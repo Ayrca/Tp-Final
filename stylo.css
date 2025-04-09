@@ -1,0 +1,141 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header{
+    width: 100%;
+    height: 250px;
+   
+   
+    border: 2px solid #000;
+   display: flex;
+   flex-direction: column;
+  
+
+}
+
+.header h2{
+ 
+}
+
+.publicidadPrincipal {
+    display: flex;
+    flex-direction: row;
+    
+      
+   }
+.publicidadPrincipal img{
+ 
+    background-size: cover;
+   
+    width: 50%;
+    height: 175px;
+   
+}
+
+.main{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+} 
+.cuerpo1{
+    width: 33%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+.cuerpo1 div{
+    width:100%;
+    height: 200px;
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #000;
+}
+
+.cuerpo1 div h3{ 
+    width: 100%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.cuerpo1 div img{ 
+    width: 100%;
+    height: 175px;
+
+}
+ 
+.cuerpo2{
+    width: 33%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   
+    border: 2px solid #000;
+}
+.cuerpo2 div{
+
+margin: 3px;
+width: 100%;
+height: 150px;
+
+display: flex;
+flex-direction: column;
+align-items: start;
+border: 2px solid #000;
+
+} 
+.cuerpo2 div h3{ 
+    
+} 
+
+.cuerpo2 div h4{ 
+   
+} 
+
+.cuerpo2 div ul{ 
+    margin-left: 19px;
+} 
+.cuerpo2 div li{ 
+    
+} 
+
+.cuerpo3{
+    width: 33%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+.cuerpo3 div{
+    width:100%;
+    height: 200px;
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #000;
+}
+
+.cuerpo3 div h3{ 
+    width: 100%;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.cuerpo3 div img{ 
+    width: 100%;
+    height: 175px;
+}
