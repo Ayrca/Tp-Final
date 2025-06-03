@@ -7,13 +7,9 @@
 .header{
     width: 100%;
     height: 250px;
-   
-   
     border: 2px solid #000;
-   display: flex;
-   flex-direction: column;
-  
-
+    display: flex;
+    flex-direction: column;
 }
 
 .header h2{
@@ -23,16 +19,12 @@
 .publicidadPrincipal {
     display: flex;
     flex-direction: row;
-    
-      
-   }
+}
+
 .publicidadPrincipal img{
- 
     background-size: cover;
-   
     width: 50%;
     height: 175px;
-   
 }
 
 .main{
@@ -70,43 +62,38 @@
 .cuerpo1 div img{ 
     width: 100%;
     height: 175px;
-
 }
- 
+
 .cuerpo2{
     width: 33%;
     height: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
-   
     border: 2px solid #000;
 }
-.cuerpo2 div{
 
+.cuerpo2 div{
 margin: 3px;
 width: 100%;
 height: 150px;
-
 display: flex;
 flex-direction: column;
 align-items: start;
 border: 2px solid #000;
-
 } 
+
 .cuerpo2 div h3{ 
-    
 } 
 
 .cuerpo2 div h4{ 
-   
 } 
 
 .cuerpo2 div ul{ 
     margin-left: 19px;
-} 
+}
+
 .cuerpo2 div li{ 
-    
 } 
 
 .cuerpo3{
@@ -115,13 +102,11 @@ border: 2px solid #000;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
 }
+
 .cuerpo3 div{
     width:100%;
     height: 200px;
-
-
     display: flex;
     flex-direction: column;
     align-items: center;
