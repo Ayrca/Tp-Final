@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Ordenar opciones de rubros alfabéticamente (excepto primera)
+  // Ordenar opciones de rubros alfabéticamente (excepto "selecciona rubro")
   function ordenarOpciones(select) {
     const opciones = Array.from(select.options).slice(1);
     opciones.sort((a, b) => a.text.localeCompare(b.text, 'es', { sensitivity: 'base' }));
