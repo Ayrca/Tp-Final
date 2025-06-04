@@ -1,20 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
   const tipoUsuario = localStorage.getItem('tipoUsuario') || 'comun';
   const tituloForm = document.getElementById('form-titulo');
-  const columna2 = document.getElementById('columna-2');
+  const columnaProfesional = document.getElementById('columna-profesional');
   const btnAgregarRubro = document.getElementById('btn-agregar-rubro');
   const rubroContainer = document.getElementById('rubro-container');
 
   // Ajustar formulario según tipo de usuario
   if (tipoUsuario === 'profesional') {
     tituloForm.textContent = 'Registro de Profesional';
-    columna2.style.display = 'block';
+    columnaProfesional.style.display = 'block';
     rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
       select.required = true;
     });
   } else {
     tituloForm.textContent = 'Registro de Usuario';
-    columna2.style.display = 'none';
+    columnaProfesional.style.display = 'none';
     rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
       select.required = false;
     });
@@ -46,13 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
       nuevoRubro.remove();
     });
 
-    ordenarOpciones(select); // Ordenar opciones del nuevo select
+    ordenarOpciones(select);
     rubroContainer.appendChild(nuevoRubro);
   }
 
   btnAgregarRubro.addEventListener('click', agregarRubro);
 
-  //Eliminar rubros
+  // Eliminar rubros con botón X
   rubroContainer.addEventListener('click', (e) => {
     if (e.target.classList.contains('btn-remove-rubro')) {
       const item = e.target.closest('.rubro-item');
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Ordenar opciones de rubros alfabéticamente (excepto "selecciona rubro")
+  // Ordenar opciones de rubros alfabéticamente (excepto "Selecciona un rubro")
   function ordenarOpciones(select) {
     const opciones = Array.from(select.options).slice(1);
     opciones.sort((a, b) => a.text.localeCompare(b.text, 'es', { sensitivity: 'base' }));
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ordenarOpciones(select);
   });
 
-  // 📌 Guardar usuario al enviar formulario
+  // Guardar usuario en localStorage
   document.getElementById('registro-form').addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -135,5 +135,4 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'login.html';
     });
   });
-
 });
