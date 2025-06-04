@@ -10,12 +10,17 @@ body {
 
 /* Contenedor principal del formulario */
 form#registro-form {
-  max-width: 900px;
+  max-width: 50%;
   margin: 0 auto;
   padding: 2rem 2.5rem;
   background-color: #fdfdfd;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s;
+}
+
+form#registro-form:hover{
+    transform: scale(1.01);
 }
 
 /* Título */
@@ -26,20 +31,54 @@ form#registro-form h2#form-titulo {
   color: #34495e;
 }
 
-/* Contenedor de columnas */
+/*formato para las columnas*/
 .form-columns {
   display: flex;
   gap: 2rem;
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 2rem;
 }
 
-/* Columnas */
-.form-columns .column {
+.column {
   flex: 1 1 45%;
   min-width: 280px;
   display: flex;
   flex-direction: column;
+}
+
+/*formato columna profesional*/
+.form-tercera-columna {
+  background-color: #f0fdf4;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #cce7da;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  margin-top: 1rem;
+}
+
+.form-tercera-columna label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #2e7d32;
+}
+
+.form-tercera-columna input,
+.form-tercera-columna select {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1.5px solid #b2dfdb;
+  font-size: 1rem;
+  background-color: #ffffff;
+  transition: border-color 0.3s ease;
+}
+
+.form-tercera-columna input:focus,
+.form-tercera-columna select:focus {
+  outline: none;
+  border-color: #27ae60;
+  box-shadow: 0 0 6px #27ae60aa;
 }
 
 /* Etiquetas */
@@ -155,7 +194,7 @@ form#registro-form select:focus {
 }
 
 /* Margen adicional para empresa */
-#columna-2 label[for="empresa"] {
+#columna-profesional label[for="empresa"] {
   display: block;
   margin-top: 1rem;
 }
