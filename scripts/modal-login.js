@@ -62,7 +62,7 @@ if (loginForm) {
   });
 }
 
-// Recuperar contraseña
+/* Recuperar contraseña
 if (forgotPasswordLink) {
   forgotPasswordLink.addEventListener("click", async () => {
     const { value: email } = await Swal.fire({
@@ -90,4 +90,4 @@ if (forgotPasswordLink) {
       }
     }
   });
-}
+}*/
