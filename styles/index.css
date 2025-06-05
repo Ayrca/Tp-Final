@@ -37,6 +37,21 @@ margin-left: 60px;
 width: 350px;
 }
 
+#irTodos{
+margin-left: 10px;
+}
+
+#irTodos button{
+height: 37px;
+width: 80px;
+border-radius: 10px;
+background-color:white;
+}
+
+#irTodos button:hover{
+background-color: #6e6d6d;
+}
+
 
 .resultado {
   padding: 10px;
