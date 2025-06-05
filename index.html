@@ -1,82 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/index.css">
-    <title>AFIP</title>
-</head>
-<body>
-    <header class="header">
-        <div class="publicidadPrincipal">
-        <img src="assets/images/img1 (6).jpg" alt="Imagen1">
-        <img src="assets/images/img1 (6).jpg" alt="Imagen1">
-        </div>
-        <div>
-            <input  type="text"  id = "nombre" placeholder= "Buscar"></input>
-        </div>
-    </header>
+    <title>Tu Oficio</title>
 
-    <main class="main">
-
-    <div class="cuerpo1">
-    <div> <h3>Gasista Matriculado Peter Parker</h3>
-    <img src="./assets/images/img1 (4).jpg" alt="Imagen1">
-    </div>
-    <div> <h3>Poda y deesmonte Tropipoda ALAN</h3>
-        <img src="./assets/images/img1 (5).jpg" alt="Imagen1">
-        </div>
-        <div> <h3>Casa GARY</h3>
-            <img src="assets/images/img1 (6).jpg" alt="Imagen1">
-            </div>
-    </div>
-    <div class="cuerpo2">
-    <div> 
-        <h3>Oficio</h3>
-        <h4>Nombre de la persona</h4>
-        <ul>
-            <li>Reseña = *****</li>
-            <li>Ubicacion</li>
-            <li><button>Contactar</button></li>
-            <li><button>Ver Pagina</button></li>
-        </ul>
-    </div>
-    <div> 
-        <h3>Oficio</h3>
-        <h4>Nombre de la persona</h4>
-        <ul>
-            <li>Reseña = *****</li>
-            <li>Ubicacion</li>
-            <li><button>Contactar</button></li>
-            <li><button>Ver Pagina</button></li>
-        </ul>
-    </div>
-    <div> 
-        <h3>Oficio</h3>
-        <h4>Nombre de la persona</h4>
-        <ul>
-            <li>Reseña = *****</li>
-            <li>Ubicacion</li>
-            <li><button>Contactar</button></li>
-            <li><button>Ver Pagina</button></li>
-        </ul>
-    </div>
-    </div>
-    <div class="cuerpo3">
-        <div> <h3>Ferreteria Express</h3>
-            <img src="assets/images/img1 (3).jpg" alt="Imagen1">
-            </div>
-            <div> <h3>La Cocina comidas caceras</h3>
-                <img src="assets/images/img1 (2).jpg" alt="Imagen1">
-                </div>
-                <div> <h3>Casa de Ropa Puro MArcas</h3>
-                    <img src="assets/images/img1 (1).jpg" alt="Imagen1">
-                    </div>
-            </div>
-    </div>
-    </main>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     
-    <script type="module" src="scripts/index.js"></script>
+    <link rel="stylesheet" href="styles/indexStyle.css">
+    
+</head>
+
+<body>
+
+      <iframe id="header" src="header.html"></iframe>
+    
+    <main class="indexmain">
+  <div class="texto1"> 
+  <h2>El Oficio para vos</h2>
+  <p>
+  La aplicación que te permitirá encontrar
+  los mejores profesionales de manera fácil y rápida.
+  </p>
+
+<input type="search" id="buscador" placeholder="Buscar oficio...">
+<div id="resultados"></div>
+</div>
+      <section class="contenedorCarrusel2">
+    <section  id="propaganda1"></section>
+  </section>
+
+      
+      <section class="contenedorCarrusel1">
+        <section  id="oficio-container"></section>
+        
+        <div class="cajaBtn1">
+          <button id="anterior1">&#60;</button>
+          <h2 class="catalogoCartel">Oficios</h2>
+          <button id="siguiente1">&#62;</button>
+        </div>
+
+   
+  </section>
+
+
+
+
+
+</main>
+
+
+<iframe id= "footer" src="footer.html"frameborder="0" width="100%" height="219px"></iframe>
+    
+
+
+<script src="scripts/index.js"></script>
 
 </body>
-</html>     
+
+</html>
