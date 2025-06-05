@@ -122,19 +122,12 @@ form#registro-form select:focus {
   padding-right: 2.5rem;
 }
 
-.password-container .toggle-password {
+.toggle-password {
   position: absolute;
-  right: 0.8rem;
   top: 50%;
-  transform: translateY(-100%);
+  right: 10px;
+  transform: translateY(-50%);
   cursor: pointer;
-  color: #aaa;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-}
-
-.password-container .toggle-password:hover {
-  color: #57b894;
 }
 
 /* Rubros */

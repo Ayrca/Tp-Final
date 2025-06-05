@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to right, #eafaf1, #f4f4f4);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-container {
+  background: #ffffff;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 300px;
+  transition: transform 0.2s;
+}
+
+.login-container:hover{
+    transform: scale(1.01);
+}
+
+/* Título */
+form#registro-form h2#form-titulo {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #34495e;
+}
+
+.login-form label {
+  margin-bottom: 0.3rem;
+  font-weight: 700px;
+  color: #2d3e50;
+  font-size: 0.95rem;
+}
+
+.login-form input {
+  width: 250px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 1.2rem;
+  border: 1.5px solid #cfd8dc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.password-container {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  left: 85%;
+  transform: translateY(-45%);
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  background-color: #57b894;
+  border: none;
+  color: white;
+  font-weight: 700;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  margin-top: 1.5rem;
+}
+
+.forgot-password {
+  margin-top: 10px;
+  color: #007bff;
+  text-align: right;
+  cursor: pointer;
+  font-size: 0.9em;
+}
