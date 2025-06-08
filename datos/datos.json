@@ -22,12 +22,185 @@
   { "nombre": "Soldador", "imagen": "assets/images/oficios/soldador.png" }
 ],
 
-  
-"publicidad" : [
+  "publicidad" : [
   { "nombre": "Casa Ropa Puro Marcas", "imagen": "assets/images/patro/patroN1.png" },
   { "nombre": "Ferreterias Expres", "imagen": "assets/images/patro/patroN2.png" },
   { "nombre": "Casa Gary", "imagen": "assets/images/patro/patroN3.png" },
   { "nombre": "La Cocina", "imagen": "assets/images/patro/patroN4.png" },
   { "nombre": "Tropi Podas", "imagen":"assets/images/patro/patroN5.png" }
-]
+],
+
+ "publicidad1" : [
+  { "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
+  { "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
+  { "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
+  { "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
+  { "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" },
+  { "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
+  { "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
+  { "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
+  { "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
+  { "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" }
+],
+
+ "publicidad2" : [
+  { "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
+  { "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
+  { "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
+  { "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
+  { "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" },
+  { "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
+  { "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
+  { "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
+  { "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
+  { "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" }
+],
+
+
+
+"Abogado" :[
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+},
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+},
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+},
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+},
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+},
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+},
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+},
+{"nombre":"Carlos",
+"apellido":"Perez",
+"email":"carlos@hotmail.com",
+"direccion":"Hornos 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Pablo",
+"apellido":"Gonzales",
+"email":"pablo@hotmail.com",
+"direccion":"Beruti 1212",
+"valuacion": 3,
+"imagen":"../assets/images/patro/patroN5.png"
+}
+
+
+],
+
+"Arquitecto" :[
+{"nombre":"Andrea",
+"apellido":"Palida",
+"email":"Arndrea@hotmail.com",
+"direccion":"Tacuari 1212",
+"valuacion": 5,
+"imagen":"../assets/images/patro/patroN3.png"
+},
+
+{"nombre":"Ana",
+"apellido":"Rosal",
+"email":"anapana@hotmail.com",
+"direccion":"Merlo 1212",
+"valuacion": 4,
+"imagen":"../assets/images/patro/patroN5.png"
+}
+ ]
+
+
+
 }

@@ -1,20 +1,26 @@
 fetch('../datos/datos.json')
   .then(response => response.json())
   .then(data => {
-    // Ordenar la lista de oficios alfabéticamente
     data.oficios.sort((a, b) => a.nombre.localeCompare(b.nombre));
-
-    // Seleccionar el elemento donde se mostrarán los oficios
     const oficiosDiv = document.getElementById('listaOficios');
 
-    // Crear una lista de oficios
     data.oficios.forEach(oficio => {
       const oficioHTML = `
-        <div>
+        <div data-categoria="${oficio.nombre}" class="oficio-item">
           <p>${oficio.nombre}</p>
         </div>
       `;
       oficiosDiv.innerHTML += oficioHTML;
     });
+
+    const oficioItems = document.querySelectorAll('.oficio-item');
+    oficioItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const categoria = item.getAttribute('data-categoria');
+        localStorage.setItem('categoria', categoria);
+        window.location.href = '/pages/listaProfesionales.html';
+      });
+    });
   })
   .catch(error => console.error('Error cargando el JSON:', error));
+
