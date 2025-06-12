@@ -90,7 +90,7 @@ margin-top: 25px;
   left: 0;
   width: 100%;
   transition: top 0.5s ease-in-out;
-   height:100%;
+  height:100%;
 }
 
 
@@ -114,6 +114,7 @@ font-size: 35px;
 width: 900px;
 height: 230px;
 background-color: #f0f0f0;
+
 display: flex;
 flex-direction: row;
 margin: 15px;
@@ -156,3 +157,135 @@ margin-left: 150px;
 #conectar{
 
 }     
+
+
+@media (max-width: 700px)  {
+
+.texto1 {
+
+}
+
+main{
+
+flex-direction: column;
+
+}
+.cartelPrincipal{
+
+}
+
+/*contenedor de tarjetas y carruseles*/
+.contenedormedio{
+display: flex;
+flex-direction: column;
+
+}
+/*contenedor de tarjetas y carruseles*/
+
+
+/*carrusel propaganda */
+
+.carrusel-container {
+  
+
+}
+
+.carrusel-item {
+
+}
+
+.carrusel-item img {
+
+}
+/*carrusel propaganda */
+
+
+
+/*carrusel propaganda 1*/
+
+.carruselvertical1 {
+
+
+}
+
+#prop1 {
+
+}
+
+/*carrusel propaganda 2*/
+.carruselvertical2 {
+
+ 
+}
+
+#prop2 {
+
+}
+
+
+
+.cartelNoHay{
+height: 900px;
+font-size: 35px;
+
+}
+
+
+/*tarjeta profecionales*/
+
+
+#listaProfecionales{
+
+
+}
+
+.profesional-item{
+display: flex;
+flex-direction: column;
+width: 300px;
+height:400px ;
+align-items: center;
+justify-content: center;
+}
+
+.profesional-item img{
+width: 150px;
+height: 100px;
+
+
+}
+.profesional-data{
+margin-left: 0;
+
+}
+.profesional-item h2{
+
+}    
+.profesional-item p{
+
+}    
+
+.profesional-buttons{
+display: flex;
+flex-direction: column;
+
+gap: 5px;
+margin-top: 0;
+margin-left: 0;
+}
+
+.profesional-buttons button{
+
+
+}
+
+#verMas{
+
+}
+
+#conectar{
+
+}     
+
+
+}

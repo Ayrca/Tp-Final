@@ -5,6 +5,26 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.error('No se especificó una categoría');
   }
+
+
+// Cargar los datos del JSON
+fetch('../datos/datos.json')
+  .then(response => response.json())
+  .then(data => {
+    const publicidad1 = data.publicidad1;
+    const publicidad2 = data.publicidad2;
+
+    // Iniciar los carruseles
+    startCarrusel('prop1', publicidad1);
+    startCarrusel('prop2', publicidad2);
+
+
+
+     })
+  .catch(error => console.error('Error cargando el JSON:', error));
+
+
+
 });
 
 function mostrarProfesionales(categoria) {
@@ -23,24 +43,41 @@ cartelPrincipal.textContent = categoria;
       if (profesionales && profesionales.length > 0) {
         // Limpiar el contenedor antes de agregar nuevos elementos
         profesionalesContainer.innerHTML = '';
-        profesionales.forEach(profesional => {
-          const tarjetaHTML = `
-            <article class="profesional-item">
-              <img src="${profesional.imagen}" alt="${profesional.nombre}">
-              <div class="profesional-data">
-                <h2>${profesional.nombre} ${profesional.apellido}</h2>
-                <p>Email: ${profesional.email}</p>
-                <p>Dirección: ${profesional.direccion}</p>
-                <p>Valoración: ${profesional.valuacion}</p>
-              </div>
-              <div class="profesional-buttons">
-                <button id="verMas">Ver Más</button>
-                <button id="conectar">Conectar</button>
-              </div>
-            </article>
-          `;
-          profesionalesContainer.insertAdjacentHTML('beforeend', tarjetaHTML);
-        });
+
+
+profesionales.forEach((profesional, index) => {
+  const tarjetaHTML = ` 
+    <article class="profesional-item" data-index="${index}">
+      <img src="${profesional.imagen}" alt="${profesional.nombre}">
+      <div class="profesional-data">
+        <h2>${profesional.nombre} ${profesional.apellido}</h2>
+        <p>Email: ${profesional.email}</p>
+        <p>Dirección: ${profesional.direccion}</p>
+        <p>Valoración: ${profesional.valuacion}</p>
+      </div>
+      <div class="profesional-buttons">
+        <button id="verMas">Ver Más</button>
+        <button id="conectar">Conectar</button>
+      </div>
+    </article>
+  `;
+  profesionalesContainer.insertAdjacentHTML('beforeend', tarjetaHTML);
+});
+
+profesionalesContainer.addEventListener('click', (e) => {
+  if (e.target.id === 'verMas') {
+    const profesionalItem = e.target.closest('.profesional-item');
+    const indexProfesional = profesionalItem.dataset.index;
+
+    // Guardar el ID del profesional seleccionado en localStorage
+    localStorage.setItem('idProfesional', indexProfesional);
+
+    // Redirigir a la otra página
+    window.location.href = 'tarjetaProfesional.html';
+  }
+});
+
+       
       } else {
         profesionalesContainer.innerHTML = '<p class="cartelNoHay">No hay profesionales registrados por el momento.</p>';
       }
@@ -75,19 +112,3 @@ function startCarrusel(containerId, items, itemHeight = 200, interval = 3000) {
     container.style.top = `${top}px`;
   }, interval);
 }
-
-// Cargar los datos del JSON
-fetch('../datos/datos.json')
-  .then(response => response.json())
-  .then(data => {
-    const publicidad1 = data.publicidad1;
-    const publicidad2 = data.publicidad2;
-
-    // Iniciar los carruseles
-    startCarrusel('prop1', publicidad1);
-    startCarrusel('prop2', publicidad2);
-
-
-
-     })
-  .catch(error => console.error('Error cargando el JSON:', error));
