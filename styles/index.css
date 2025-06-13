@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 
-
 /*body y main */
 body {
   background-color: #fdfdfd;
@@ -40,32 +39,37 @@ body {
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
 
-
 .resultado {
   padding: 10px;
   border-bottom: 1px solid #ccc;
-  cursor: pointer;
- 
+  cursor: pointer; 
 }
 
 .resultado:hover {
   background-color: #f0f0f0;
 }
-/*buscador*/
 
-/* main  */
-.indexmain {}
-
-/* main */
+/*Estilo boton ingresar del inicio de sesion */
+.boton-ingresar {
+  background-color: #57b894;
+  border: none;
+  color: white;
+  font-weight: 700;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  margin-top: 1.5rem;
+}
 
 /*contenedor de oficios*/
-
 .contenedorCarrusel1{
     height: 650px;
     display: flex;
@@ -81,7 +85,6 @@ body {
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
-
   
 /*Tarjeta Oficios (dentro de oficio container)*/
 .oficio-item {
@@ -89,35 +92,29 @@ body {
     height: 550px;
     transition: transform 0.2s;
     border-radius: 10px;
-    /*background-color: #24b388;*/
     border: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
     margin: 20px;
     padding: 20px;
     margin-right: 20px;
-
     display: flex;
     flex-direction: column;
     overflow-x: auto;
     justify-content: center;
     align-items: center;
     scroll-snap-align: center;
-    flex-shrink: 0;  
-  
+    flex-shrink: 0;    
 }
+
 .oficio-item:hover {
     transform: scale(1.05);
 }
-
-
 
 /*los a son los contenedores de las fotos boton y h2 de las tarjetas*/
 .Acard {
     display: flex;
     flex-direction: column;
-    text-decoration: none;
-        
+    text-decoration: none;        
 }
 
 .btnIndexcard {
@@ -127,14 +124,11 @@ body {
     justify-content: center;
    }
 
-
 .oficio-item img {
   width: 100%;
   height: 450px; 
-  object-fit: contain; 
-
+  object-fit: contain;
 }
-
 
 .oficio-item h2 {
     color: #34495e;
@@ -148,7 +142,6 @@ display: flex;
 justify-content: center;
 font-size: 2rem;
 color: #34495e;
-
 }
 
 .cajaBtn1{ 
@@ -158,6 +151,7 @@ color: #34495e;
     width:250px ;
 
 }
+
 .cajaBtn1 button { 
     width: 50px;
     height: 25px;
@@ -165,18 +159,7 @@ color: #34495e;
     margin-top: 15px;
   }
 
-
-
-/* carteles de carruseles */
-  
-    
-
 /*propaganda*/
-
-.contenedorCarrusel2{
-width:100%;
-}
-
 #propaganda1{
 margin-bottom: -200px;
 width:100%;
@@ -188,37 +171,25 @@ scroll-behavior: smooth;
 -webkit-overflow-scrolling: touch;
 scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
 -ms-overflow-style: none; /* Oculta la barra de desplazamiento en IE y Edge */
-
 }
 
-
-.propaganda2 {
- 
+.propaganda2 { 
 width:450px;
-height: 400px;  
-
+height: 400px;
 margin: 15px;
-
-
- transition: transform 0.2s;
-    border-radius: 10px;
-  
-    border: 1px solid #ddd;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-    
-    padding: 20px;
-    margin-right: 20px;
-
-    display: flex;
-    flex-direction: column;
-    overflow-x: auto;
-    justify-content: center;
-    align-items: center;
-    scroll-snap-align: center;
-    flex-shrink: 0;  
-
-
+transition: transform 0.2s;
+border-radius: 10px;  
+border: 1px solid #ddd;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);    
+padding: 20px;
+margin-right: 20px;
+display: flex;
+flex-direction: column;
+overflow-x: auto;
+justify-content: center;
+align-items: center;
+scroll-snap-align: center;
+flex-shrink: 0;
 }
 
 .propaganda2 h2 {
@@ -231,26 +202,15 @@ text-align: center;
 width: 350px;
 height: 300px;
 object-fit: cover;
-
 }
 
- #footer {
- background-color: #24b388;
- width: 100%;
- height: 100px;
-}
- 
+#footer {
+background-color: #24b388;
+width: 100%;
+height: 100px;
+} 
 
-@media (max-width: 700px) {
-   
-#header {
-
-}
-
-/* carteles de carruseles */
-.catalogoCartel {
-
-}
+@media (max-width: 700px) {   
 
 .texto1{
 margin: 0;
@@ -258,6 +218,7 @@ margin-left: 0;
 margin-left: 5px;
 margin-top: 15px;
 }
+
 /*buscador*/
 #buscador{
 margin: 0;
@@ -267,44 +228,14 @@ width: 200px;
 margin-top: 15px;
 }
 
-.resultado {
- 
-}
-
-/*buscador*/
-
-
-/* carteles de carruseles */
-
-/*header fin del header*/
-
-/*body y main */
-body {
-
-    
-}
-
-
-/* main contenedor 2 contenedor de tarjetas*/
-.indexmain {}
-
-/* main contenedor 2 contenedor de tarjetas*/
-
 /*contenedor de oficios*/
-
 .contenedorCarrusel1{
-
 display: flex;
 flex-direction: column;
 align-items: center;
 height: 600px;
 margin-top: 15px;
 } 
-
-#oficio-container {
-   
-}
-
   
 /*Tarjeta Oficios (dentro de oficio container)*/
 .oficio-item {
@@ -316,25 +247,11 @@ height: 300px;
 width: 250px;
 }
 
-
-
-/*los a son los contenedores de las fotos boton y h2 de las tarjetas*/
-.Acard {
-  
-        
-}
-
-.btnIndexcard {
-  
-}
-
-
 .oficio-item img {
 border-radius: 30px;
 width: 200px;
 height: 250px;
 }
-
 
 .oficio-item h2 {
 font-size: 1.1em;
@@ -342,26 +259,11 @@ font-style: unset;
 text-align: center;
 }
 
-/* carteles de carruseles */
-.catalogoCartel {
-
-
-}
-
-.cajaBtn1{ 
-  
+.cajaBtn1{  
 margin-bottom: 200px;
 }
-.cajaBtn1 button { 
- 
-}
-
-/* carteles de carruseles */
-  
-    
 
 /*propaganda*/
-
 .contenedorCarrusel2{
 width: 100%;
 margin-top: 15px;
@@ -369,28 +271,15 @@ margin-top: 15px;
 
 #propaganda1{
 width: 100%;
-
 }
-
 
 .propaganda2 {
 width: 100%;
 height: 400px;
-
-
-}
-
-.propaganda2 h2 {
-
 }
 
 .propaganda2 img{
 width: 80%;
 height: 300px;
 }
-
-#footer {
-
-}
-
 }
