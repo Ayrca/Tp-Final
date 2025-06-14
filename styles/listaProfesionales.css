@@ -1,0 +1,291 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.texto1 {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin-left: 225px;
+}
+
+main{
+  justify-items: center;
+}
+.cartelPrincipal{
+font-size: 3rem;
+color: #34495e;
+}
+
+/*contenedor de tarjetas y carruseles*/
+.contenedormedio{
+width: 100%;
+display: flex;
+flex-direction: row;
+justify-items: center;
+
+margin-top: 25px;
+}
+/*contenedor de tarjetas y carruseles*/
+
+
+/*carrusel propaganda */
+
+.carrusel-container {
+  
+  position: relative;
+  height: 200px; /* Ajusta la altura según tus necesidades */
+  overflow: hidden;
+}
+
+
+.carrusel-item {
+  height: 200px; /* Ajusta la altura según tus necesidades */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 250px;
+}
+
+.carrusel-item img {
+ width: 600px;
+  height: 300px;
+}
+/*carrusel propaganda */
+
+
+
+/*carrusel propaganda 1*/
+
+.carruselvertical1 {
+  width: 33%;
+  position: relative;
+  
+  overflow: hidden;
+
+}
+
+#prop1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: top 0.5s ease-in-out;
+   height:100%;
+}
+
+/*carrusel propaganda 2*/
+.carruselvertical2 {
+  width: 33%;
+  position: relative;
+  overflow: hidden;
+ 
+}
+
+#prop2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: top 0.5s ease-in-out;
+  height:100%;
+}
+
+
+
+.cartelNoHay{
+height: 900px;
+font-size: 35px;
+
+}
+
+
+/*tarjeta profecionales*/
+
+
+#listaProfecionales{
+ 
+  
+}
+
+.profesional-item{
+width: 900px;
+height: 230px;
+background-color: #f0f0f0;
+
+display: flex;
+flex-direction: row;
+margin: 15px;
+}
+
+.profesional-item img{
+width: 150px;
+height: 150px;
+margin: 15px;
+
+}
+.profesional-data{
+margin-left: 25px;
+}
+.profesional-item h2{
+margin-top: 10px;
+
+}    
+.profesional-item p{
+
+}    
+
+.profesional-buttons{
+display: flex;
+flex-direction: column;
+gap: 15px;
+margin-top: 40px;
+margin-left: 150px;
+}
+
+.profesional-buttons button{
+  width: 150px;
+  height: 35px;
+}
+
+#verMas{
+
+}
+
+#conectar{
+
+}     
+
+
+@media (max-width: 700px)  {
+
+.texto1 {
+
+}
+
+main{
+
+flex-direction: column;
+
+}
+.cartelPrincipal{
+
+}
+
+/*contenedor de tarjetas y carruseles*/
+.contenedormedio{
+display: flex;
+flex-direction: column;
+
+}
+/*contenedor de tarjetas y carruseles*/
+
+
+/*carrusel propaganda */
+
+.carrusel-container {
+  
+
+}
+
+.carrusel-item {
+
+}
+
+.carrusel-item img {
+
+}
+/*carrusel propaganda */
+
+
+
+/*carrusel propaganda 1*/
+
+.carruselvertical1 {
+
+
+}
+
+#prop1 {
+
+}
+
+/*carrusel propaganda 2*/
+.carruselvertical2 {
+
+ 
+}
+
+#prop2 {
+
+}
+
+
+
+.cartelNoHay{
+height: 900px;
+font-size: 35px;
+
+}
+
+
+/*tarjeta profecionales*/
+
+
+#listaProfecionales{
+
+
+}
+
+.profesional-item{
+display: flex;
+flex-direction: column;
+width: 300px;
+height:400px ;
+align-items: center;
+justify-content: center;
+}
+
+.profesional-item img{
+width: 150px;
+height: 100px;
+
+
+}
+.profesional-data{
+margin-left: 0;
+
+}
+.profesional-item h2{
+
+}    
+.profesional-item p{
+
+}    
+
+.profesional-buttons{
+display: flex;
+flex-direction: column;
+
+gap: 5px;
+margin-top: 0;
+margin-left: 0;
+}
+
+.profesional-buttons button{
+
+
+}
+
+#verMas{
+
+}
+
+#conectar{
+
+}     
+
+
+}

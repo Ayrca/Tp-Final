@@ -2,10 +2,16 @@ const buscador = document.getElementById('buscador');
 const resultados = document.getElementById('resultados');
 let seleccionRealizada = false;
 let oficioSeleccionado = null;
+let oficiosData = []; /*buscador funcion de seleccionar una palabra con el enter y que se dirija a la pagina del profesional seleccionado*/ 
 
-/*buscador*/ 
-let oficiosData = [];
+buscador.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && oficioSeleccionado) {
+    localStorage.setItem('categoria', oficioSeleccionado.nombre);
+    window.location.href = 'pages/listaProfesionales.html';
+  }
+});
 
+/*Buscador*/
 function buscarOficios() {
   const textoBusqueda = buscador.value.toLowerCase();
   const resultadosFiltrados = oficiosData.filter(oficio => oficio && oficio.nombre && oficio.nombre.toLowerCase().startsWith(textoBusqueda));
@@ -40,12 +46,9 @@ buscador.addEventListener('blur', () => {
     seleccionRealizada = false;
   }
 });
-/*Buscador*/
 
 // Función para crear carrusel de oficios
-
 const oficioContainer = document.getElementById('oficio-container');
-
 function crearArticulos(oficios) {
   const oficioContainer = document.getElementById('oficio-container');
   oficios.forEach(oficio => {
@@ -67,14 +70,15 @@ function crearArticulos(oficios) {
   cards.forEach(card => {
     card.addEventListener('click', () => {
       const categoria = card.getAttribute('data-categoria');
-      window.location.href = `prueba.html?categoria=${categoria}`;
+      //almacena la categoria en la local storage
+    localStorage.setItem('categoria', categoria);
+    window.location.href = 'pages/listaProfesionales.html';
     });
   });
 }
 
 /*movimiento de las tarjetas de oficio*/
 const tarjetasContainer1 = document.querySelector('#oficio-container');
-
 const anterior1 = document.getElementById('anterior1');
 const siguiente1 = document.getElementById('siguiente1');
 
@@ -172,7 +176,6 @@ siguiente1.addEventListener('click', () => {
   }
 });
 
-
 const propagandaContainer = document.getElementById('propaganda1');
 //const propagandaContainer = document.querySelector('.propaganda');
 let isDown = false;
@@ -183,7 +186,6 @@ let intervalId;
 
 
 /*Crea el carrusel de propaganda*/ 
-
 function crearPropaganda(publicidad) {
   const propagandaContainer = document.getElementById('propaganda1');
   publicidad.forEach((anuncio) => {
@@ -195,7 +197,6 @@ function crearPropaganda(publicidad) {
     `;
     propagandaContainer.insertAdjacentHTML('beforeend', articuloHTML);
   });
-
 
       // Agregar eventos de mouse y touch para desplazar el carrusel
       propagandaContainer.addEventListener('mousedown', (e) => {
@@ -251,7 +252,7 @@ function crearPropaganda(publicidad) {
       }
 
       autoScroll();
-       
+
 /*Movimiento del carrusel propaganda*/ 
       // Pausar el desplazamiento automático cuando se interactúa con el carrusel
       propagandaContainer.addEventListener('mousedown', () => {
@@ -270,19 +271,22 @@ function crearPropaganda(publicidad) {
       propagandaContainer.addEventListener('touchend', () => {
         autoScroll();
       });
-     
 }
-/*Movimiento del carrusel propaganda*/ 
+
 
 /*llamado del json y ejecucion de los carruseles, con el buscador en tiempo real*/ 
-  
 fetch('datos/datos.json')
   .then(response => response.json())
   .then(data => {
     oficiosData = data.oficios;
     crearArticulos(oficiosData);
     crearPropaganda(data.publicidad);
-    // Habilitar el buscador después de cargar los datos
     buscador.addEventListener('input', buscarOficios);
+    buscador.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && oficioSeleccionado) {
+        localStorage.setItem('categoria', oficioSeleccionado.nombre);
+        window.location.href = 'pages/listaProfesionales.html';
+      }
+    });
   })
   .catch(error => console.error('Error al cargar datos:', error));
