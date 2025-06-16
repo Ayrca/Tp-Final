@@ -118,7 +118,7 @@ form#registro-form select:focus {
 }
 
 .password-container input {
-  width: 100%;
+  width: 93%;
   padding-right: 2.5rem;
 }
 
@@ -126,7 +126,7 @@ form#registro-form select:focus {
   position: absolute;
   top: 50%;
   right: 10px;
-  transform: translateY(-50%);
+  transform: translateY(-100%);
   cursor: pointer;
 }
 
