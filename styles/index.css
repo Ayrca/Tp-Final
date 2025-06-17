@@ -69,7 +69,7 @@ background-color: #6e6d6d;
 
 /*contenedor de oficios*/
 .contenedorCarrusel1{
-    height: 650px;
+    height: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
