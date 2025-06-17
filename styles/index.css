@@ -16,9 +16,9 @@ body {
 
 /*header */
 #header {
- background-color: #24b388;
- width: 100%;
- height: 100px;
+background-color: #24b388;
+width: 100%;
+height: 100px;
 }
 
 .texto1 {
@@ -31,17 +31,26 @@ body {
 
 /*buscador*/
 #buscador{
-  margin-top: 15px;
-  width: 80%;
-  max-width: 800px;
-  height: 40px;
-  padding: 5px 15px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+padding: 5px;
+margin-top: 35PX;
+height: 35px;
+margin-left: 60px;
+width: 350px;
+}
+
+#irTodos{
+margin-left: 10px;
+}
+
+#irTodos button{
+height: 37px;
+width: 80px;
+border-radius: 10px;
+background-color:white;
+}
+
+#irTodos button:hover{
+background-color: #6e6d6d;
 }
 
 .resultado {
@@ -54,19 +63,9 @@ body {
   background-color: #f0f0f0;
 }
 
-/*Estilo boton ingresar del inicio de sesion */
-.boton-ingresar {
-  background-color: #57b894;
-  border: none;
-  color: white;
-  font-weight: 700;
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease;
-  margin-top: 1.5rem;
+.boton-personalizado {
+  background-color: #57b894 !important;
+  border-color: #57b894 !important;
 }
 
 /*contenedor de oficios*/
@@ -122,7 +121,7 @@ body {
     background-color: transparent;
     cursor: pointer;
     justify-content: center;
-   }
+}
 
 .oficio-item img {
   width: 100%;
@@ -158,6 +157,10 @@ color: #34495e;
     margin: 10px;
     margin-top: 15px;
   }
+
+.contenedorCarrusel2{
+width:100%;
+}
 
 /*propaganda*/
 #propaganda1{
@@ -236,7 +239,7 @@ align-items: center;
 height: 600px;
 margin-top: 15px;
 } 
-  
+
 /*Tarjeta Oficios (dentro de oficio container)*/
 .oficio-item {
 border-radius: 10px;
