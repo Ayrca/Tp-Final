@@ -6,19 +6,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const rubroContainer = document.getElementById('rubro-container');
 
   // Ajustar formulario según tipo de usuario
-  if (tipoUsuario === 'profesional') {
-    tituloForm.textContent = 'Registro de Profesional';
-    columnaProfesional.style.display = 'block';
-    rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
-      select.required = true;
-    });
-  } else {
-    tituloForm.textContent = 'Registro de Usuario';
-    columnaProfesional.style.display = 'none';
-    rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
-      select.required = false;
-    });
+  function actualizarCamposRubros() {
+    if (tipoUsuario === 'profesional') {
+      tituloForm.textContent = 'Registro de Profesional';
+      columnaProfesional.style.display = 'block';
+
+      rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
+        select.required = true;
+        select.disabled = false;
+      });
+
+      btnAgregarRubro.style.display = 'inline-block';
+    } else {
+      tituloForm.textContent = 'Registro de Usuario';
+      columnaProfesional.style.display = 'none';
+
+      rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
+        select.required = false;
+        select.disabled = true;
+      });
+
+      btnAgregarRubro.style.display = 'none';
+    }
   }
+
+  actualizarCamposRubros();
 
   // Ocultar botón "X" del primer rubro
   const primerBtnEliminar = rubroContainer.querySelector('.rubro-item .btn-remove-rubro');
@@ -39,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const select = nuevoRubro.querySelector('select');
     select.value = '';
+    select.required = true;
+    select.disabled = false;
 
     const btnEliminar = nuevoRubro.querySelector('.btn-remove-rubro');
     btnEliminar.style.display = 'inline-block';
@@ -93,8 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ordenarOpciones(select);
   });
 
-  // Guardar usuario en localStorage
-  document.getElementById('registro-form').addEventListener('submit', (e) => {
+  // Envío del formulario
+  document.getElementById('registro-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const nombre = document.getElementById('nombre').value.trim();
@@ -109,12 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    const existe = usuarios.some(u => u.email === email);
-    if (existe) {
-      Swal.fire('Ya existe un usuario con ese email');
-      return;
-    }
+    // Tomar rubros solo si es profesional
+    const rubros = tipoUsuario === 'profesional'
+      ? [...document.querySelectorAll('.rubro-select')].map(s => s.value)
+      : [];
 
     const nuevoUsuario = {
       nombre,
@@ -122,17 +134,31 @@ document.addEventListener('DOMContentLoaded', () => {
       email,
       password,
       tipo: tipoUsuario,
-      rubros: tipoUsuario === 'profesional'
-        ? [...document.querySelectorAll('.rubro-select')].map(s => s.value)
-        : [],
+      rubros,
       empresa: tipoUsuario === 'profesional' ? empresa : ''
     };
 
-    usuarios.push(nuevoUsuario);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-    Swal.fire('Registro exitoso').then(() => {
-      window.location.href = 'login.html';
+    try {
+    const response = await fetch('http://localhost:3000/registro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevoUsuario)
     });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        Swal.fire(data.error || 'Error en el registro');
+        return;
+      }
+
+      Swal.fire('Registro exitoso').then(() => {
+        window.location.href = 'login.html';
+      });
+
+    } catch (error) {
+      Swal.fire('Error de conexión');
+      console.error(error);
+    }
   });
 });

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Cuenta - Profesional</title>
+  <link rel="stylesheet" href="../styles/global.css">
+  <link rel="stylesheet" href="../styles/mi-cuenta.css">
+</head>
+<body>
+  <main class="cuenta-container">
+    <section class="perfil-usuario">
+      <img id="avatar" src="../assets/imagenesProfesionales/default-avatar.png" alt="Avatar" class="avatar-img">
+      
+      <div class="info">
+        <h2 id="profesion">Profesión</h2>
+        <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+        <p><strong>Tel:</strong> <span id="telefono"></span></p>
+        <p><strong>Dir:</strong> <span id="direccion"></span></p>
+        <div class="estado">
+          <span id="estado-label">Estado: </span>
+          <button id="toggle-estado" class="estado-btn">Activo</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="descripcion">
+      <div class="descripcion-header">
+        <h3>Descripción de habilidades, conocimientos y trabajos anteriores</h3>
+        <div class="acciones-descripcion">
+          <button id="editar-desc" title="Editar">✏️</button>
+          <button id="guardar-desc" title="Guardar" hidden>✔️</button>
+          <button id="cancelar-desc" title="Cancelar" hidden>❌</button>
+        </div>
+      </div>
+      <div id="descripcion-texto" contenteditable="false" class="descripcion-texto"></div>
+    </section>
+
+    <section class="galeria">
+      <h3>Trabajos anteriores</h3>
+      <div class="imagenes-container" id="imagenes-container"></div>
+      <input type="file" id="file-input" accept="image/*" hidden />
+      <button id="agregar-imagen">➕ Agregar imagen</button>
+    </section>
+  </main>
+
+  <script src="../scripts/mi-cuenta.js"></script>
+</body>
+</html>

@@ -1,10 +1,9 @@
 const loginForm = document.getElementById("modalLoginForm");
 const emailInput = document.getElementById("modalEmail");
 const passwordInput = document.getElementById("modalPassword");
-const forgotPasswordLink = document.getElementById("modalForgotPassword");
 
 if (loginForm) {
-  loginForm.addEventListener("submit", (event) => {
+  loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const email = emailInput.value.trim();
@@ -19,75 +18,62 @@ if (loginForm) {
       return;
     }
 
-    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-    const user = usuarios.find(u => u.email === email && u.password === password);
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-    if (!user) {
+      const data = await response.json();
+
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "Error al iniciar sesión",
+          text: data.error || "Correo o contraseña incorrectos.",
+        });
+        return;
+      }
+
+      // Usuario correcto
+      const user = data;
+
+      const currentUser = {
+        isLoggedIn: true,
+        email: user.email,
+        nombre: user.nombre,
+        tipo: user.tipo
+      };
+
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+      const modalInstance = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
+      modalInstance.hide();
+
+      const loginBtn = document.querySelector("button[data-bs-target='#exampleModal']");
+      if (loginBtn) {
+        loginBtn.outerHTML = `
+          <a href="mi-cuenta.html" class="btn btn-outline-success">
+            Mi cuenta
+          </a>
+        `;
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: `¡Bienvenido, ${user.nombre}!`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+    } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Error al iniciar sesión",
-        text: "Correo o contraseña incorrectos.",
+        title: "Error de conexión",
+        text: "No se pudo conectar con el servidor.",
       });
-      return;
+      console.error(error);
     }
-
-    // Guardar sesión
-    const currentUser = {
-      isLoggedIn: true,
-      email: user.email,
-      nombre: user.nombre,
-    };
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-
-    // Cerrar modal
-    const modalInstance = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
-    modalInstance.hide();
-
-    // Reemplazar botón de login por "Mi cuenta"
-    const loginBtn = document.querySelector("button[data-bs-target='#exampleModal']");
-    if (loginBtn) {
-      loginBtn.outerHTML = `
-        <a href="./pages/mi-cuenta.html" class="btn btn-outline-success">
-          Mi cuenta
-        </a>
-      `;
-    }
-
-    Swal.fire({
-      icon: "success",
-      title: `¡Bienvenido, ${user.nombre}!`,
-      timer: 1500,
-      showConfirmButton: false,
-    });
   });
 }
-
-/* Recuperar contraseña
-if (forgotPasswordLink) {
-  forgotPasswordLink.addEventListener("click", async () => {
-    const { value: email } = await Swal.fire({
-      title: "Recuperar contraseña",
-      input: "email",
-      inputLabel: "Ingresá tu correo electrónico",
-      inputPlaceholder: "ejemplo@correo.com",
-      showCancelButton: true,
-      confirmButtonText: "Enviar",
-      cancelButtonText: "Cancelar",
-    });
-
-    if (email) {
-      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-      const user = usuarios.find(u => u.email === email);
-
-      if (!user) {
-        Swal.fire("No se encontró ninguna cuenta con ese correo.", "", "error");
-      } else {
-        Swal.fire({
-          icon: "success",
-          title: "Recuperación simulada",
-          html: `Tu contraseña es: <b>${user.password}</b>`,
-        });
-      }
-    }
-  });
-}*/
