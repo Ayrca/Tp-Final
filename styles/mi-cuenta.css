@@ -1,0 +1,67 @@
+.cuenta-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.perfil-usuario {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.avatar-img {
+  width: 100px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.estado {
+  margin-top: 10px;
+}
+
+.estado-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20px;
+  background: #28a745;
+  color: white;
+  cursor: pointer;
+}
+
+.estado-btn.inactivo {
+  background: #dc3545;
+}
+
+.descripcion {
+  margin-bottom: 30px;
+}
+
+.descripcion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.descripcion-texto {
+  background: #f3f3f3;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.galeria img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin: 10px;
+  position: relative;
+}
+
+.imagenes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
