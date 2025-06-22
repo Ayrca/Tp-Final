@@ -117,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const password = document.getElementById('password').value;
     const confirmarPassword = document.getElementById('confirmar-password').value;
     const empresa = document.getElementById('empresa')?.value.trim() || '';
+    const telefono = document.getElementById('telefono').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+
 
     if (password !== confirmarPassword) {
       Swal.fire('Las contraseñas no coinciden');
@@ -128,15 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
       ? [...document.querySelectorAll('.rubro-select')].map(s => s.value)
       : [];
 
-    const nuevoUsuario = {
-      nombre,
-      apellido,
-      email,
-      password,
-      tipo: tipoUsuario,
-      rubros,
-      empresa: tipoUsuario === 'profesional' ? empresa : ''
-    };
+      const nuevoUsuario = {
+        nombre,
+        apellido,
+        email,
+        password,
+        tipo: tipoUsuario,
+        rubros,
+        empresa: tipoUsuario === 'profesional' ? empresa : '',
+        telefono,
+        direccion
+      };
 
     try {
     const response = await fetch('http://localhost:3000/registro', {
@@ -153,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       Swal.fire('Registro exitoso').then(() => {
-        window.location.href = 'login.html';
+        window.location.href = '../index.html';
       });
 
     } catch (error) {

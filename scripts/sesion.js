@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginBtn = document.querySelector("button[data-bs-target='#exampleModal']");
     if (loginBtn) {
       loginBtn.outerHTML = `
-        <a href="./pages/mi-cuenta.html" class="btn btn-outline-success">
+          <a href="./pages/mi-cuenta.html" class="btn btn-outline-success">
           Mi cuenta
         </a>
       `;

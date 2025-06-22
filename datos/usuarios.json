@@ -4,8 +4,24 @@
     "apellido": "Amaya",
     "email": "naa87.1993@gmail.com",
     "password": "123456",
-    "tipo": "comun",
+    "tipo": "profesional",
     "rubros": [],
     "empresa": ""
+  },
+  {
+    "nombre": "Ignacio Gaston",
+    "apellido": "Amaya",
+    "email": "ignacioamaya04@gmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "arquitecto",
+      "contador",
+      "programador",
+      "electricista"
+    ],
+    "empresa": "Nacho Inc",
+    "telefono": "2284502063",
+    "direccion": "25 de Mayo 1755"
   }
 ]
