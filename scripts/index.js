@@ -275,6 +275,25 @@ function crearPropaganda(publicidad) {
 
 
 /*llamado del json y ejecucion de los carruseles, con el buscador en tiempo real*/ 
+
+Promise.all([
+  fetch('datos/datos.json').then(response => response.json()),
+  fetch('datos/publicidad.json').then(response => response.json())
+])
+.then(([dataOficios, dataPublicidad]) => {
+  oficiosData = dataOficios.oficios;
+  crearArticulos(oficiosData);
+  crearPropaganda(dataPublicidad.publicidad); // o el array que corresponda
+  buscador.addEventListener('input', buscarOficios);
+  buscador.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && oficioSeleccionado) {
+      localStorage.setItem('categoria', oficioSeleccionado.nombre);
+      window.location.href = 'pages/listaProfesionales.html';
+    }
+  });
+})
+.catch(error => console.error('Error al cargar datos:', error));
+/*
 fetch('datos/datos.json')
   .then(response => response.json())
   .then(data => {
@@ -289,4 +308,4 @@ fetch('datos/datos.json')
       }
     });
   })
-  .catch(error => console.error('Error al cargar datos:', error));
+  .catch(error => console.error('Error al cargar datos:', error));*/

@@ -23,5 +23,18 @@
     "empresa": "Nacho Inc",
     "telefono": "2284502063",
     "direccion": "25 de Mayo 1755"
+  },
+  {
+    "nombre": "Franker",
+    "apellido": "Arcidiacono",
+    "email": "rbc_ocp@hotmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "contador"
+    ],
+    "empresa": "FrankerAcount",
+    "telefono": "2284589286",
+    "direccion": "gralpaz1233"
   }
 ]

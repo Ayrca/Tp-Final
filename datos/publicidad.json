@@ -1,0 +1,133 @@
+{
+  "publicidad": [
+    {
+      "id": 1,
+      "nombre": "Casa Ropa Puro Marcas",
+      "imagen": "../assets/images/patro/patroN1.png"
+    },
+    {
+      "id": 2,
+      "nombre": "Ferreterias Expres",
+      "imagen": "../assets/images/patro/patroN2.png"
+    },
+    {
+      "id": 3,
+      "nombre": "Casa Gary",
+      "imagen": "../assets/images/patro/patroN3.png"
+    },
+    {
+      "id": 4,
+      "nombre": "La Cocina de cacho",
+      "imagen": "../assets/images/patro/patroN4.png"
+    },
+    {
+      "id": 5,
+      "nombre": "Tropi Podas",
+      "imagen": "../assets/images/patro/patroN5.png"
+    }
+  ],
+  "publicidad1": [
+    {
+      "id": 1,
+      "nombre": "Casa Ropa Puro Marcas",
+      "imagen": "../assets/images/patro/patroN1.png"
+    },
+    {
+      "id": 2,
+      "nombre": "Ferreterias Expres",
+      "imagen": "../assets/images/patro/patroN2.png"
+    },
+    {
+      "id": 3,
+      "nombre": "Casa Gary",
+      "imagen": "../assets/images/patro/patroN3.png"
+    },
+    {
+      "id": 4,
+      "nombre": "La Cocina",
+      "imagen": "../assets/images/patro/patroN4.png"
+    },
+    {
+      "id": 5,
+      "nombre": "Tropi Podas",
+      "imagen": "../assets/images/patro/patroN5.png"
+    },
+    {
+      "id": 6,
+      "nombre": "Casa Ropa Puro Marcas",
+      "imagen": "../assets/images/patro/patroN1.png"
+    },
+    {
+      "id": 7,
+      "nombre": "Ferreterias Expres",
+      "imagen": "../assets/images/patro/patroN2.png"
+    },
+    {
+      "id": 8,
+      "nombre": "Casa Gary",
+      "imagen": "../assets/images/patro/patroN3.png"
+    },
+    {
+      "id": 9,
+      "nombre": "La Cocina",
+      "imagen": "../assets/images/patro/patroN4.png"
+    },
+    {
+      "id": 10,
+      "nombre": "0Tropi Podas",
+      "imagen": "../assets/images/patro/patroN5.png"
+    }
+  ],
+  "publicidad2": [
+    {
+      "id": 1,
+      "nombre": "Casa Ropa Puro Marcas",
+      "imagen": "../assets/images/patro/patroN1.png"
+    },
+    {
+      "id": 2,
+      "nombre": "Ferreterias Expres",
+      "imagen": "../assets/images/patro/patroN2.png"
+    },
+    {
+      "id": 3,
+      "nombre": "Casa Gary",
+      "imagen": "../assets/images/patro/patroN3.png"
+    },
+    {
+      "id": 4,
+      "nombre": "La Cocina",
+      "imagen": "../assets/images/patro/patroN4.png"
+    },
+    {
+      "id": 5,
+      "nombre": "Tropi Podas",
+      "imagen": "../assets/images/patro/patroN5.png"
+    },
+    {
+      "id": 6,
+      "nombre": "Casa Ropa Puro Marcas",
+      "imagen": "../assets/images/patro/patroN1.png"
+    },
+    {
+      "id": 7,
+      "nombre": "Ferreterias Expres",
+      "imagen": "../assets/images/patro/patroN2.png"
+    },
+    {
+      "id": 8,
+      "nombre": "Casa Gary",
+      "imagen": "../assets/images/patro/patroN3.png"
+    },
+    {
+      "id": 9,
+      "nombre": "La Cocina",
+      "imagen": "../assets/images/patro/patroN4.png"
+    },
+    {
+      "id": 10,
+      "nombre": "Tropi Podas",
+      "imagen": "../assets/images/patro/patroN5.png"
+    }
+  ]
+}

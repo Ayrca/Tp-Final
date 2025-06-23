@@ -3,21 +3,23 @@ const fs = require('fs');
 const path = require('path');
 const port = 3000;
 
+// Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
-  res.writeHead(statusCode, { 
+  res.writeHead(statusCode, {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
     'Access-Control-Allow-Headers': 'Content-Type'
   });
   res.end(JSON.stringify(obj));
 }
 
 http.createServer((req, res) => {
+   try {
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Content-Length': '0',
     });
@@ -25,17 +27,119 @@ http.createServer((req, res) => {
     return;
   }
 
+
+
+// Función para leer publicidad
+function leerPublicidad(callback) {
+  const filePath = path.join(__dirname, 'datos', 'publicidad.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    const publicidad = JSON.parse(data);
+    callback(null, publicidad);
+  });
+}
+
+// Función para agregar publicidad
+
+function agregarPublicidad(nombreArray, nuevoObjeto, callback) {
+  const filePath = path.join(__dirname, 'datos', 'publicidad.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    const publicidad = JSON.parse(data);
+    if (!publicidad[nombreArray]) {
+      callback(new Error(`Array ${nombreArray} no encontrado`));
+      return;
+    }
+    nuevoObjeto.id = publicidad[nombreArray].length + 1;
+    publicidad[nombreArray].push(nuevoObjeto);
+    fs.writeFile(filePath, JSON.stringify(publicidad, null, 2), (err) => {
+      if (err) {
+        callback(err);
+        return;
+      }
+      callback(null);
+    });
+  });
+}
+
+
+// Función para modificar publicidad
+function modificarPublicidad(nombreArray, idObjeto, nuevosDatos, callback) {
+  const filePath = path.join(__dirname, 'datos', 'publicidad.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    const publicidad = JSON.parse(data);
+    if (!publicidad[nombreArray]) {
+      callback(new Error(`Array ${nombreArray} no encontrado`));
+      return;
+    }
+    const indice = publicidad[nombreArray].findIndex((obj) => obj.id === parseInt(idObjeto));
+    if (indice !== -1) {
+      publicidad[nombreArray][indice] = { ...publicidad[nombreArray][indice], ...nuevosDatos };
+      fs.writeFile(filePath, JSON.stringify(publicidad, null, 2), (err) => {
+        if (err) {
+          callback(err);
+          return;
+        }
+        callback(null);
+      });
+    } else {
+      callback(new Error('Objeto no encontrado'));
+    }
+  });
+}
+
+
+function eliminarPublicidad(nombreArray, idObjeto, callback) {
+  const filePath = path.join(__dirname, 'datos', 'publicidad.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    const publicidad = JSON.parse(data);
+    if (!publicidad[nombreArray]) {
+      callback(new Error(`Array ${nombreArray} no encontrado`));
+      return;
+    }
+    const indice = publicidad[nombreArray].findIndex((obj) => obj.id === parseInt(idObjeto));
+    if (indice !== -1) {
+      publicidad[nombreArray].splice(indice, 1);
+      // Actualiza los IDs después de eliminar un objeto
+      publicidad[nombreArray] = publicidad[nombreArray].map((obj, index) => ({ ...obj, id: index + 1 }));
+      fs.writeFile(filePath, JSON.stringify(publicidad, null, 2), (err) => {
+        if (err) {
+          callback(err);
+          return;
+        }
+        callback(null);
+      });
+    } else {
+      callback(new Error('Objeto no encontrado'));
+    }
+  });
+}
+
+
+  // Rutas para usuarios y login
   if (req.method === 'POST' && req.url === '/registro') {
     let body = '';
     req.on('data', chunk => {
       body += chunk.toString();
     });
-
     req.on('end', () => {
       try {
         const nuevoUsuario = JSON.parse(body);
         const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
-
         fs.readFile(usuariosPath, 'utf8', (err, data) => {
           let usuarios = [];
           if (!err) {
@@ -46,32 +150,27 @@ http.createServer((req, res) => {
               usuarios = [];
             }
           }
-
           if (usuarios.find(u => u.email === nuevoUsuario.email)) {
             sendJSON(res, 400, { error: 'El email ya está registrado' });
             return;
           }
-
           usuarios.push(nuevoUsuario);
-
           fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
             if (err) {
               sendJSON(res, 500, { error: 'Error al guardar usuario' });
               return;
             }
-
-            sendJSON(res, 200, { success: true });
+            
+             sendJSON(res, 200, { success: true });
           });
         });
-
       } catch (error) {
         sendJSON(res, 400, { error: 'JSON inválido' });
       }
     });
-
     return;
 
-  } else if (req.method === 'POST' && req.url === '/login') {
+} else if (req.method === 'POST' && req.url === '/login') {
     let body = '';
     req.on('data', chunk => {
       body += chunk.toString();
@@ -114,37 +213,155 @@ http.createServer((req, res) => {
     return;
   }
 
-  // Archivos estáticos
-  const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
-  const ext = path.extname(filePath);
 
-  const contentType = {
-    '.html': 'text/html',
-    '.js': 'text/javascript',
-    '.json': 'application/json',
-    '.css': 'text/css',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.gif': 'image/gif',
-  };
+    /*
+  } else if (req.method === 'POST' && req.url === '/login') {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      try {
+        const { email, password } = JSON.parse(body);
+        const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+        fs.readFile(usuariosPath, 'utf8', (err, data) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+            return;
+          }
+          let usuarios;
+          try {
+            usuarios = JSON.parse(data);
+          } catch {
+            usuarios = [];
+          }
+          const user = usuarios.find(u => u.email === email && u.password === password);
+          if (!user) {
+            sendJSON(res, 401, { error: 'Correo o contraseña incorrectos' });
+            return;
+          }
+          const { password: _, ...userSinPassword } = user;
+          sendJSON(res, 200, userSinPassword);
+        });
+      } catch {
+        sendJSON(res, 400, { error: 'JSON inválido' });
+      }
+    });
+    return;
+  }
+*/
 
-  fs.readFile(filePath, (err, content) => {
-    if (err) {
-      res.writeHead(404, {
-        'Access-Control-Allow-Origin': '*'
+
+
+  // Rutas para publicidad
+  
+  else if (req.method === 'GET' && req.url === '/datos/publicidad') {
+    leerPublicidad((err, publicidad) => {
+      if (err) {
+        sendJSON(res, 500, { error: 'Error leyendo publicidad' });
+      } else {
+        sendJSON(res, 200, publicidad);
+      }
+    });
+
+
+  }else if (req.method === 'POST' && req.url.startsWith('/publicidad/')) {
+    console.log('Ruta alcanzada:', req.url);
+  const urlParts = req.url.split('/');
+  if (urlParts.length < 3) {
+    sendJSON(res, 400, { error: 'Nombre del array no proporcionado' });
+    return;
+  }
+  const nombreArray = urlParts[2];
+  console.log('Nombre del array:', nombreArray);
+  let body = '';
+  req.on('data', (chunk) => {
+    body += chunk;
+  });
+  req.on('end', () => {
+    try {
+      const objeto = JSON.parse(body);
+      agregarPublicidad(nombreArray, objeto, (err) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error agregando publicidad' });
+        } else {
+          sendJSON(res, 201, objeto);
+        }
       });
-      res.end('Not found');
-    } else {
-      const type = contentType[ext] || 'application/octet-stream';
-      res.writeHead(200, {
-        'Content-Type': type,
-        'Access-Control-Allow-Origin': '*'
-      });
-      res.end(content);
+    } catch (err) {
+      sendJSON(res, 400, { error: 'Cuerpo de la solicitud inválido' });
     }
   });
 
+  } else if (req.method === 'PUT' && req.url.startsWith('/publicidad/')) {
+  const urlParts = req.url.split('/');
+  const nombreArray = urlParts[2];
+  const idObjeto = urlParts[3];
+  let body = '';
+  req.on('data', (chunk) => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const nuevosDatos = JSON.parse(body);
+      modificarPublicidad(nombreArray, idObjeto, nuevosDatos, (err) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error modificando publicidad' });
+        } else {
+          sendJSON(res, 200, { success: true });
+        }
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+}
+
+  
+else if (req.method === 'DELETE' && req.url.startsWith('/publicidad/')) {
+  const urlParts = req.url.split('/');
+  const nombreArray = urlParts[2];
+  const idObjeto = urlParts[3];
+  eliminarPublicidad(nombreArray, idObjeto, (err) => {
+    if (err) {
+      sendJSON(res, 500, { error: 'Error eliminando publicidad' });
+    } else {
+      sendJSON(res, 200, { success: true });
+    }
+  });
+}
+
+  // Archivos estáticos
+  else {
+    const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
+    const ext = path.extname(filePath);
+    const contentType = {
+      '.html': 'text/html',
+      '.js': 'text/javascript',
+      '.json': 'application/json',
+      '.css': 'text/css',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.gif': 'image/gif',
+    };
+    fs.readFile(filePath, (err, content) => {
+      if (err) {
+        res.writeHead(404, { 'Access-Control-Allow-Origin': '*' });
+        res.end('Not found');
+      } else {
+        const type = contentType[ext] || 'application/octet-stream';
+        res.writeHead(200, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*' });
+        res.end(content);
+      }
+    });
+  }
+
+
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    sendJSON(res, 500, { error: 'Error interno del servidor' });
+  }
 }).listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port}`);
 });
