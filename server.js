@@ -15,7 +15,7 @@ function sendJSON(res, statusCode, obj) {
 }
 
 http.createServer((req, res) => {
-   try {
+  try {
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
@@ -26,8 +26,6 @@ http.createServer((req, res) => {
     res.end();
     return;
   }
-
-
 
 // Función para leer publicidad
 function leerPublicidad(callback) {
@@ -43,7 +41,6 @@ function leerPublicidad(callback) {
 }
 
 // Función para agregar publicidad
-
 function agregarPublicidad(nombreArray, nuevoObjeto, callback) {
   const filePath = path.join(__dirname, 'datos', 'publicidad.json');
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -67,7 +64,6 @@ function agregarPublicidad(nombreArray, nuevoObjeto, callback) {
     });
   });
 }
-
 
 // Función para modificar publicidad
 function modificarPublicidad(nombreArray, idObjeto, nuevosDatos, callback) {
@@ -98,7 +94,7 @@ function modificarPublicidad(nombreArray, idObjeto, nuevosDatos, callback) {
   });
 }
 
-
+// Función para eliminar publicidad
 function eliminarPublicidad(nombreArray, idObjeto, callback) {
   const filePath = path.join(__dirname, 'datos', 'publicidad.json');
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -128,7 +124,6 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     }
   });
 }
-
 
   // Rutas para usuarios y login
   if (req.method === 'POST' && req.url === '/registro') {
@@ -161,7 +156,7 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
               return;
             }
             
-             sendJSON(res, 200, { success: true });
+            sendJSON(res, 200, { success: true });
           });
         });
       } catch (error) {
@@ -213,48 +208,7 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     return;
   }
 
-
-    /*
-  } else if (req.method === 'POST' && req.url === '/login') {
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
-      try {
-        const { email, password } = JSON.parse(body);
-        const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
-        fs.readFile(usuariosPath, 'utf8', (err, data) => {
-          if (err) {
-            sendJSON(res, 500, { error: 'Error leyendo usuarios' });
-            return;
-          }
-          let usuarios;
-          try {
-            usuarios = JSON.parse(data);
-          } catch {
-            usuarios = [];
-          }
-          const user = usuarios.find(u => u.email === email && u.password === password);
-          if (!user) {
-            sendJSON(res, 401, { error: 'Correo o contraseña incorrectos' });
-            return;
-          }
-          const { password: _, ...userSinPassword } = user;
-          sendJSON(res, 200, userSinPassword);
-        });
-      } catch {
-        sendJSON(res, 400, { error: 'JSON inválido' });
-      }
-    });
-    return;
-  }
-*/
-
-
-
-  // Rutas para publicidad
-  
+  // Rutas para publicidad  
   else if (req.method === 'GET' && req.url === '/datos/publicidad') {
     leerPublicidad((err, publicidad) => {
       if (err) {
@@ -263,7 +217,6 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
         sendJSON(res, 200, publicidad);
       }
     });
-
 
   }else if (req.method === 'POST' && req.url.startsWith('/publicidad/')) {
     console.log('Ruta alcanzada:', req.url);
@@ -316,9 +269,8 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     }
   });
 }
-
   
-else if (req.method === 'DELETE' && req.url.startsWith('/publicidad/')) {
+    else if (req.method === 'DELETE' && req.url.startsWith('/publicidad/')) {
   const urlParts = req.url.split('/');
   const nombreArray = urlParts[2];
   const idObjeto = urlParts[3];
@@ -329,6 +281,79 @@ else if (req.method === 'DELETE' && req.url.startsWith('/publicidad/')) {
       sendJSON(res, 200, { success: true });
     }
   });
+}
+
+//Actualizar descripcion del profesional
+else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const { email, descripcion, estado, imagenes } = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+          return;
+        }
+        let usuarios = JSON.parse(data);
+        const index = usuarios.findIndex(u => u.email === email);
+        if (index === -1) {
+          sendJSON(res, 404, { error: 'Usuario no encontrado' });
+          return;
+        }
+        usuarios[index].descripcion = descripcion;
+        usuarios[index].estado = estado;
+        usuarios[index].imagenes = imagenes;
+        fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error al guardar cambios' });
+            return;
+          }
+          sendJSON(res, 200, { success: true });
+        });
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+//Subir imagen de trabajos
+else if (req.method === 'POST' && req.url === '/subirImagen') {
+  const formidable = require('formidable');
+  const { v4: uuidv4 } = require('uuid');
+  const form = new formidable.IncomingForm({ multiples: false });
+  const uploadDir = path.join(__dirname, 'assets', 'imagenesProfesionales');
+
+  form.uploadDir = uploadDir;
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      sendJSON(res, 500, { error: 'Error al procesar archivo' });
+      return;
+    }
+    const file = files.imagen;
+    if (!file) {
+      sendJSON(res, 400, { error: 'No se recibió ninguna imagen' });
+      return;
+    }
+    const ext = path.extname(file.originalFilename);
+    const newFileName = uuidv4() + ext;
+    const newPath = path.join(uploadDir, newFileName);
+    fs.rename(file.filepath, newPath, (err) => {
+      if (err) {
+        sendJSON(res, 500, { error: 'Error al guardar imagen' });
+        return;
+      }
+      sendJSON(res, 200, { success: true, filename: newFileName });
+    });
+  });
+  return;
 }
 
   // Archivos estáticos
@@ -356,7 +381,6 @@ else if (req.method === 'DELETE' && req.url.startsWith('/publicidad/')) {
       }
     });
   }
-
 
   } catch (error) {
     console.error('Error en el servidor:', error);

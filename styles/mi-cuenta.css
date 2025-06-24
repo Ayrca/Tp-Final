@@ -28,6 +28,7 @@
   background: #28a745;
   color: white;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .estado-btn.inactivo {
@@ -50,18 +51,75 @@
   padding: 10px;
   border: 1px solid #ccc;
   margin-top: 10px;
+  border-radius: 4px;
 }
 
-.galeria img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  margin: 10px;
-  position: relative;
+/* Mostrar visualmente cuando está editable */
+.descripcion-texto[contenteditable="true"] {
+  border: 1px dashed #999;
+  background: #fff;
+  outline: none;
+}
+
+.acciones-descripcion button {
+  margin-left: 5px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.acciones-descripcion button:hover {
+  opacity: 0.7;
+}
+
+.galeria {
+  margin-bottom: 30px;
 }
 
 .imagenes-container {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.imagen-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.imagen-wrapper img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.eliminar-img {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#agregar-imagen {
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#agregar-imagen:hover {
+  background: #0056b3;
 }
