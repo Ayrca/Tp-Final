@@ -22,7 +22,10 @@
     ],
     "empresa": "Nacho Inc",
     "telefono": "2284502063",
-    "direccion": "25 de Mayo 1755"
+    "direccion": "25 de Mayo 1755",
+    "descripcion": "Probando descripcion",
+    "estado": true,
+    "imagenes": []
   },
   {
     "nombre": "Franker",

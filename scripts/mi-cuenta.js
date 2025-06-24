@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const editarBtn = document.getElementById('editar-desc');
   const guardarBtn = document.getElementById('guardar-desc');
   const cancelarBtn = document.getElementById('cancelar-desc');
-  const estadoBtn = document.getElementById('estado-toggle');
+  const estadoBtn = document.getElementById('toggle-estado');
   const fileInput = document.getElementById('file-input');
   const agregarImagenBtn = document.getElementById('agregar-imagen');
   const imagenesContainer = document.getElementById('imagenes-container');
@@ -40,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cancelarBtn.hidden = false;
   });
 
-  guardarBtn.addEventListener('click', () => {
+  guardarBtn.addEventListener('click', async () => {
     descripcionTexto.contentEditable = false;
     descripcion = descripcionTexto.textContent.trim();
-    guardarEnLocal();
+    await guardarEnServidor();
     editarBtn.hidden = false;
     guardarBtn.hidden = true;
     cancelarBtn.hidden = true;
@@ -58,11 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Estado
-  estadoBtn.addEventListener('click', () => {
+  estadoBtn.addEventListener('click', async () => {
     estado = !estado;
     estadoBtn.textContent = estado ? 'Activo' : 'Inactivo';
     estadoBtn.classList.toggle('inactivo', !estado);
-    guardarEnLocal();
+    await guardarEnServidor();
   });
 
   // Cargar imágenes
@@ -78,9 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const x = document.createElement('button');
       x.textContent = '✖';
       x.className = 'eliminar-img';
-      x.addEventListener('click', () => {
+      x.addEventListener('click', async () => {
         imagenes.splice(index, 1);
-        guardarEnLocal();
+        await guardarEnServidor();
         renderImagenes();
       });
 
@@ -94,27 +94,61 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.click();
   });
 
-  fileInput.addEventListener('change', () => {
+  fileInput.addEventListener('change', async () => {
     const archivo = fileInput.files[0];
-    if (archivo) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        imagenes.push(e.target.result);
-        guardarEnLocal();
-        renderImagenes();
-      };
-      reader.readAsDataURL(archivo);
+    if (!archivo) return;
+
+    const formData = new FormData();
+    formData.append('imagen', archivo);
+
+    try {
+      const response = await fetch('http://localhost:3000/subirImagen', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.filename) {
+        alert('Error al subir la imagen');
+        return;
+      }
+
+      const url = `../assets/imagenesProfesionales/${data.filename}`;
+      imagenes.push(url);
+      await guardarEnServidor();
+      renderImagenes();
+    } catch (error) {
+      console.error('Error al subir imagen:', error);
     }
   });
 
-  function guardarEnLocal() {
+  // Guardar cambios en el servidor
+  async function guardarEnServidor() {
     const actualizado = {
-      ...currentUser,
+      email: currentUser.email,
       descripcion,
       imagenes,
       estado
     };
-    localStorage.setItem('currentUser', JSON.stringify(actualizado));
+
+    try {
+      const response = await fetch('http://localhost:3000/actualizarPerfil', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(actualizado)
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.error || 'Error al actualizar perfil');
+        return;
+      }
+
+      localStorage.setItem('currentUser', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error al actualizar perfil:', error);
+    }
   }
 
   renderImagenes();
