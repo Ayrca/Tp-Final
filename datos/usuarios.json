@@ -6,14 +6,17 @@
     "password": "123456",
     "tipo": "profesional",
     "rubros": [
-      "Abogado"
+      "Abogado",
+      "Contador"
     ],
     "empresa": "Nacho Inc",
     "telefono": "2284502063",
-    "direccion": "25 de Mayo 1775",
+    "direccion": "25 de Mayo 1755",
     "descripcion": "",
     "estado": true,
-    "imagenes": []
+    "imagenes": [
+      "/assets/imagenesProfesionales/21917bc6-fd98-41f3-9143-27d9170ff925.jpeg"
+    ]
   },
   {
     "nombre": "Franker",
