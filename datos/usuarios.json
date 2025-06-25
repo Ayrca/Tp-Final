@@ -35,5 +35,16 @@
     "descripcion": "",
     "estado": true,
     "imagenes": []
+  },
+  {
+    "nombre": "Ayrton",
+    "apellido": "Carli",
+    "email": "ayrton@gmail.com",
+    "password": "123456",
+    "tipo": "comun",
+    "rubros": [],
+    "empresa": "",
+    "telefono": "2284",
+    "direccion": "Bolivar 1943"
   }
 ]
