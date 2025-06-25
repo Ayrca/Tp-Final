@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let imagenes = currentUser.imagenes || [];
   let estado = currentUser.estado !== false;
   let rubros = Array.isArray(currentUser.rubros) ? [...currentUser.rubros] : [];
+  let modoEdicion = false;
+
 
   // Mostrar datos
   nombreEl.textContent = `${currentUser.nombre} ${currentUser.apellido}`;
@@ -43,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   estadoBtn.classList.toggle('inactivo', !estado);
   renderRubros();
   renderImagenes();
+  rubroNuevoContainer.hidden = true;
+
 
   // Cargar opciones de rubros desde el backend
   fetch('http://localhost:3000/datos/oficios')
@@ -58,11 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(err => console.error('Error cargando oficios:', err));
 
   // Rubros
-  function renderRubros() {
-    listaRubros.innerHTML = '';
-    rubros.forEach((rubro, index) => {
-      const li = document.createElement('li');
-      li.textContent = rubro;
+function renderRubros() {
+  listaRubros.innerHTML = '';
+  rubros.forEach((rubro, index) => {
+    const li = document.createElement('li');
+    li.textContent = rubro;
+    if (modoEdicion) {
       const btn = document.createElement('button');
       btn.textContent = '❌';
       btn.onclick = () => {
@@ -70,9 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRubros();
       };
       li.appendChild(btn);
-      listaRubros.appendChild(li);
-    });
-  }
+    }
+    listaRubros.appendChild(li);
+  });
+}
 
   agregarRubroBtn.addEventListener('click', () => {
     const nuevo = nuevoRubroSelect.value.trim();
@@ -91,22 +97,28 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Botón editar
-  editarBtn.addEventListener('click', () => {
-    [emailEl, telefonoEl, direccionEl, empresaEl].forEach(input => input.disabled = false);
-    descripcionTexto.contentEditable = true;
-    rubroNuevoContainer.hidden = false;
-    editarBtn.hidden = true;
-    guardarBtn.hidden = false;
-    cancelarBtn.hidden = false;
-  });
+editarBtn.addEventListener('click', () => {
+  modoEdicion = true;
+  [emailEl, telefonoEl, direccionEl, empresaEl].forEach(input => input.disabled = false);
+  descripcionTexto.contentEditable = true;
+  rubroNuevoContainer.hidden = false;
+  editarBtn.hidden = true;
+  guardarBtn.hidden = false;
+  cancelarBtn.hidden = false;
+  renderRubros(); // Redibujamos para que aparezcan las ❌
+});
 
   // Botón cancelar
-  cancelarBtn.addEventListener('click', () => {
-    window.location.reload();
-  });
+cancelarBtn.addEventListener('click', () => {
+  modoEdicion = false;
+  rubroNuevoContainer.hidden = true;
+  window.location.reload();
+});
 
   // Botón guardar
-  guardarBtn.addEventListener('click', async () => {
+    guardarBtn.addEventListener('click', async () => {
+      modoEdicion = false;
+      rubroNuevoContainer.hidden = true;
     const actualizado = {
       ...currentUser,
       email: emailEl.value.trim(),
