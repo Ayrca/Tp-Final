@@ -300,7 +300,7 @@ else if (req.method === 'GET' && req.url === '/datos/oficios') {
   });
 }
 
-//Actualizar descripcion del profesional
+//Actualizar datos del profesional
 else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   let body = '';
   req.on('data', chunk => {
@@ -308,20 +308,40 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   });
   req.on('end', () => {
     try {
-      const { email, descripcion, estado, imagenes, telefono, direccion, empresa, rubros } = JSON.parse(body);
+      const {
+        emailOriginal, // Nuevo campo
+        email,         // Nuevo email
+        descripcion,
+        estado,
+        imagenes,
+        telefono,
+        direccion,
+        empresa,
+        rubros
+      } = JSON.parse(body);
+
       const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
       fs.readFile(usuariosPath, 'utf8', (err, data) => {
         if (err) {
           sendJSON(res, 500, { error: 'Error leyendo usuarios' });
           return;
         }
+
         let usuarios = JSON.parse(data);
-        const index = usuarios.findIndex(u => u.email === email);
+        const index = usuarios.findIndex(u => u.email === emailOriginal);
         if (index === -1) {
           sendJSON(res, 404, { error: 'Usuario no encontrado' });
           return;
         }
-        // Actualizar campos editables
+
+        // Verificar que el nuevo email no esté siendo usado por otro usuario
+        if (email !== emailOriginal && usuarios.some(u => u.email === email)) {
+          sendJSON(res, 409, { error: 'El nuevo email ya está en uso' });
+          return;
+        }
+
+        // Actualizar campos
+        usuarios[index].email = email;
         usuarios[index].descripcion = descripcion;
         usuarios[index].estado = estado;
         usuarios[index].imagenes = imagenes;
@@ -335,8 +355,8 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
             sendJSON(res, 500, { error: 'Error al guardar cambios' });
             return;
           }
-          // Enviar el usuario completo actualizado para que frontend lo guarde en localStorage
-          const { password, ...usuarioSinPassword } = usuarios[index]; // excluye password
+
+          const { password, ...usuarioSinPassword } = usuarios[index];
           sendJSON(res, 200, usuarioSinPassword);
         });
       });
@@ -354,29 +374,70 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
   const form = new formidable.IncomingForm({ multiples: false });
   const uploadDir = path.join(__dirname, 'assets', 'imagenesProfesionales');
 
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
   form.uploadDir = uploadDir;
   form.keepExtensions = true;
 
   form.parse(req, (err, fields, files) => {
     if (err) {
+      console.error('Error al parsear con formidable:', err);
       sendJSON(res, 500, { error: 'Error al procesar archivo' });
       return;
     }
-    const file = files.imagen;
-    if (!file) {
-      sendJSON(res, 400, { error: 'No se recibió ninguna imagen' });
+
+    let file = files.imagen;
+    if (Array.isArray(file)) file = file[0];
+
+    if (!file || !file.originalFilename) {
+      sendJSON(res, 400, { error: 'No se recibió ninguna imagen válida' });
       return;
     }
+
     const ext = path.extname(file.originalFilename);
     const newFileName = uuidv4() + ext;
     const newPath = path.join(uploadDir, newFileName);
+
     fs.rename(file.filepath, newPath, (err) => {
       if (err) {
+        console.error('Error al mover archivo:', err);
         sendJSON(res, 500, { error: 'Error al guardar imagen' });
         return;
       }
+
       sendJSON(res, 200, { success: true, filename: newFileName });
     });
+  });
+
+  return;
+}
+
+// Eliminar imagen del servidor
+else if (req.method === 'POST' && req.url === '/eliminarImagen') {
+  let body = '';
+  req.on('data', chunk => body += chunk.toString());
+  req.on('end', () => {
+    try {
+      const { filename } = JSON.parse(body);
+      if (!filename) throw new Error('Falta filename');
+
+      // Sanitizar filename para evitar path traversal
+      const safeFilename = path.basename(filename);
+      const imgPath = path.join(__dirname, 'assets', 'imagenesProfesionales', safeFilename);
+
+      fs.unlink(imgPath, (err) => {
+        if (err) {
+          console.error('Error eliminando imagen:', err);
+          sendJSON(res, 500, { error: 'No se pudo eliminar la imagen' });
+          return;
+        }
+        sendJSON(res, 200, { success: true });
+      });
+    } catch (err) {
+      sendJSON(res, 400, { error: 'JSON inválido o filename inválido' });
+    }
   });
   return;
 }
