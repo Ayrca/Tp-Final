@@ -1,29 +1,18 @@
 [
   {
-    "nombre": "Nacho",
-    "apellido": "Amaya",
-    "email": "naa87.1993@gmail.com",
-    "password": "123456",
-    "tipo": "profesional",
-    "rubros": [],
-    "empresa": ""
-  },
-  {
     "nombre": "Ignacio Gaston",
     "apellido": "Amaya",
     "email": "ignacioamaya04@gmail.com",
     "password": "123456",
     "tipo": "profesional",
     "rubros": [
-      "arquitecto",
-      "contador",
-      "programador",
-      "electricista"
+      "Plomero",
+      "Mecánico"
     ],
     "empresa": "Nacho Inc",
     "telefono": "2284502063",
-    "direccion": "25 de Mayo 1755",
-    "descripcion": "Probando descripcion",
+    "direccion": "25 de Mayo 1775",
+    "descripcion": "",
     "estado": true,
     "imagenes": []
   },
@@ -33,11 +22,12 @@
     "email": "rbc_ocp@hotmail.com",
     "password": "123456",
     "tipo": "profesional",
-    "rubros": [
-      "contador"
-    ],
+    "rubros": [],
     "empresa": "FrankerAcount",
     "telefono": "2284589286",
-    "direccion": "gralpaz1233"
+    "direccion": "gralpaz1233",
+    "descripcion": "",
+    "estado": true,
+    "imagenes": []
   }
 ]

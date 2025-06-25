@@ -39,16 +39,8 @@ if (loginForm) {
       // Usuario correcto
       const user = data;
 
-    const currentUser = {
-      isLoggedIn: true,
-      email: user.email,
-      nombre: user.nombre,
-      tipo: user.tipo,
-      telefono: user.telefono,  
-      direccion: user.direccion,
-    };
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-
+      user.isLoggedIn = true;
+      localStorage.setItem("currentUser", JSON.stringify(user));
 
       const modalInstance = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
       modalInstance.hide();
