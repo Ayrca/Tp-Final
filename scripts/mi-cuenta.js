@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cancelarBtn = document.getElementById('cancelar-datos');
 
   const listaRubros = document.getElementById('lista-rubros');
-  const nuevoRubroInput = document.getElementById('nuevo-rubro');
+  const nuevoRubroSelect = document.getElementById('nuevo-rubro');
   const agregarRubroBtn = document.getElementById('agregar-rubro');
   const rubroNuevoContainer = document.getElementById('rubro-nuevo-container');
 
@@ -44,6 +44,19 @@ document.addEventListener('DOMContentLoaded', () => {
   renderRubros();
   renderImagenes();
 
+  // Cargar opciones de rubros desde el backend
+  fetch('http://localhost:3000/datos/oficios')
+    .then(res => res.json())
+    .then(oficios => {
+      oficios.forEach(oficio => {
+        const option = document.createElement('option');
+        option.value = oficio.nombre;
+        option.textContent = oficio.nombre;
+        nuevoRubroSelect.appendChild(option);
+      });
+    })
+    .catch(err => console.error('Error cargando oficios:', err));
+
   // Rubros
   function renderRubros() {
     listaRubros.innerHTML = '';
@@ -62,10 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   agregarRubroBtn.addEventListener('click', () => {
-    const nuevo = nuevoRubroInput.value.trim();
+    const nuevo = nuevoRubroSelect.value.trim();
     if (nuevo && !rubros.includes(nuevo)) {
       rubros.push(nuevo);
-      nuevoRubroInput.value = '';
+      nuevoRubroSelect.value = '';
       renderRubros();
     }
   });

@@ -283,6 +283,23 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
   });
 }
 
+//leer oficios de datos.json
+else if (req.method === 'GET' && req.url === '/datos/oficios') {
+  const filePath = path.join(__dirname, 'datos', 'datos.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      sendJSON(res, 500, { error: 'Error leyendo datos.json' });
+      return;
+    }
+    try {
+      const datos = JSON.parse(data);
+      sendJSON(res, 200, datos.oficios || []);
+    } catch {
+      sendJSON(res, 500, { error: 'Error procesando JSON' });
+    }
+  });
+}
+
 //Actualizar descripcion del profesional
 else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   let body = '';

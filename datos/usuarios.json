@@ -6,9 +6,8 @@
     "password": "123456",
     "tipo": "profesional",
     "rubros": [
-      "programador",
-      "electricista",
-      "Carnicero"
+      "Plomero",
+      "Mecánico"
     ],
     "empresa": "Nacho Inc",
     "telefono": "2284502063",
