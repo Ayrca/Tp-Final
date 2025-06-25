@@ -291,7 +291,7 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   });
   req.on('end', () => {
     try {
-      const { email, descripcion, estado, imagenes } = JSON.parse(body);
+      const { email, descripcion, estado, imagenes, telefono, direccion, empresa, rubros } = JSON.parse(body);
       const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
       fs.readFile(usuariosPath, 'utf8', (err, data) => {
         if (err) {
@@ -304,15 +304,23 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
           sendJSON(res, 404, { error: 'Usuario no encontrado' });
           return;
         }
+        // Actualizar campos editables
         usuarios[index].descripcion = descripcion;
         usuarios[index].estado = estado;
         usuarios[index].imagenes = imagenes;
+        usuarios[index].telefono = telefono || usuarios[index].telefono;
+        usuarios[index].direccion = direccion || usuarios[index].direccion;
+        usuarios[index].empresa = empresa || usuarios[index].empresa;
+        usuarios[index].rubros = rubros || usuarios[index].rubros;
+
         fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
           if (err) {
             sendJSON(res, 500, { error: 'Error al guardar cambios' });
             return;
           }
-          sendJSON(res, 200, { success: true });
+          // Enviar el usuario completo actualizado para que frontend lo guarde en localStorage
+          const { password, ...usuarioSinPassword } = usuarios[index]; // excluye password
+          sendJSON(res, 200, usuarioSinPassword);
         });
       });
     } catch {

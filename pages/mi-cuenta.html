@@ -11,27 +11,35 @@
   <main class="cuenta-container">
     <section class="perfil-usuario">
       <img id="avatar" src="../assets/imagenesProfesionales/default-avatar.png" alt="Avatar" class="avatar-img">
-      
+
       <div class="info">
         <h2 id="profesion">Profesional</h2>
         <p><strong>Nombre y apellido:</strong> <span id="nombre"></span></p>
-        <p><strong>Telefono:</strong> <span id="telefono"></span></p>
-        <p><strong>Dirección:</strong> <span id="direccion"></span></p>
+        <p><strong>Email:</strong> <input type="email" id="email" disabled /></p>
+        <p><strong>Teléfono:</strong> <input type="tel" id="telefono" disabled /></p>
+        <p><strong>Dirección:</strong> <input type="text" id="direccion" disabled /></p>
+        <p><strong>Empresa:</strong> <input type="text" id="empresa" disabled /></p>
+        <p><strong>Rubros:</strong></p>
+        <div id="rubros" class="rubros-container">
+          <ul id="lista-rubros"></ul>
+          <div id="rubro-nuevo-container" hidden>
+            <input type="text" id="nuevo-rubro" placeholder="Nuevo rubro" />
+            <button id="agregar-rubro">➕</button>
+          </div>
+        </div>
         <div class="estado">
-          <span id="estado-label">Estado: </span>
+          <strong><span id="estado-label">Estado: </span></strong>
           <button id="toggle-estado" class="estado-btn">Activo</button>
         </div>
+        <button id="editar-datos">✏️ Modificar datos</button>
+        <button id="guardar-datos" hidden>✔️ Guardar cambios</button>
+        <button id="cancelar-datos" hidden>❌ Cancelar</button>
       </div>
     </section>
 
     <section class="descripcion">
       <div class="descripcion-header">
         <h3>Descripción de habilidades, conocimientos y trabajos anteriores</h3>
-        <div class="acciones-descripcion">
-          <button id="editar-desc" title="Editar">✏️</button>
-          <button id="guardar-desc" title="Guardar" hidden>✔️</button>
-          <button id="cancelar-desc" title="Cancelar" hidden>❌</button>
-        </div>
       </div>
       <div id="descripcion-texto" contenteditable="false" class="descripcion-texto"></div>
     </section>
