@@ -308,17 +308,19 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   });
   req.on('end', () => {
     try {
-      const {
-        emailOriginal, // Nuevo campo
-        email,         // Nuevo email
-        descripcion,
-        estado,
-        imagenes,
-        telefono,
-        direccion,
-        empresa,
-        rubros
-      } = JSON.parse(body);
+    const {
+      emailOriginal,
+      email,
+      descripcion,
+      estado,
+      imagenes,
+      telefono,
+      direccion,
+      empresa,
+      rubros,
+      avatar 
+    } = JSON.parse(body);
+
 
       const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
       fs.readFile(usuariosPath, 'utf8', (err, data) => {
@@ -349,6 +351,7 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
         usuarios[index].direccion = direccion || usuarios[index].direccion;
         usuarios[index].empresa = empresa || usuarios[index].empresa;
         usuarios[index].rubros = rubros || usuarios[index].rubros;
+        usuarios[index].avatar = avatar || usuarios[index].avatar;
 
         fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
           if (err) {

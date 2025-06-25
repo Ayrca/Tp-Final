@@ -18,12 +18,42 @@
   margin-bottom: 30px;
 }
 
+.avatar-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
 .avatar-img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  object-fit: cover;
+  display: block;
+}
+
+.cambiar-avatar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 128, 0, 0.7);
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  width: 60px;
+  height: 60px;
+  line-height: 55px;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  user-select: none;
+}
+
+.avatar-container:hover .cambiar-avatar {
+  opacity: 1;
 }
 
 .info p {
@@ -189,31 +219,39 @@
 
 .imagen-wrapper {
   position: relative;
+  display: inline-block;
+  margin: 5px;
 }
 
-.imagen-wrapper img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.eliminar-img {
+.imagen-wrapper button {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #dc3545;
-  color: white;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(255, 0, 0, 0.8);
   border: none;
+  color: white;
+  font-weight: bold;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  font-size: 14px;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  transition: background-color 0.3s ease;
+}
+
+.imagen-wrapper button:hover {
+  background-color: rgba(255, 0, 0, 1);
+}
+
+.imagen-wrapper img {
+  width: 280px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
 }
 
 #agregar-imagen {
@@ -229,4 +267,20 @@
 
 #agregar-imagen:hover {
   background-color: #0056b3;
+}
+
+#cerrar-sesion {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+#cerrar-sesion:hover {
+  background-color: #b02a37;
 }

@@ -28,11 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const agregarImagenBtn = document.getElementById('agregar-imagen');
   const imagenesContainer = document.getElementById('imagenes-container');
 
+  // NUEVAS referencias para avatar
+  const avatarEl = document.getElementById('avatar');
+  const cambiarAvatarBtn = document.getElementById('cambiar-avatar');
+  const inputAvatar = document.getElementById('input-avatar');
+
   // Variables con datos actuales del usuario
   let descripcion = currentUser.descripcion || '';
   let imagenes = currentUser.imagenes || [];
   let estado = currentUser.estado !== false;
   let rubros = Array.isArray(currentUser.rubros) ? [...currentUser.rubros] : [];
+  let avatar = currentUser.avatar || '../assets/images/avatar-de-usuario.png';
   let modoEdicion = false;
 
   // Mostrar datos en pantalla
@@ -44,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   descripcionTexto.textContent = descripcion;
   estadoBtn.textContent = estado ? 'Activo' : 'Inactivo';
   estadoBtn.classList.toggle('inactivo', !estado);
+  avatarEl.src = avatar;
   renderRubros();
   renderImagenes();
   rubroNuevoContainer.hidden = true;
@@ -77,6 +84,54 @@ document.addEventListener('DOMContentLoaded', () => {
         li.appendChild(btn);
       }
       listaRubros.appendChild(li);
+    });
+  }
+
+  // Renderizar imágenes
+  function renderImagenes() {
+    imagenesContainer.innerHTML = '';
+    imagenes.forEach((src, index) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'imagen-wrapper';
+      const img = document.createElement('img');
+      img.src = src;
+
+      const btn = document.createElement('button');
+      btn.textContent = '✖';
+      btn.onclick = async () => {
+        const filename = src.split('/').pop();
+
+        try {
+          // Eliminar imagen física en servidor
+          const resEliminar = await fetch('http://localhost:3000/eliminarImagen', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename }),
+          });
+          const dataEliminar = await resEliminar.json();
+          if (!resEliminar.ok || !dataEliminar.success) {
+            alert('No se pudo eliminar la imagen del servidor');
+            return;
+          }
+
+          // Actualizar array local y enviar cambios al backend
+          imagenes.splice(index, 1);
+          const actualizado = { ...currentUser, imagenes, avatar };
+          const usuarioActualizado = await guardarPerfil(actualizado);
+
+          // Actualizar localStorage y re-renderizar imágenes
+          imagenes = usuarioActualizado.imagenes || [];
+          renderImagenes();
+
+        } catch (err) {
+          console.error('Error al eliminar imagen:', err);
+          alert('Error al eliminar imagen');
+        }
+      };
+
+      wrapper.appendChild(img);
+      wrapper.appendChild(btn);
+      imagenesContainer.appendChild(wrapper);
     });
   }
 
@@ -150,7 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
       descripcion: descripcionTexto.textContent.trim(),
       rubros,
       imagenes,
-      estado
+      estado,
+      avatar
     };
 
     try {
@@ -160,6 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
       rubros = usuarioActualizado.rubros || [];
       descripcion = usuarioActualizado.descripcion || '';
       estado = usuarioActualizado.estado;
+      avatar = usuarioActualizado.avatar || avatar;
+
       emailEl.disabled = true;
       telefonoEl.disabled = true;
       direccionEl.disabled = true;
@@ -170,63 +228,16 @@ document.addEventListener('DOMContentLoaded', () => {
       cancelarBtn.hidden = true;
       renderRubros();
       renderImagenes();
+      avatarEl.src = avatar;
     } catch {
       // error ya manejado en guardarPerfil
     }
   });
 
-  // Renderizar imágenes
-  function renderImagenes() {
-    imagenesContainer.innerHTML = '';
-    imagenes.forEach((src, index) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'imagen-wrapper';
-      const img = document.createElement('img');
-      img.src = src;
-
-      const btn = document.createElement('button');
-      btn.textContent = '✖';
-      btn.onclick = async () => {
-        const filename = src.split('/').pop();
-
-        try {
-          // Eliminar imagen física en servidor
-          const resEliminar = await fetch('http://localhost:3000/eliminarImagen', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filename }),
-          });
-          const dataEliminar = await resEliminar.json();
-          if (!resEliminar.ok || !dataEliminar.success) {
-            alert('No se pudo eliminar la imagen del servidor');
-            return;
-          }
-
-          // Actualizar array local y enviar cambios al backend
-          imagenes.splice(index, 1);
-          const actualizado = { ...currentUser, imagenes };
-          const usuarioActualizado = await guardarPerfil(actualizado);
-
-          // Actualizar localStorage y re-renderizar imágenes
-          imagenes = usuarioActualizado.imagenes || [];
-          renderImagenes();
-
-        } catch (err) {
-          console.error('Error al eliminar imagen:', err);
-          alert('Error al eliminar imagen');
-        }
-      };
-
-      wrapper.appendChild(img);
-      wrapper.appendChild(btn);
-      imagenesContainer.appendChild(wrapper);
-    });
-  }
-
-  // Abrir selector de archivo al click en botón
+  // Abrir selector de archivo al click en botón para agregar imagenes de trabajos
   agregarImagenBtn.addEventListener('click', () => fileInput.click());
 
-  // Subir imagen seleccionada
+  // Subir imagen seleccionada de trabajos anteriores
   fileInput.addEventListener('change', async () => {
     const archivo = fileInput.files[0];
     if (!archivo) return;
@@ -249,17 +260,72 @@ document.addEventListener('DOMContentLoaded', () => {
       const url = `/assets/imagenesProfesionales/${data.filename}`;
       imagenes.push(url);
 
-      // Guardar el perfil actualizado con nuevo array
-      const actualizado = { ...currentUser, imagenes };
+      // Si no hay avatar o es default, asignar esta nueva imagen como avatar
+      if (!avatar || avatar.includes('default-avatar')) {
+        avatar = url;
+        avatarEl.src = avatar;
+      }
+
+      // Guardar el perfil actualizado con nuevo array e avatar
+      const actualizado = { ...currentUser, imagenes, avatar };
       const usuarioActualizado = await guardarPerfil(actualizado);
 
       imagenes = usuarioActualizado.imagenes || [];
+      avatar = usuarioActualizado.avatar || avatar;
       renderImagenes();
     } catch (err) {
       console.error('Error al subir imagen:', err);
       alert('Error al subir imagen');
     }
   });
+
+  //cambiar avatar
+  cambiarAvatarBtn.addEventListener('click', () => {
+    inputAvatar.click();
+  });
+
+  inputAvatar.addEventListener('change', async () => {
+    const archivo = inputAvatar.files[0];
+    if (!archivo) return;
+
+    const formData = new FormData();
+    formData.append('imagen', archivo);
+
+    try {
+      const res = await fetch('http://localhost:3000/subirImagen', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok || !data.filename) {
+        alert('Error al subir avatar');
+        return;
+      }
+
+      const url = `/assets/imagenesProfesionales/${data.filename}`;
+
+      // Actualizar avatar localmente
+      avatar = url;
+      avatarEl.src = avatar;
+
+      // Guardar avatar actualizado en perfil
+      const actualizado = { ...currentUser, avatar };
+      const usuarioActualizado = await guardarPerfil(actualizado);
+
+      avatar = usuarioActualizado.avatar || avatar;
+      avatarEl.src = avatar;
+
+    } catch (err) {
+      console.error('Error al subir avatar:', err);
+      alert('Error al subir avatar');
+    }
+  });
+
+  document.getElementById('cerrar-sesion').addEventListener('click', () => {
+  localStorage.removeItem('currentUser');  // Borra la sesión local
+  window.location.href = '../index.html';  // Redirige al home o login
+});
+
 
   // Renderizar imágenes inicial
   renderImagenes();
