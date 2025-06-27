@@ -38,16 +38,89 @@ fetch('../datos/publicidad.json')
 
 });
 
+
 function mostrarProfesionales(categoria) {
   // Cargar el oficio en el h2
   const cartelPrincipal = document.querySelector('.cartelPrincipal');
   cartelPrincipal.textContent = categoria;
 
   // Cargar el JSON con los datos de los profesionales
-  fetch('../datos/datos.json')
+  fetch('../datos/usuarios.json')
     .then(response => response.json())
     .then(data => {
-      const profesionales = data[categoria] || [];
+      const profesionales = data.filter(profesional => profesional.rubros.some(rubro => rubro.toLowerCase() === categoria.toLowerCase()));
+      const profesionalesContainer = document.getElementById('listaProfesionales');
+
+      if (profesionales.length > 0) {
+        // Ordenar los profesionales por valuación de mayor a menor
+        profesionales.sort((a, b) => parseFloat(b.valuacion) - parseFloat(a.valuacion));
+
+        // Limpiar el contenedor antes de agregar nuevos elementos
+        profesionalesContainer.innerHTML = '';
+
+        profesionales.forEach((profesional) => {
+          const estado = profesional.estado;
+          const tarjetaHTML = `
+            <article class="profesional-item" data-email="${profesional.email}">
+              <img src="${profesional.avatar}" alt="${profesional.nombre}">
+              <div class="profesional-data">
+                <h2>${profesional.nombre} ${profesional.apellido}.</h2>
+                <h2>${profesional.empresa}.</h2>
+                <p>Email: ${profesional.email}</p>
+                <p>Tel: ${profesional.telefono}</p>
+                <p>Dirección: ${profesional.direccion}</p>
+                <p>Valoración: ${profesional.valuacion}</p>
+              </div>
+              <div class="profesional-buttons">
+                <button class="verMas">Ver Más</button>
+                <button class="conectar">Conectar</button>
+                <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
+              </div>
+              
+            </article>
+          `;
+          profesionalesContainer.insertAdjacentHTML('beforeend', tarjetaHTML);
+        });
+
+        profesionalesContainer.addEventListener('click', (e) => {
+          if (e.target.classList.contains('verMas')) {
+            const profesionalItem = e.target.closest('.profesional-item');
+            const emailProfesional = profesionalItem.getAttribute('data-email');
+
+            // Guardar el email del profesional seleccionado en localStorage
+            localStorage.setItem('emailProfesional', emailProfesional);
+
+            // Redirigir a la otra página
+            window.location.href = 'tarjetaProfesional.html';
+          }
+        });
+      } else {
+        profesionalesContainer.innerHTML = '<p class="cartelNoHay">No hay profesionales registrados por el momento.</p>';
+      }
+    })
+    .catch(error => console.error('Error cargando el JSON:', error));
+}
+
+
+
+
+
+
+
+
+
+
+/*
+function mostrarProfesionales(categoria) {
+  // Cargar el oficio en el h2
+  const cartelPrincipal = document.querySelector('.cartelPrincipal');
+  cartelPrincipal.textContent = categoria;
+
+  // Cargar el JSON con los datos de los profesionales
+  fetch('../datos/usuarios.json')
+    .then(response => response.json())
+    .then(data => {
+const profesionales = data.filter(profesional => profesional.rubros.some(rubro => rubro.toLowerCase() === categoria.toLowerCase()));
 
       const profesionalesContainer = document.getElementById('listaProfesionales');
 
@@ -59,10 +132,10 @@ function mostrarProfesionales(categoria) {
         profesionalesContainer.innerHTML = '';
 
         profesionales.forEach((profesional, index) => {
-          const disponible = profesional.disponible;
+          const estado = profesional.estado;
           const tarjetaHTML = `
             <article class="profesional-item" data-index="${index}">
-              <img src="${profesional.imagen}" alt="${profesional.nombre}">
+              <img src="${profesional.imagenes}" alt="${profesional.nombre}">
               <div class="profesional-data">
                 <h2>${profesional.nombre} ${profesional.apellido}</h2>
                 <p>Email: ${profesional.email}</p>
@@ -72,7 +145,7 @@ function mostrarProfesionales(categoria) {
               <div class="profesional-buttons">
                 <button id="verMas">Ver Más</button>
                 <button id="conectar">Conectar</button>
-                <label id="disponible" class="${disponible ? 'disponible' : 'no-disponible'}">${disponible ? 'Disponible' : 'No Disponible'}</label>
+                <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
               </div>
             </article>
           `;
@@ -82,7 +155,7 @@ function mostrarProfesionales(categoria) {
         profesionalesContainer.addEventListener('click', (e) => {
           if (e.target.id === 'verMas') {
             const profesionalItem = e.target.closest('.profesional-item');
-            const indexProfesional = profesionalItem.dataset.index;
+            const indexProfesional = profesionales.findIndex(profesional => profesional.email === profesionalItem.querySelector('h2').textContent.split(' ')[0] + ' ' + profesionalItem.querySelector('h2').textContent.split(' ')[1]);
             // Guardar el ID del profesional seleccionado en localStorage
             localStorage.setItem('idProfesional', indexProfesional);
             // Redirigir a la otra página
@@ -95,8 +168,7 @@ function mostrarProfesionales(categoria) {
     })
     .catch(error => console.error('Error cargando el JSON:', error));
 }
-
-      
+      */
     
 function startCarruselHorizontal(containerId, items, interval) {
   const container = document.querySelector(`#${containerId}`);

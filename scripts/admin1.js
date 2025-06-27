@@ -2,8 +2,12 @@ const traeListaButton = document.getElementById('traeLista');
 const inputListaArray = document.getElementById('input-listaArray');
 const inputLista = document.getElementById('input-lista');
 const inputNombre = document.getElementById('input-Nombre');
-const inputImagen = document.getElementById('input-Imagen');
 const inputPagina = document.getElementById('input-pagina');
+const inputImagen = document.getElementById('input-Imagen');
+
+const inputImagen1 = document.getElementById('imagen');
+
+const botonSubir = document.getElementById('subir-imagen');
 
 async function obtenerPublicidad() {
   try {
@@ -24,7 +28,6 @@ async function obtenerPublicidadPorId(id) {
     console.error('Error al obtener la publicidad por ID:', error);
   }
 }
-
 
 
 async function agregarPublicidad(nombreArray, objeto) {
@@ -81,10 +84,6 @@ async function actualizarPublicidad(id, arrayName, publicidad) {
     console.error(error);
   }
 }
-
-
-
-
 
 
 //Treae lista de array de publicidad
@@ -149,27 +148,27 @@ document.getElementById('borrarDato').addEventListener('click', async () => {
 
 // Función para modificar publicidad
 document.getElementById('modificarDato').addEventListener('click', async () => {
-  if (!currentItem) {
-    console.error('No se ha seleccionado una publicidad para actualizar');
-    return;
-  }
   const publicidad = {
     nombre: document.getElementById('input-Nombre').value,
-    imagen: document.getElementById('input-Imagen').value
+    
+    imagen: inputImagen.value, // utiliza la ruta de la imagen actualizada
   };
   await actualizarPublicidad(currentItem.id, 'publicidad', publicidad);
 });
 
 
 // Evento para agregar publicidad
+
 document.getElementById('agregarDato').addEventListener('click', async () => {
   const nombreArray = inputListaArray.value;
   const objeto = {
     nombre: inputNombre.value,
-    imagen: inputImagen.value
+    imagen: inputImagen.value, // utiliza la ruta de la imagen actualizada
   };
   await agregarPublicidad(nombreArray, objeto);
 });
+
+
 
 // Funcion para limpiar los imputs
 function limpiarInputs() {
@@ -179,6 +178,32 @@ function limpiarInputs() {
   inputListaArray.innerHTML = '';
   inputLista.innerHTML = '';
 }
+
+
+botonSubir.addEventListener('click', () => {
+  const archivo = inputImagen1.files[0];
+  const formData = new FormData();
+  formData.append('imagen', archivo);
+
+  fetch('/subir-imagen', {
+    method: 'POST',
+    body: formData,
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    const rutaImagen = data.filename; // suponiendo que el servidor devuelve la ruta de la imagen
+    inputImagen.value = rutaImagen; // actualiza el valor del input "inputImagen"
+  })
+  .catch((error) => console.error(error));
+});
+
+inputImagen1.addEventListener('change', () => {
+  const archivo = inputImagen1.files[0];
+  const rutaArchivo = URL.createObjectURL(archivo);
+  inputImagen.value = rutaArchivo;
+});
+
+
 
 const limpiarListaButton = document.getElementById('limpiarLista');
 limpiarListaButton.addEventListener('click', limpiarInputs);

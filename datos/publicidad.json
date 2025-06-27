@@ -3,7 +3,7 @@
     {
       "id": 1,
       "nombre": "Casa Ropa Puro Marcas",
-      "imagen": "../assets/images/patro/patroN1.png"
+      "imagen": "blob:http://localhost:3000/4012f4a4-bf95-4e2a-b022-23d97b65b3cb"
     },
     {
       "id": 2,
@@ -24,6 +24,11 @@
       "id": 5,
       "nombre": "Tropi Podas",
       "imagen": "../assets/images/patro/patroN5.png"
+    },
+    {
+      "nombre": "Loquita",
+      "imagen": "blob:http://localhost:3000/ed315d25-8d82-44c8-bbb8-fd524aa6dfef",
+      "id": 6
     }
   ],
   "publicidad1": [
