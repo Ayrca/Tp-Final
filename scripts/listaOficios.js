@@ -23,4 +23,3 @@ fetch('../datos/datos.json')
     });
   })
   .catch(error => console.error('Error cargando el JSON:', error));
-

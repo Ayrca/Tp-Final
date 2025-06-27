@@ -4,11 +4,11 @@ body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(to right, #eafaf1, #f4f4f4);
   margin: 0;
-  padding: 0;
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .pre-registro-container {
@@ -18,12 +18,12 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   text-align: center;
   max-width: 420px;
-  width: 90%;
+  width: 100%;
   transition: transform 0.2s;
 }
 
-.pre-registro-container:hover{
-    transform: scale(1.01);
+.pre-registro-container:hover {
+  transform: scale(1.01);
 }
 
 h2 {
@@ -50,6 +50,9 @@ h2 {
   font-weight: 600;
   box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);
   transition: background-color 0.3s ease, transform 0.2s ease;
+  flex: 1 1 120px;
+  min-width: 140px;
+  max-width: 200px;
 }
 
 .btn-opcion:hover {

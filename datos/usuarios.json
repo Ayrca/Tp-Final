@@ -1,0 +1,67 @@
+[
+  {
+    "nombre": "Ignacio Gaston",
+    "apellido": "Amaya",
+    "email": "ignacioamaya04@gmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "Abogado",
+      "Contador"
+    ],
+    "empresa": "Nacho Inc",
+    "telefono": "2284502063",
+    "direccion": "25 de Mayo 1755",
+    "descripcion": "Me gustan los atardeceres",
+    "estado": true,
+    "valuacion": 5,
+    "comentarios": [
+      "Tenia olor a pata pero hizo bien su trabajo",
+      "Super recomendable",
+      "Me supo asesorar sobre mi problema, pero mientras lo hacia se comio mi paquete de pitusas"
+    ],
+    "imagenes": [
+      "/assets/imagenesProfesionales/5c7de501-afd0-4b01-b8c2-61c7e481d76c.jpg",
+      "/assets/imagenesProfesionales/6daab32e-fec4-49da-8fc0-38a6755e6bd9.jpg",
+      "/assets/imagenesProfesionales/bf227f12-6fc9-489f-befe-3485de041dab.jpg"
+    ],
+    "avatar": "/assets/imagenesProfesionales/5cc5f80f-3f80-48e1-84da-e9e54e39016e.jpg"
+  },
+  {
+    "nombre": "Franker",
+    "apellido": "Arcidiacono",
+    "email": "rbc_ocp@hotmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "Abogado"
+    ],
+    "empresa": "FrankerAcount",
+    "telefono": "2284589286",
+    "direccion": "gralpaz1233",
+    "descripcion": "Me gusta mirar netflix por las tardes",
+    "estado": true,
+    "valuacion": 5,
+    "comentarios": [
+      ""
+    ],
+    "imagenes": [
+      "/assets/imagenesProfesionales/caba6cbf-2df9-4600-ba36-57b2956e17c4.png",
+      "/assets/imagenesProfesionales/5ad3426d-9a46-45a9-8c86-021b5637a767.png",
+      "/assets/imagenesProfesionales/8b0c37c2-4eb9-4c90-82ce-6e0c7fabaeef.png"
+    ],
+    "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg"
+  },
+  {
+    "nombre": "Ayrton",
+    "apellido": "Carli",
+    "email": "ayrton@gmail.com",
+    "password": "123456",
+    "tipo": "comun",
+    "rubros": [],
+    "empresa": "",
+    "telefono": "2284",
+    "direccion": "Bolivar 1943",
+    "avatar": ""
+  }
+]

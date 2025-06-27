@@ -1,0 +1,68 @@
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+main{
+justify-items: center;
+}
+
+.inputs1{
+display: flex;
+flex-direction: row;
+justify-content: center;
+}
+
+#input-lista{
+width: 250px;
+height: 300px;
+}
+
+#input-listaArray{
+    width: 250px;
+height: 300px;
+}
+                   
+
+
+
+
+.datos1{
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+#input-Nombre{
+width: 250px;
+height: 35px;
+}
+
+#input-Imagen{
+width: 250px;
+height: 35px;
+}
+
+#input-pagina{
+width: 250px;
+height: 35px;
+}
+
+
+.botonera1{
+margin-top: 25px;
+}
+
+.botonera1 button {
+width: 150px;
+height: 35px;
+}
+
+
+@media (max-width: 700px)  {
+
+
+}
+
+
