@@ -3,11 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const port = 3000;
 
-//guardar imagenes de patrocinadores
-
-const multer = require('multer');
-
-
 // Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
   res.writeHead(statusCode, {
@@ -130,21 +125,6 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
   });
 }
 
-
-//guardar imagenes de patrocinadores
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'assets', 'imagenesPatrocinio'));
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage });
-
-
-
   // Rutas para usuarios y login
   if (req.method === 'POST' && req.url === '/registro') {
     let body = '';
@@ -228,8 +208,7 @@ const upload = multer({ storage });
     return;
   }
 
-  // Rutas para publicidad  
-    
+  // Rutas para publicidad    
   else if (req.method === 'GET' && req.url === '/datos/publicidad') {
     leerPublicidad((err, publicidad) => {
       if (err) {
@@ -303,7 +282,8 @@ const upload = multer({ storage });
     }
   });
 }
-//subir imagenes de publicidad
+
+/*subir imagenes de publicidad
 else if (req.method === 'POST' && req.url === '/subirImagen') {
   upload.single('imagen')(req, res, (err) => {
     if (err) {
@@ -315,10 +295,7 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
     sendJSON(res, 200, { success: true, filename: file.filename });
   });
   return;
-}
-
- // Rutas para publicidad  
-
+}*/
 
 //leer oficios de datos.json
 else if (req.method === 'GET' && req.url === '/datos/oficios') {
@@ -407,9 +384,7 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   return;
 }
 
-
-//Subir imagen de trabajos
-
+//Subir imagen de trabajos anteriores
 else if (req.method === 'POST' && req.url === '/subirImagen') {
   const formidable = require('formidable');
   const { v4: uuidv4 } = require('uuid');
