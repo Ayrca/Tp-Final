@@ -28,7 +28,6 @@ async function obtenerPublicidadPorId(id) {
   }
 }
 
-
 async function agregarPublicidad(nombreArray, objeto) {
   console.log('Nombre del array:', nombreArray);
   try {
@@ -84,7 +83,6 @@ async function actualizarPublicidad(id, arrayName, publicidad) {
   }
 }
 
-
 //Treae lista de array de publicidad
 traeListaButton.addEventListener('click', async () => {
   const respuesta = await obtenerPublicidad();
@@ -101,7 +99,6 @@ traeListaButton.addEventListener('click', async () => {
     console.error('La respuesta del servidor no es un objeto');
   }
 });
-
 
 let selectedId = null;
 
@@ -120,7 +117,6 @@ inputListaArray.addEventListener('change', () => {
 });
 
 let selectedIdGlobal = null;
-
 let currentItem = null;
 
 
@@ -141,14 +137,12 @@ inputLista.addEventListener('change', async () => {
   imagenPropaganda.innerHTML = `<img src="${currentItem.imagen}" alt="Imagen de propaganda">`;
 });
 
-
 // Función para eliminar publicidad
 document.getElementById('borrarDato').addEventListener('click', async () => {
   const selectedArray = inputListaArray.value;
   const selectedId = inputLista.value;
   await eliminarPublicidad(selectedId, selectedArray);
 });
-
 
 // Función para modificar publicidad
 
@@ -163,7 +157,6 @@ document.getElementById('modificarDato').addEventListener('click', async () => {
 });
 
 // Evento para agregar publicidad
-
 document.getElementById('agregarDato').addEventListener('click', () => {
   const agregarBotones = document.getElementById('agregar-botones');
   agregarBotones.innerHTML = `
@@ -183,7 +176,6 @@ document.getElementById('subir-imagen').addEventListener('click', () => {
   formData.append('imagen', archivo);
   formData.append('tipo', 'patrocinio');
 
-
 fetch('/subirImagen', {
   method: 'POST',
   body: formData,
@@ -198,20 +190,6 @@ fetch('/subirImagen', {
 })
 .catch((error) => console.error('Error al subir imagen:', error));
 });
-
-/*
-  fetch('/subirImagen', {
-    method: 'POST',
-    body: formData,
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    const rutaCarpeta = '../assets/imagenesPatrocinio/'; // ajusta esta ruta según sea necesario
-    document.getElementById('imagen-nueva-ruta').value = `${rutaCarpeta}${data.filename}`;
-  })
-  .catch((error) => console.error(error));
-});
-*/
 
   document.getElementById('aceptar-agregar').addEventListener('click', async () => {
     const nombreArray = inputListaArray.value;
@@ -230,7 +208,6 @@ fetch('/subirImagen', {
 });
 
 // Funcion para limpiar los imputs
-
 function limpiarInputs() {
   inputNombre.value = '';
   inputImagen.value = '';
@@ -243,6 +220,10 @@ function limpiarInputs() {
   imagenPropaganda.innerHTML = '';
 }
 
+  // Limpiar el bloque de la imagen
+  const imagenPropaganda = document.getElementById('imagen-propaganda');
+  imagenPropaganda.innerHTML = '';
+}
 
 const limpiarListaButton = document.getElementById('limpiarLista');
 limpiarListaButton.addEventListener('click', limpiarInputs);

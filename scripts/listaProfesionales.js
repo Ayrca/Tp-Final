@@ -1,113 +1,139 @@
 document.addEventListener('DOMContentLoaded', () => {
   const categoria = localStorage.getItem('categoria');
   if (categoria) {
-    mostrarProfesionales(categoria); // Llama a la función que muestra los profesionales
+    mostrarProfesionales(categoria);
   } else {
     console.error('No se especificó una categoría');
   }
 
-const mediaQuery = window.matchMedia('(max-width: 700px)');
-fetch('../datos/publicidad.json')
-  .then(response => response.json())
-  .then(data => {
-    const publicidad1 = data.publicidad1;
-    const publicidad2 = data.publicidad2;
-    const containerId1 = 'prop1';
-    const containerId2 = 'prop2';
-    const interval = 3000;
+  const mediaQuery = window.matchMedia('(max-width: 700px)');
+  fetch('../datos/publicidad.json')
+    .then(response => response.json())
+    .then(data => {
+      const publicidad1 = data.publicidad1;
+      const publicidad2 = data.publicidad2;
+      const containerId1 = 'prop1';
+      const containerId2 = 'prop2';
+      const interval = 3000;
 
-    if (mediaQuery.matches) {
-      startCarruselHorizontal(containerId1, publicidad1, interval);
-      startCarruselHorizontal(containerId2, publicidad2, interval);
-    } else {
-      startCarruselVertical(containerId1, publicidad1, interval);
-      startCarruselVertical(containerId2, publicidad2, interval);
-    }
-
-    mediaQuery.addEventListener('change', (mq) => {
-      if (mq.matches) {
+      if (mediaQuery.matches) {
         startCarruselHorizontal(containerId1, publicidad1, interval);
         startCarruselHorizontal(containerId2, publicidad2, interval);
       } else {
         startCarruselVertical(containerId1, publicidad1, interval);
         startCarruselVertical(containerId2, publicidad2, interval);
       }
-    });
-  })
-  .catch(error => console.error('Error cargando el JSON:', error));
+
+      mediaQuery.addEventListener('change', (mq) => {
+        if (mq.matches) {
+          startCarruselHorizontal(containerId1, publicidad1, interval);
+          startCarruselHorizontal(containerId2, publicidad2, interval);
+        } else {
+          startCarruselVertical(containerId1, publicidad1, interval);
+          startCarruselVertical(containerId2, publicidad2, interval);
+        }
+      });
+    })
+    .catch(error => console.error('Error cargando el JSON:', error));
 });
 
 function mostrarProfesionales(categoria) {
-  // Cargar el oficio en el h2
   const cartelPrincipal = document.querySelector('.cartelPrincipal');
   cartelPrincipal.textContent = categoria;
 
-  // Cargar el JSON con los datos de los profesionales
-  fetch('../datos/usuarios.json')
-    .then(response => response.json())
-    .then(data => {
-      const profesionales = data.filter(profesional => profesional.rubros.some(rubro => rubro.toLowerCase() === categoria.toLowerCase()));
-      const profesionalesContainer = document.getElementById('listaProfesionales');
+  // Cargar profesionales y trabajos juntos
+  Promise.all([
+    fetch('../datos/usuarios.json').then(res => res.json()),
+    fetch('../datos/trabajos.json').then(res => res.json())
+  ])
+  .then(([usuarios, trabajos]) => {
+    const profesionales = usuarios.filter(profesional =>
+      profesional.rubros.some(rubro => rubro.toLowerCase() === categoria.toLowerCase())
+    );
 
-      if (profesionales.length > 0) {
-        // Ordenar los profesionales por valuación de mayor a menor
-        profesionales.sort((a, b) => parseFloat(b.valuacion) - parseFloat(a.valuacion));
+    const profesionalesContainer = document.getElementById('listaProfesionales');
+    profesionalesContainer.innerHTML = '';
 
-        // Limpiar el contenedor antes de agregar nuevos elementos
-        profesionalesContainer.innerHTML = '';
+    if (profesionales.length === 0) {
+      profesionalesContainer.innerHTML = '<p class="cartelNoHay">No hay profesionales registrados por el momento.</p>';
+      return;
+    }
 
-        profesionales.forEach((profesional) => {
-          const estado = profesional.estado;
-          const tarjetaHTML = `
-          <article class="profesional-item" data-email="${profesional.email}" data-telefono="${profesional.telefono}">
-              <img src="${profesional.avatar}" alt="${profesional.nombre}">
-              <div class="profesional-data">
-                <h2>${profesional.nombre} ${profesional.apellido}.</h2>
-                <h2>${profesional.empresa}.</h2>
-                <p>Email: ${profesional.email}</p>
-                <p>Tel: ${profesional.telefono}</p>
-                <p>Dirección: ${profesional.direccion}</p>
-                <p>Valoración: ${profesional.valuacion}</p>
-              </div>
-              <div class="profesional-buttons">
-                <button class="verMas">Ver Más</button>
-                <button class="conectar">Conectar</button>
-                <button class="contratar">Contratar</button>
-                <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
-              </div>
-              
-            </article>
-          `;
-          profesionalesContainer.insertAdjacentHTML('beforeend', tarjetaHTML);
-        });
+    // Para cada profesional, calcular su promedio de valoraciones en este rubro
+    const tarjetas = profesionales.map(profesional => {
+      const trabajosDeEsteProfesional = trabajos.filter(t =>
+        t.profesionalEmail === profesional.email &&
+        t.rubro.toLowerCase() === categoria.toLowerCase() &&
+        t.valoracion !== null
+      );
 
-        profesionalesContainer.addEventListener('click', (e) => {
-          const profesionalItem = e.target.closest('.profesional-item');
-          if (!profesionalItem) return;
-
-          const emailProfesional = profesionalItem.getAttribute('data-email');
-
-          if (e.target.classList.contains('verMas')) {
-            // Guardar el email del profesional seleccionado en localStorage
-            localStorage.setItem('emailProfesional', emailProfesional);
-            // Redirigir a la otra página
-            window.location.href = 'tarjetaProfesional.html';
-          }
-
-          if (e.target.classList.contains('conectar')) {
-            const telefonoProfesional = profesionalItem.getAttribute('data-telefono');
-            abrirWhatsApp(telefonoProfesional);
-          }
-
-          if (e.target.classList.contains('contratar')) {
-            contratarProfesional(emailProfesional);
-          }
-        });
-      } else {
-        profesionalesContainer.innerHTML = '<p class="cartelNoHay">No hay profesionales registrados por el momento.</p>';
+      let promedio = 'Sin valoraciones';
+      if (trabajosDeEsteProfesional.length > 0) {
+        const suma = trabajosDeEsteProfesional.reduce((acc, t) => acc + t.valoracion, 0);
+        promedio = (suma / trabajosDeEsteProfesional.length).toFixed(1);
       }
-    })
-    .catch(error => console.error('Error cargando el JSON:', error));
+
+      return {
+        profesional,
+        promedio
+      };
+    });
+
+    // Ordenar por promedio de mayor a menor (los sin valoraciones quedan al final)
+    tarjetas.sort((a, b) => {
+      if (a.promedio === 'Sin valoraciones') return 1;
+      if (b.promedio === 'Sin valoraciones') return -1;
+      return parseFloat(b.promedio) - parseFloat(a.promedio);
+    });
+
+    // Renderizar tarjetas
+    tarjetas.forEach(({ profesional, promedio }) => {
+      const estado = profesional.estado;
+      const tarjetaHTML = `
+        <article class="profesional-item" data-email="${profesional.email}" data-telefono="${profesional.telefono}">
+          <img src="${profesional.avatar}" alt="${profesional.nombre}">
+          <div class="profesional-data">
+            <h2>${profesional.nombre} ${profesional.apellido}.</h2>
+            <h2>${profesional.empresa}.</h2>
+            <p>Email: ${profesional.email}</p>
+            <p>Tel: ${profesional.telefono}</p>
+            <p>Dirección: ${profesional.direccion}</p>
+            <p>Valoración promedio: ${promedio}</p>
+          </div>
+          <div class="profesional-buttons">
+            <button class="verMas">Ver Más</button>
+            <button class="conectar">Conectar</button>
+            <button class="contratar">Contratar</button>
+            <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
+          </div>
+        </article>
+      `;
+      profesionalesContainer.insertAdjacentHTML('beforeend', tarjetaHTML);
+    });
+
+    // Eventos para botones
+    profesionalesContainer.addEventListener('click', (e) => {
+      const profesionalItem = e.target.closest('.profesional-item');
+      if (!profesionalItem) return;
+
+      const emailProfesional = profesionalItem.getAttribute('data-email');
+
+      if (e.target.classList.contains('verMas')) {
+        localStorage.setItem('emailProfesional', emailProfesional);
+        window.location.href = 'tarjetaProfesional.html';
+      }
+
+      if (e.target.classList.contains('conectar')) {
+        const telefonoProfesional = profesionalItem.getAttribute('data-telefono');
+        abrirWhatsApp(telefonoProfesional);
+      }
+
+      if (e.target.classList.contains('contratar')) {
+        contratarProfesional(emailProfesional);
+      }
+    });
+  })
+  .catch(error => console.error('Error cargando los datos:', error));
 }
 
 function contratarProfesional(emailProfesional) {
@@ -116,7 +142,12 @@ function contratarProfesional(emailProfesional) {
   const rubro = localStorage.getItem('categoria');
 
   if (!emailUsuario) {
-    alert('Debes iniciar sesión para contratar un profesional.');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Atención',
+      text: 'Debes iniciar sesión para contratar un profesional.',
+      confirmButtonColor: '#3b82f6'
+    });
     return;
   }
 
@@ -127,7 +158,8 @@ function contratarProfesional(emailProfesional) {
     rubro: rubro,
     estado: 'pendiente',
     valoracion: null,
-    fechaContratacion: new Date().toISOString()
+    comentario: "",
+    fechaContratacion: new Date().toISOString().split('T')[0]
   };
 
   // Enviar al servidor
@@ -145,11 +177,21 @@ function contratarProfesional(emailProfesional) {
     return res.json();
   })
   .then(() => {
-    alert('¡Trabajo contratado con éxito!');
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: '¡Trabajo contratado con éxito!',
+      confirmButtonColor: '#10b981'
+    });
   })
   .catch(error => {
     console.error('Error:', error);
-    alert('Hubo un problema al contratar el servicio.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Hubo un problema al contratar el servicio.',
+      confirmButtonColor: '#ef4444'
+    });
   });
 }
 
@@ -172,7 +214,7 @@ function startCarruselHorizontal(containerId, items, interval) {
   container.style.display = 'flex';
   container.style.flexDirection = 'row';
   container.style.overflowX = 'hidden';
-  container.style.width = `${items.length * 100}%`; // Configura el ancho del contenedor
+  container.style.width = `${items.length * 100}%`;
 
   items.forEach((item) => {
     const carruselItem = document.createElement('div');
@@ -180,14 +222,12 @@ function startCarruselHorizontal(containerId, items, interval) {
     carruselItem.style.width = '100vw';
     carruselItem.style.flexShrink = 0;
     carruselItem.style.display = 'inline-block';
-    carruselItem.innerHTML = `
-      <img src="${item.imagen}" alt="${item.nombre}";">
-    `;
+    carruselItem.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}";">`;
     container.appendChild(carruselItem);
   });
 
   let currentIndex = 0;
-  let intervalId = setInterval(() => {
+  setInterval(() => {
     currentIndex = (currentIndex + 1) % items.length;
     container.style.transform = `translateX(-${currentIndex * 100}vw)`;
   }, interval);
@@ -205,14 +245,12 @@ function startCarruselVertical(containerId, items, interval) {
     carruselItem.style.display = 'flex';
     carruselItem.style.justifyContent = 'center';
     carruselItem.style.alignItems = 'center';
-    carruselItem.innerHTML = `
-      <img src="${item.imagen}" alt="${item.nombre}";">
-    `;
+    carruselItem.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}";">`;
     container.appendChild(carruselItem);
   });
 
   let currentIndex = 0;
-  let intervalId = setInterval(() => {
+  setInterval(() => {
     currentIndex = (currentIndex + 1) % items.length;
     container.style.top = `-${currentIndex * 200}px`;
   }, interval);

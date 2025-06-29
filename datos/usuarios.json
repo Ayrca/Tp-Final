@@ -15,17 +15,11 @@
     "direccion": "25 de Mayo 1755",
     "descripcion": "Hola",
     "estado": true,
-    "valuacion": 5,
-    "comentarios": [
-      "Tenia olor a pata pero hizo bien su trabajo",
-      "Super recomendable",
-      "Me supo asesorar sobre mi problema, pero mientras lo hacia se comio mi paquete de pitusas"
-    ],
     "imagenes": [
-      "/assets/imagenesProfesionales/d239ad94-44d5-4af4-b9b0-32cef08f6f8d.png"
+      "/assets/imagenesProfesionales/195a6aa7-1334-4f0b-827e-43d67037eb07.jpg",
+      "/assets/imagenesProfesionales/84a86700-7553-4ffe-ab5e-25fe56efd4b1.jpg",
+      "/assets/imagenesProfesionales/4f0da9a7-ef65-4239-9471-8b2a126fb18e.jpg"
     ],
-    "avatar": "/assets/imagenesProfesionales/618a9b13-5809-4b3e-a145-c2d9672caa51.jpg",
-    "estadoCuenta": true
   },
   {
     "nombre": "Franker",
@@ -41,10 +35,6 @@
     "direccion": "gralpaz1233",
     "descripcion": "Me gusta mirar netflix por las tardes",
     "estado": true,
-    "valuacion": 5,
-    "comentarios": [
-      ""
-    ],
     "imagenes": [],
     "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
     "estadoCuenta":true
