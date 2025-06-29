@@ -4,7 +4,6 @@ const inputLista = document.getElementById('input-lista');
 const inputNombre = document.getElementById('input-Nombre');
 const inputPagina = document.getElementById('input-pagina');
 const inputImagen = document.getElementById('input-Imagen');
-
 const inputImagen1 = document.getElementById('imagen');
 
 const botonSubir = document.getElementById('subir-imagen');
@@ -28,7 +27,6 @@ async function obtenerPublicidadPorId(id) {
     console.error('Error al obtener la publicidad por ID:', error);
   }
 }
-
 
 async function agregarPublicidad(nombreArray, objeto) {
   console.log('Nombre del array:', nombreArray);
@@ -85,7 +83,6 @@ async function actualizarPublicidad(id, arrayName, publicidad) {
   }
 }
 
-
 //Treae lista de array de publicidad
 traeListaButton.addEventListener('click', async () => {
   const respuesta = await obtenerPublicidad();
@@ -102,7 +99,6 @@ traeListaButton.addEventListener('click', async () => {
     console.error('La respuesta del servidor no es un objeto');
   }
 });
-
 
 let selectedId = null;
 
@@ -121,7 +117,6 @@ inputListaArray.addEventListener('change', () => {
 });
 
 let selectedIdGlobal = null;
-
 let currentItem = null;
 
 inputLista.addEventListener('change', async () => {
@@ -135,8 +130,11 @@ inputLista.addEventListener('change', async () => {
   currentItem = array[selectedIndex];
   inputNombre.value = currentItem.nombre;
   inputImagen.value = currentItem.imagen;
+  inputPagina.value = currentItem.pagina;
+  // Mostrar la imagen en el div imagen-propaganda
+  const imagenPropaganda = document.getElementById('imagen-propaganda');
+  imagenPropaganda.innerHTML = `<img src="${currentItem.imagen}" alt="Imagen de propaganda">`;
 });
-
 
 // Función para eliminar publicidad
 document.getElementById('borrarDato').addEventListener('click', async () => {
@@ -145,30 +143,67 @@ document.getElementById('borrarDato').addEventListener('click', async () => {
   await eliminarPublicidad(selectedId, selectedArray);
 });
 
-
 // Función para modificar publicidad
 document.getElementById('modificarDato').addEventListener('click', async () => {
   const publicidad = {
     nombre: document.getElementById('input-Nombre').value,
-    
-    imagen: inputImagen.value, // utiliza la ruta de la imagen actualizada
+    imagen: inputImagen.value,
+    pagina: inputPagina.value
   };
-  await actualizarPublicidad(currentItem.id, 'publicidad', publicidad);
+  const selectedArray = inputListaArray.value; // obtén el nombre del array seleccionado
+  await actualizarPublicidad(currentItem.id, selectedArray, publicidad);
 });
-
 
 // Evento para agregar publicidad
+document.getElementById('agregarDato').addEventListener('click', () => {
+  const agregarBotones = document.getElementById('agregar-botones');
+  agregarBotones.innerHTML = `
+    <input type="text" id="nombre-nuevo" placeholder="Nombre">
+    <input type="text" id="imagen-nueva-ruta" placeholder="Ruta de la imagen" readonly>
+    <input type="text" id="pagina-nueva" placeholder="URL de la página web">
 
-document.getElementById('agregarDato').addEventListener('click', async () => {
-  const nombreArray = inputListaArray.value;
-  const objeto = {
-    nombre: inputNombre.value,
-    imagen: inputImagen.value, // utiliza la ruta de la imagen actualizada
-  };
-  await agregarPublicidad(nombreArray, objeto);
+    <input type="file" id="imagen" accept="image/*">
+    <button id="subir-imagen">Subir imagen</button>
+    <button id="aceptar-agregar">Aceptar</button>
+    <button id="cancelar-agregar">Cancelar</button>
+  `;
+
+document.getElementById('subir-imagen').addEventListener('click', () => {
+  const archivo = document.getElementById('imagen').files[0];
+  const formData = new FormData();
+  formData.append('imagen', archivo);
+  formData.append('tipo', 'patrocinio');
+
+fetch('/subirImagen', {
+  method: 'POST',
+  body: formData,
+})
+.then((response) => response.json())
+.then((data) => {
+  console.log('Respuesta del servidor:', data);
+  const rutaCarpeta = '../assets/imagenesPatrocinio/';
+  const rutaImagen = `${rutaCarpeta}${data.filename}`;
+  console.log('Ruta de la imagen:', rutaImagen);
+  document.getElementById('imagen-nueva-ruta').value = rutaImagen;
+})
+.catch((error) => console.error('Error al subir imagen:', error));
 });
 
+  document.getElementById('aceptar-agregar').addEventListener('click', async () => {
+    const nombreArray = inputListaArray.value;
+    const objeto = {
+      nombre: document.getElementById('nombre-nuevo').value,
+      imagen: document.getElementById('imagen-nueva-ruta').value,
+      pagina: document.getElementById('pagina-nueva').value
+    };
+    await agregarPublicidad(nombreArray, objeto);
+    agregarBotones.innerHTML = '';
+  });
 
+  document.getElementById('cancelar-agregar').addEventListener('click', () => {
+    agregarBotones.innerHTML = '';
+  });
+});
 
 // Funcion para limpiar los imputs
 function limpiarInputs() {
@@ -177,33 +212,11 @@ function limpiarInputs() {
   inputPagina.value = '';
   inputListaArray.innerHTML = '';
   inputLista.innerHTML = '';
+
+  // Limpiar el bloque de la imagen
+  const imagenPropaganda = document.getElementById('imagen-propaganda');
+  imagenPropaganda.innerHTML = '';
 }
-
-
-botonSubir.addEventListener('click', () => {
-  const archivo = inputImagen1.files[0];
-  const formData = new FormData();
-  formData.append('imagen', archivo);
-
-  fetch('/subir-imagen', {
-    method: 'POST',
-    body: formData,
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    const rutaImagen = data.filename; // suponiendo que el servidor devuelve la ruta de la imagen
-    inputImagen.value = rutaImagen; // actualiza el valor del input "inputImagen"
-  })
-  .catch((error) => console.error(error));
-});
-
-inputImagen1.addEventListener('change', () => {
-  const archivo = inputImagen1.files[0];
-  const rutaArchivo = URL.createObjectURL(archivo);
-  inputImagen.value = rutaArchivo;
-});
-
-
 
 const limpiarListaButton = document.getElementById('limpiarLista');
 limpiarListaButton.addEventListener('click', limpiarInputs);

@@ -20,55 +20,5 @@
 { "nombre": "Pintor", "imagen": "assets/images/oficios/pintor.png" },
 { "nombre": "Plomero", "imagen": "assets/images/oficios/plomero.png" },
 { "nombre": "Soldador", "imagen": "assets/images/oficios/soldador.png" }
-],
-
-
-"Abogado" :[
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/profesionales/prof0.png",
-"disponible": true
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/profesionales/prof1.png",
-"disponible": false
-},
-{"nombre":"Pedro",
-"apellido":"Blonder",
-"email":"pedro@hotmail.com",
-"direccion":"Funes 4212",
-"valuacion": 2,
-"imagen":"../assets/images/profesionales/prof3.png",
-"disponible": false
-}
-],
-
-"Arquitecto" :[
-{"nombre":"Andrea",
-"apellido":"Palida",
-"email":"Arndrea@hotmail.com",
-"direccion":"Tacuari 1212",
-"valuacion": 1,
-"imagen":"../assets/images/profesionales/prof5.png",
-"disponible": true
-},
-
-{"nombre":"Ana",
-"apellido":"Rosal",
-"email":"anapana@hotmail.com",
-"direccion":"Merlo 1212",
-"valuacion": 2,
-"imagen":"../assets/images/profesionales/prof4.png",
-"disponible": true
-}
 ]
-
 }

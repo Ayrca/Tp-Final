@@ -6,7 +6,9 @@
   <title>Mi Cuenta - Profesional</title>
   <link rel="stylesheet" href="../styles/global.css">
   <link rel="stylesheet" href="../styles/mi-cuenta.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
   <main class="cuenta-container">
     <section class="perfil-usuario">
@@ -17,7 +19,7 @@
       </div>
 
       <div class="info">
-        <h2 id="profesion">Profesional</h2>
+        <h2 id="profesion">Usuario Profesional</h2>
         <p><strong>Nombre y apellido:</strong> <span id="nombre"></span></p>
         <p><strong>Email:</strong> <input type="email" id="email" disabled /></p>
         <p><strong>Teléfono:</strong> <input type="tel" id="telefono" disabled /></p>
@@ -63,6 +65,12 @@
       <input type="file" id="file-input" accept="image/*" hidden />
       <button id="agregar-imagen">➕ Agregar imagen</button>
     </section>
+
+    <section class="trabajos-contratados">
+      <h3>Trabajos contratados</h3>
+      <div id="trabajos-container"></div>
+    </section>
+
   </main>
 
   <script src="../scripts/mi-cuenta.js"></script>
