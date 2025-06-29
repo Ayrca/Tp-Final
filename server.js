@@ -3,6 +3,42 @@ const fs = require('fs');
 const path = require('path');
 const port = 3000;
 
+
+
+// Función para servir archivos estáticos
+const serveStaticFile = (filePath, res) => {
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      res.writeHead(404, { 'Access-Control-Allow-Origin': '*' });
+      res.end('Not found');
+    } else {
+      const ext = path.extname(filePath);
+      const contentType = { 
+        '.html': 'text/html', 
+        '.js': 'text/javascript', 
+        '.json': 'application/json', 
+        '.css': 'text/css', 
+        '.png': 'image/png', 
+        '.jpg': 'image/jpeg', 
+        '.jpeg': 'image/jpeg', 
+        '.gif': 'image/gif', 
+      };
+      const type = contentType[ext] || 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*' });
+      res.end(content);
+    }
+  });
+};
+
+// Función para servir archivos estáticos
+
+
+
+
+
+
+
+
 // Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
   res.writeHead(statusCode, {
@@ -262,8 +298,8 @@ else if (req.method === 'GET' && req.url === '/api/trabajos') {
   });
   return;
 }
-
-  // Rutas para publicidad    
+ 
+  // Rutas para publicidad  
   else if (req.method === 'GET' && req.url === '/datos/publicidad') {
     leerPublicidad((err, publicidad) => {
       if (err) {
@@ -338,19 +374,6 @@ else if (req.method === 'GET' && req.url === '/api/trabajos') {
   });
 }
 
-/*subir imagenes de publicidad
-else if (req.method === 'POST' && req.url === '/subirImagen') {
-  upload.single('imagen')(req, res, (err) => {
-    if (err) {
-      console.error('Error al subir imagen:', err);
-      sendJSON(res, 500, { error: 'Error al procesar archivo' });
-      return;
-    }
-    const file = req.file;
-    sendJSON(res, 200, { success: true, filename: file.filename });
-  });
-  return;
-}*/
 
 //leer oficios de datos.json
 else if (req.method === 'GET' && req.url === '/datos/oficios') {
@@ -439,6 +462,58 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   return;
 }
 
+//Subir imagen de trabajos y publicidad
+else if (req.method === 'POST' && req.url === '/subirImagen') {
+  const formidable = require('formidable');
+  const { v4: uuidv4 } = require('uuid');
+  const form = new formidable.IncomingForm({ multiples: false });
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      console.error('Error al parsear con formidable:', err);
+      sendJSON(res, 500, { error: 'Error al procesar archivo' });
+      return;
+    }
+
+    console.log('Valor de tipo:', fields.tipo); // Verificar que se cargue la variable patrocinio
+
+
+  const uploadDir = fields.tipo && fields.tipo[0] === 'patrocinio'
+  ? path.join(__dirname, 'assets', 'imagenesPatrocinio')
+  : path.join(__dirname, 'assets', 'imagenesProfesionales');
+
+    console.log('Carpeta de subida:', uploadDir); // Verificar la carpeta de subida
+
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    form.uploadDir = uploadDir;
+
+    let file = files.imagen;
+    if (Array.isArray(file)) file = file[0];
+    if (!file || !file.originalFilename) {
+      sendJSON(res, 400, { error: 'No se recibió ninguna imagen válida' });
+      return;
+    }
+
+    const ext = path.extname(file.originalFilename);
+    const newFileName = uuidv4() + ext;
+    const newPath = path.join(uploadDir, newFileName);
+    fs.rename(file.filepath, newPath, (err) => {
+      if (err) {
+        console.error('Error al mover archivo:', err);
+        sendJSON(res, 500, { error: 'Error al guardar imagen' });
+        return;
+      }
+      sendJSON(res, 200, { success: true, filename: newFileName });
+    });
+  });
+  return;
+}
+
+/*
 //Subir imagen de trabajos anteriores
 else if (req.method === 'POST' && req.url === '/subirImagen') {
   const formidable = require('formidable');
@@ -485,7 +560,7 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
 
   return;
 }
-
+*/
 // Eliminar imagen del servidor
 else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   let body = '';
@@ -514,8 +589,22 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   return;
 }
 
+
+
   // Archivos estáticos
+  
   else {
+  if (req.url.startsWith('/assets/imagenesPatrocinio/')) {
+    const filePath = path.join(__dirname, req.url);
+    serveStaticFile(filePath, res);
+  } else {
+    const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
+    serveStaticFile(filePath, res);
+  }
+}
+  /*
+  else {
+
     const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
     const ext = path.extname(filePath);
     const contentType = {
@@ -539,7 +628,8 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
       }
     });
   }
-
+*/
+  
   } catch (error) {
     console.error('Error en el servidor:', error);
     sendJSON(res, 500, { error: 'Error interno del servidor' });
