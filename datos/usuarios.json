@@ -17,9 +17,11 @@
     "estado": true,
     "imagenes": [
       "/assets/imagenesProfesionales/195a6aa7-1334-4f0b-827e-43d67037eb07.jpg",
-      "/assets/imagenesProfesionales/84a86700-7553-4ffe-ab5e-25fe56efd4b1.jpg",
-      "/assets/imagenesProfesionales/4f0da9a7-ef65-4239-9471-8b2a126fb18e.jpg"
+      "/assets/imagenesProfesionales/4f0da9a7-ef65-4239-9471-8b2a126fb18e.jpg",
+      "/assets/imagenesProfesionales/0c014501-df66-4b04-9680-5b76902c493e.jpg",
+      "/assets/imagenesProfesionales/78408ecd-f400-44d5-9897-77d8c3e01f51.jpg"
     ],
+    "avatar": "/assets/imagenesProfesionales/1764c698-74c7-49af-af41-5a7ded842d8d.jpg"
   },
   {
     "nombre": "Franker",
@@ -37,7 +39,7 @@
     "estado": true,
     "imagenes": [],
     "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
-    "estadoCuenta":true
+    "estadoCuenta": true
   },
   {
     "nombre": "Ayrton",

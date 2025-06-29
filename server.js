@@ -3,8 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const port = 3000;
 
-
-
 // Función para servir archivos estáticos
 const serveStaticFile = (filePath, res) => {
   fs.readFile(filePath, (err, content) => {
@@ -289,7 +287,7 @@ else if (req.method === 'GET' && req.url === '/api/trabajos') {
   });
   return;
 }
- 
+
   // Rutas para publicidad  
   else if (req.method === 'GET' && req.url === '/datos/publicidad') {
     leerPublicidad((err, publicidad) => {
@@ -364,7 +362,6 @@ else if (req.method === 'GET' && req.url === '/api/trabajos') {
     }
   });
 }
-
 
 //leer oficios de datos.json
 else if (req.method === 'GET' && req.url === '/datos/oficios') {
@@ -534,7 +531,7 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   });
   return;
 }
-    
+
   // Archivos estáticos  
   else {
   if (req.url.startsWith('/assets/imagenesPatrocinio/')) {
