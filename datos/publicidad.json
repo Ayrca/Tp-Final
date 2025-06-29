@@ -5,6 +5,18 @@
       "nombre": "Tropi Podas",
       "imagen": "../assets/images/patro/patroN5.png",
       "pagina": ""
+    },
+    {
+      "nombre": "Prueba2",
+      "imagen": "../assets/imagenesPatrocinio/59df43e2-6666-4109-94a6-fe6cea11538e.png",
+      "pagina": "http://localhost:3000/pages/admin1.html",
+      "id": 2
+    },
+    {
+      "nombre": "Prueba3",
+      "imagen": "../assets/imagenesPatrocinio/a80b7300-2891-47e7-82ca-3a61d120742c.jpeg",
+      "pagina": "http://localhost:3000/pages/",
+      "id": 3
     }
   ],
   "publicidad1": [

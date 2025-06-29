@@ -220,10 +220,5 @@ function limpiarInputs() {
   imagenPropaganda.innerHTML = '';
 }
 
-  // Limpiar el bloque de la imagen
-  const imagenPropaganda = document.getElementById('imagen-propaganda');
-  imagenPropaganda.innerHTML = '';
-}
-
 const limpiarListaButton = document.getElementById('limpiarLista');
 limpiarListaButton.addEventListener('click', limpiarInputs);
