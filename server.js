@@ -30,15 +30,6 @@ const serveStaticFile = (filePath, res) => {
   });
 };
 
-// Función para servir archivos estáticos
-
-
-
-
-
-
-
-
 // Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
   res.writeHead(statusCode, {
@@ -543,11 +534,8 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   });
   return;
 }
-
-
-
-  // Archivos estáticos
-  
+    
+  // Archivos estáticos  
   else {
   if (req.url.startsWith('/assets/imagenesPatrocinio/')) {
     const filePath = path.join(__dirname, req.url);
@@ -557,33 +545,6 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
     serveStaticFile(filePath, res);
   }
 }
-  /*
-  else {
-
-    const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
-    const ext = path.extname(filePath);
-    const contentType = {
-      '.html': 'text/html',
-      '.js': 'text/javascript',
-      '.json': 'application/json',
-      '.css': 'text/css',
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.gif': 'image/gif',
-    };
-    fs.readFile(filePath, (err, content) => {
-      if (err) {
-        res.writeHead(404, { 'Access-Control-Allow-Origin': '*' });
-        res.end('Not found');
-      } else {
-        const type = contentType[ext] || 'application/octet-stream';
-        res.writeHead(200, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*' });
-        res.end(content);
-      }
-    });
-  }
-*/
   
   } catch (error) {
     console.error('Error en el servidor:', error);

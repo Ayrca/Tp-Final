@@ -20,7 +20,6 @@
       "/assets/imagenesProfesionales/84a86700-7553-4ffe-ab5e-25fe56efd4b1.jpg",
       "/assets/imagenesProfesionales/4f0da9a7-ef65-4239-9471-8b2a126fb18e.jpg"
     ],
-    "avatar": "/assets/imagenesProfesionales/ccc81bda-2ba6-434d-b82f-8c52416b99e8.jpg"
   },
   {
     "nombre": "Franker",
@@ -37,7 +36,8 @@
     "descripcion": "Me gusta mirar netflix por las tardes",
     "estado": true,
     "imagenes": [],
-    "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg"
+    "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
+    "estadoCuenta":true
   },
   {
     "nombre": "Ayrton",
@@ -49,6 +49,7 @@
     "empresa": "",
     "telefono": "2284",
     "direccion": "Bolivar 1943",
-    "avatar": ""
+    "avatar": "",
+    "estadoCuenta": true
   }
 ]

@@ -119,6 +119,7 @@ inputListaArray.addEventListener('change', () => {
 let selectedIdGlobal = null;
 let currentItem = null;
 
+
 inputLista.addEventListener('change', async () => {
   const selectedArray = inputListaArray.value;
   const selectedIndex = inputLista.selectedIndex;
@@ -144,6 +145,7 @@ document.getElementById('borrarDato').addEventListener('click', async () => {
 });
 
 // Función para modificar publicidad
+
 document.getElementById('modificarDato').addEventListener('click', async () => {
   const publicidad = {
     nombre: document.getElementById('input-Nombre').value,
@@ -212,6 +214,11 @@ function limpiarInputs() {
   inputPagina.value = '';
   inputListaArray.innerHTML = '';
   inputLista.innerHTML = '';
+
+  // Limpiar el bloque de la imagen
+  const imagenPropaganda = document.getElementById('imagen-propaganda');
+  imagenPropaganda.innerHTML = '';
+}
 
   // Limpiar el bloque de la imagen
   const imagenPropaganda = document.getElementById('imagen-propaganda');
