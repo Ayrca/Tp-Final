@@ -1,0 +1,20 @@
+[
+  {
+    "id": "f1ec3518-61b7-4d2b-8967-64d26503607b",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "rbc_ocp@hotmail.com",
+    "rubro": "Abogado",
+    "estado": "pendiente",
+    "valoracion": null,
+    "fechaContratacion": "2025-06-29T15:05:17.085Z"
+  },
+  {
+    "id": "1c800d24-d26e-4283-9cd3-54b83fab6a52",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "rbc_ocp@hotmail.com",
+    "rubro": "Plomero",
+    "estado": "pendiente",
+    "valoracion": null,
+    "fechaContratacion": "2025-06-29T15:05:55.467Z"
+  }
+]

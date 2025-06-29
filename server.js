@@ -208,6 +208,61 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     return;
   }
 
+  //agregar nuevo trabajo a trabajos.json
+  else if (req.method === 'POST' && req.url === '/api/trabajos') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const nuevoTrabajo = JSON.parse(body);
+      const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+      fs.readFile(trabajosPath, 'utf8', (err, data) => {
+        let trabajos = [];
+        if (!err && data) {
+          try {
+            trabajos = JSON.parse(data);
+            if (!Array.isArray(trabajos)) trabajos = [];
+          } catch {
+            trabajos = [];
+          }
+        }
+
+        trabajos.push(nuevoTrabajo);
+        fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error al guardar trabajo' });
+          } else {
+            sendJSON(res, 201, { success: true });
+          }
+        });
+      });
+    } catch (error) {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+//obtener todos los trabajos de trabajos.json
+else if (req.method === 'GET' && req.url === '/api/trabajos') {
+  const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+  fs.readFile(trabajosPath, 'utf8', (err, data) => {
+    if (err) {
+      sendJSON(res, 200, []); // Devuelve array vacío si no existe o error
+      return;
+    }
+    try {
+      const trabajos = JSON.parse(data);
+      sendJSON(res, 200, trabajos);
+    } catch {
+      sendJSON(res, 200, []);
+    }
+  });
+  return;
+}
+
   // Rutas para publicidad    
   else if (req.method === 'GET' && req.url === '/datos/publicidad') {
     leerPublicidad((err, publicidad) => {
