@@ -35,9 +35,7 @@ fetch('../datos/publicidad.json')
     });
   })
   .catch(error => console.error('Error cargando el JSON:', error));
-
 });
-
 
 function mostrarProfesionales(categoria) {
   // Cargar el oficio en el h2
@@ -61,7 +59,7 @@ function mostrarProfesionales(categoria) {
         profesionales.forEach((profesional) => {
           const estado = profesional.estado;
           const tarjetaHTML = `
-            <article class="profesional-item" data-email="${profesional.email}">
+          <article class="profesional-item" data-email="${profesional.email}" data-telefono="${profesional.telefono}">
               <img src="${profesional.avatar}" alt="${profesional.nombre}">
               <div class="profesional-data">
                 <h2>${profesional.nombre} ${profesional.apellido}.</h2>
@@ -74,6 +72,7 @@ function mostrarProfesionales(categoria) {
               <div class="profesional-buttons">
                 <button class="verMas">Ver Más</button>
                 <button class="conectar">Conectar</button>
+                <button class="contratar">Contratar</button>
                 <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
               </div>
               
@@ -83,15 +82,25 @@ function mostrarProfesionales(categoria) {
         });
 
         profesionalesContainer.addEventListener('click', (e) => {
-          if (e.target.classList.contains('verMas')) {
-            const profesionalItem = e.target.closest('.profesional-item');
-            const emailProfesional = profesionalItem.getAttribute('data-email');
+          const profesionalItem = e.target.closest('.profesional-item');
+          if (!profesionalItem) return;
 
+          const emailProfesional = profesionalItem.getAttribute('data-email');
+
+          if (e.target.classList.contains('verMas')) {
             // Guardar el email del profesional seleccionado en localStorage
             localStorage.setItem('emailProfesional', emailProfesional);
-
             // Redirigir a la otra página
             window.location.href = 'tarjetaProfesional.html';
+          }
+
+          if (e.target.classList.contains('conectar')) {
+            const telefonoProfesional = profesionalItem.getAttribute('data-telefono');
+            abrirWhatsApp(telefonoProfesional);
+          }
+
+          if (e.target.classList.contains('contratar')) {
+            contratarProfesional(emailProfesional);
           }
         });
       } else {
@@ -101,75 +110,63 @@ function mostrarProfesionales(categoria) {
     .catch(error => console.error('Error cargando el JSON:', error));
 }
 
+function contratarProfesional(emailProfesional) {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const emailUsuario = currentUser ? currentUser.email : null;
+  const rubro = localStorage.getItem('categoria');
 
+  if (!emailUsuario) {
+    alert('Debes iniciar sesión para contratar un profesional.');
+    return;
+  }
 
+  const nuevoTrabajo = {
+    id: generarUUID(),
+    profesionalEmail: emailProfesional,
+    usuarioEmail: emailUsuario,
+    rubro: rubro,
+    estado: 'pendiente',
+    valoracion: null,
+    fechaContratacion: new Date().toISOString()
+  };
 
-
-
-
-
-
-
-/*
-function mostrarProfesionales(categoria) {
-  // Cargar el oficio en el h2
-  const cartelPrincipal = document.querySelector('.cartelPrincipal');
-  cartelPrincipal.textContent = categoria;
-
-  // Cargar el JSON con los datos de los profesionales
-  fetch('../datos/usuarios.json')
-    .then(response => response.json())
-    .then(data => {
-const profesionales = data.filter(profesional => profesional.rubros.some(rubro => rubro.toLowerCase() === categoria.toLowerCase()));
-
-      const profesionalesContainer = document.getElementById('listaProfesionales');
-
-      if (profesionales.length > 0) {
-        // Ordenar los profesionales por valuación de mayor a menor
-        profesionales.sort((a, b) => parseFloat(b.valuacion) - parseFloat(a.valuacion));
-
-        // Limpiar el contenedor antes de agregar nuevos elementos
-        profesionalesContainer.innerHTML = '';
-
-        profesionales.forEach((profesional, index) => {
-          const estado = profesional.estado;
-          const tarjetaHTML = `
-            <article class="profesional-item" data-index="${index}">
-              <img src="${profesional.imagenes}" alt="${profesional.nombre}">
-              <div class="profesional-data">
-                <h2>${profesional.nombre} ${profesional.apellido}</h2>
-                <p>Email: ${profesional.email}</p>
-                <p>Dirección: ${profesional.direccion}</p>
-                <p>Valoración: ${profesional.valuacion}</p>
-              </div>
-              <div class="profesional-buttons">
-                <button id="verMas">Ver Más</button>
-                <button id="conectar">Conectar</button>
-                <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
-              </div>
-            </article>
-          `;
-          profesionalesContainer.insertAdjacentHTML('beforeend', tarjetaHTML);
-        });
-
-        profesionalesContainer.addEventListener('click', (e) => {
-          if (e.target.id === 'verMas') {
-            const profesionalItem = e.target.closest('.profesional-item');
-            const indexProfesional = profesionales.findIndex(profesional => profesional.email === profesionalItem.querySelector('h2').textContent.split(' ')[0] + ' ' + profesionalItem.querySelector('h2').textContent.split(' ')[1]);
-            // Guardar el ID del profesional seleccionado en localStorage
-            localStorage.setItem('idProfesional', indexProfesional);
-            // Redirigir a la otra página
-            window.location.href = 'tarjetaProfesional.html';
-          }
-        });
-      } else {
-        profesionalesContainer.innerHTML = '<p class="cartelNoHay">No hay profesionales registrados por el momento.</p>';
-      }
-    })
-    .catch(error => console.error('Error cargando el JSON:', error));
+  // Enviar al servidor
+  fetch('http://localhost:3000/api/trabajos', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(nuevoTrabajo)
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Error al contratar. Intenta nuevamente.');
+    }
+    return res.json();
+  })
+  .then(() => {
+    alert('¡Trabajo contratado con éxito!');
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Hubo un problema al contratar el servicio.');
+  });
 }
-      */
-    
+
+function generarUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function abrirWhatsApp(telefono) {
+  const numeroConPrefijo = `+54${telefono}`;
+  const url = `https://wa.me/${numeroConPrefijo}`;
+  window.open(url, '_blank');
+}
+
 function startCarruselHorizontal(containerId, items, interval) {
   const container = document.querySelector(`#${containerId}`);
   container.style.display = 'flex';
