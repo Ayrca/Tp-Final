@@ -169,12 +169,24 @@ function contratarProfesional(emailProfesional) {
   const emailUsuario = currentUser ? currentUser.email : null;
   const rubro = localStorage.getItem('categoria');
 
+  // Validar login
   if (!emailUsuario) {
     Swal.fire({
       icon: 'warning',
       title: 'Atención',
       text: 'Debes iniciar sesión para contratar un profesional.',
       confirmButtonColor: '#3b82f6'
+    });
+    return;
+  }
+
+  // Validar tipo de usuario
+  if (currentUser.tipo !== 'comun') {
+    Swal.fire({
+      icon: 'error',
+      title: 'Acceso denegado',
+      text: 'Solo los usuarios registrados como clientes pueden contratar profesionales.',
+      confirmButtonColor: '#ef4444'
     });
     return;
   }
@@ -190,6 +202,7 @@ function contratarProfesional(emailProfesional) {
     fechaContratacion: new Date().toISOString().split('T')[0]
   };
 
+  // Enviar al servidor
   fetch('http://localhost:3000/api/trabajos', {
     method: 'POST',
     headers: {
@@ -198,7 +211,9 @@ function contratarProfesional(emailProfesional) {
     body: JSON.stringify(nuevoTrabajo)
   })
   .then(res => {
-    if (!res.ok) throw new Error('Error al contratar. Intenta nuevamente.');
+    if (!res.ok) {
+      throw new Error('Error al contratar. Intenta nuevamente.');
+    }
     return res.json();
   })
   .then(() => {
@@ -213,7 +228,7 @@ function contratarProfesional(emailProfesional) {
     console.error('Error:', error);
     Swal.fire({
       icon: 'error',
-      title: 'Oops...',
+      title: 'Error',
       text: 'Hubo un problema al contratar el servicio.',
       confirmButtonColor: '#ef4444'
     });
