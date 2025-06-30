@@ -23,10 +23,17 @@ height: 300px;
     width: 250px;
 height: 300px;
 }
-                   
 
+#imagen-propaganda img{
+width: 250px;
+height: 250px;
+}
 
-
+#agregar-botones{
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
 
 .datos1{
 display: flex;
@@ -49,7 +56,6 @@ width: 250px;
 height: 35px;
 }
 
-
 .botonera1{
 margin-top: 25px;
 }
@@ -59,10 +65,5 @@ width: 150px;
 height: 35px;
 }
 
-
 @media (max-width: 700px)  {
-
-
 }
-
-

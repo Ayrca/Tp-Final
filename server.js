@@ -3,6 +3,31 @@ const fs = require('fs');
 const path = require('path');
 const port = 3000;
 
+// Función para servir archivos estáticos
+const serveStaticFile = (filePath, res) => {
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      res.writeHead(404, { 'Access-Control-Allow-Origin': '*' });
+      res.end('Not found');
+    } else {
+      const ext = path.extname(filePath);
+      const contentType = { 
+        '.html': 'text/html', 
+        '.js': 'text/javascript', 
+        '.json': 'application/json', 
+        '.css': 'text/css', 
+        '.png': 'image/png', 
+        '.jpg': 'image/jpeg', 
+        '.jpeg': 'image/jpeg', 
+        '.gif': 'image/gif', 
+      };
+      const type = contentType[ext] || 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*' });
+      res.end(content);
+    }
+  });
+};
+
 // Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
   res.writeHead(statusCode, {
@@ -208,6 +233,61 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     return;
   }
 
+  //agregar nuevo trabajo a trabajos.json
+  else if (req.method === 'POST' && req.url === '/api/trabajos') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const nuevoTrabajo = JSON.parse(body);
+      const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+      fs.readFile(trabajosPath, 'utf8', (err, data) => {
+        let trabajos = [];
+        if (!err && data) {
+          try {
+            trabajos = JSON.parse(data);
+            if (!Array.isArray(trabajos)) trabajos = [];
+          } catch {
+            trabajos = [];
+          }
+        }
+
+        trabajos.push(nuevoTrabajo);
+        fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error al guardar trabajo' });
+          } else {
+            sendJSON(res, 201, { success: true });
+          }
+        });
+      });
+    } catch (error) {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+//obtener todos los trabajos de trabajos.json
+else if (req.method === 'GET' && req.url === '/api/trabajos') {
+  const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+  fs.readFile(trabajosPath, 'utf8', (err, data) => {
+    if (err) {
+      sendJSON(res, 200, []); // Devuelve array vacío si no existe o error
+      return;
+    }
+    try {
+      const trabajos = JSON.parse(data);
+      sendJSON(res, 200, trabajos);
+    } catch {
+      sendJSON(res, 200, []);
+    }
+  });
+  return;
+}
+
   // Rutas para publicidad  
   else if (req.method === 'GET' && req.url === '/datos/publicidad') {
     leerPublicidad((err, publicidad) => {
@@ -370,18 +450,65 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   return;
 }
 
-//Subir imagen de trabajos
+//actualizar estado de trabajo
+else if (req.method === 'POST' && req.url === '/actualizarEstadoTrabajo') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const { id, estado } = JSON.parse(body);
+
+      if (!id || !estado) {
+        sendJSON(res, 400, { error: 'Faltan datos: id y estado' });
+        return;
+      }
+
+      const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+      fs.readFile(trabajosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo trabajos.json' });
+          return;
+        }
+
+        let trabajos = [];
+        try {
+          trabajos = JSON.parse(data);
+        } catch {
+          sendJSON(res, 500, { error: 'Error parseando trabajos.json' });
+          return;
+        }
+
+        const index = trabajos.findIndex(t => t.id === id);
+        if (index === -1) {
+          sendJSON(res, 404, { error: 'Trabajo no encontrado' });
+          return;
+        }
+
+        trabajos[index].estado = estado;
+
+        fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error guardando cambios' });
+            return;
+          }
+
+          sendJSON(res, 200, { success: true });
+        });
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+//subir imagen de trabajos, publicidad y avatar
 else if (req.method === 'POST' && req.url === '/subirImagen') {
   const formidable = require('formidable');
   const { v4: uuidv4 } = require('uuid');
   const form = new formidable.IncomingForm({ multiples: false });
-  const uploadDir = path.join(__dirname, 'assets', 'imagenesProfesionales');
-
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-
-  form.uploadDir = uploadDir;
   form.keepExtensions = true;
 
   form.parse(req, (err, fields, files) => {
@@ -389,6 +516,16 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
       console.error('Error al parsear con formidable:', err);
       sendJSON(res, 500, { error: 'Error al procesar archivo' });
       return;
+    }
+
+    // Decidir carpeta según 'tipo'
+    const tipo = (fields.tipo && fields.tipo[0]) || '';
+    const uploadDir = tipo === 'patrocinio'
+      ? path.join(__dirname, 'assets', 'imagenesPatrocinio')
+      : path.join(__dirname, 'assets', 'imagenesProfesionales');
+
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
 
     let file = files.imagen;
@@ -403,17 +540,21 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
     const newFileName = uuidv4() + ext;
     const newPath = path.join(uploadDir, newFileName);
 
-    fs.rename(file.filepath, newPath, (err) => {
+    //Usar copy+unlink para soportar cross-device
+    fs.copyFile(file.filepath, newPath, (err) => {
       if (err) {
-        console.error('Error al mover archivo:', err);
+        console.error('Error al copiar archivo:', err);
         sendJSON(res, 500, { error: 'Error al guardar imagen' });
         return;
       }
-
-      sendJSON(res, 200, { success: true, filename: newFileName });
+      fs.unlink(file.filepath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error('Error al borrar temporal:', unlinkErr);
+        }
+        sendJSON(res, 200, { success: true, filename: newFileName });
+      });
     });
   });
-
   return;
 }
 
@@ -445,32 +586,17 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   return;
 }
 
-  // Archivos estáticos
+  // Archivos estáticos  
   else {
+  if (req.url.startsWith('/assets/imagenesPatrocinio/')) {
+    const filePath = path.join(__dirname, req.url);
+    serveStaticFile(filePath, res);
+  } else {
     const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
-    const ext = path.extname(filePath);
-    const contentType = {
-      '.html': 'text/html',
-      '.js': 'text/javascript',
-      '.json': 'application/json',
-      '.css': 'text/css',
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.gif': 'image/gif',
-    };
-    fs.readFile(filePath, (err, content) => {
-      if (err) {
-        res.writeHead(404, { 'Access-Control-Allow-Origin': '*' });
-        res.end('Not found');
-      } else {
-        const type = contentType[ext] || 'application/octet-stream';
-        res.writeHead(200, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*' });
-        res.end(content);
-      }
-    });
+    serveStaticFile(filePath, res);
   }
-
+}
+  
   } catch (error) {
     console.error('Error en el servidor:', error);
     sendJSON(res, 500, { error: 'Error interno del servidor' });

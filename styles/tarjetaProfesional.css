@@ -1,183 +1,322 @@
+/* Reset básico */
 * {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-main{
-justify-items: center;
+main {
+  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  padding: 20px 0;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/*Tarjeta Profesional*/
-.tarjetaProfesional{
-display: flex;
-flex-direction: row;
-justify-content: start;
-align-items: center;
-background-color: rgb(201, 198, 204);
-width: 90%;
-height: 220px;
+/* Tarjeta Profesional */
+.tarjetaProfesional {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 1000px;
+  height: 250px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
-.tarjetaProfesional img{
-width: 200px;
-height: 200px;
-margin: 5px;
-margin-left: 15px;
+.tarjetaProfesional:hover {
+  transform: translateY(-5px);
 }
 
-.datosProfesional{
-margin-left: 10px;
-background-color: white;
-height: 100%;
-width: 90%;
+.tarjetaProfesional img {
+  width: 220px;
+  height: 220px;
+  margin: 15px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.datosProfesional li{
-font-size: 25px;
-} 
-
-/*Descripcion Profesional*/
-.descripcionProfesional{
-margin-top: 25px;
-margin-bottom: 15px;
-width: 90%;
-height:300px;
-background-color: rgb(201, 198, 204);
-}
-/*Caja Imagenes*/
-.cajaImagenes{
-display: flex;
-flex-direction: row;
-justify-content: start;
-align-items: center;
-background-color: rgb(201, 198, 204);
-width: 90%;
-height: 300px;
+.datosProfesional {
+  margin-left: 15px;
+  background-color: transparent;
+  height: 100%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.cajaImagenes img{
-width: 250px;
-height: 250px;
-margin: 125px;
+.datosProfesional ul {
+  list-style: none;
+  color: #333;
 }
 
-/*H2*/
-h2{
-margin-top: 25px;
-margin-bottom: 15px;
+.datosProfesional li {
+  font-size: 20px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
-/*Caja Comentario*/
-.cajaComentario{
-margin-top: 25px ;
-margin-bottom: 15px ;
-width: 90%;
-height:300px ;
-background-color: rgb(201, 198, 204);
+/* Descripción Profesional */
+.descripcionProfesional {
+  margin: 15px 0;
+  width: 90%;
+  max-width: 1000px;
+  background-color: #ffffff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  font-size: 18px;
+  color: #444;
+  line-height: 1.5;
 }
 
-/*Boton Conectar*/
-
-.conectarContainer{
-display: flex;
-flex-direction: column;
-
+/* Caja Imágenes */
+.cajaImagenes {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 1000px;
+  height: 280px;
+  overflow-x: auto;
+  padding: 10px 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  gap: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #a0aec0 transparent;
 }
 
-#disponible{
-  width: 150px;
-  height: 30px;
+.cajaImagenes::-webkit-scrollbar {
+  height: 8px;
+}
+
+.cajaImagenes::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cajaImagenes::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
+  border-radius: 10px;
+}
+
+.cajaImagenes img {
+  width: 260px;
+  height: 260px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.cajaImagenes img:hover {
+  transform: scale(1.05);
+}
+
+/* Caja Valoraciones */
+.cajaValoraciones {
+  margin: 25px 0;
+  width: 90%;
+  max-width: 1000px;
+  background-color: #ffffff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cajaValoraciones h3 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #2d3748;
+  font-weight: 700;
   text-align: center;
-  line-height: 27px; /* Altura de la línea de texto */
-border: solid black 1.5px;
-font-size: 15px;
-margin-bottom: 15px;
+  letter-spacing: 0.05em;
 }
-#disponible.disponible {
-  color: green;
 
+/* Contenedor grid para trabajos */
+#trabajos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+/* Card individual de trabajo */
+.trabajo-item {
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.trabajo-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.trabajo-item p {
+  margin: 6px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.trabajo-item p strong {
+  color: #4caf50;
+}
+
+/* Botón Conectar y Contratar */
+.conectarContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+  width: 90%;
+  max-width: 1000px;
+  align-items: center;
+  gap: 15px;
+}
+
+#disponible {
+  width: 160px;
+  height: 36px;
+  text-align: center;
+  line-height: 34px;
+  border: 2px solid black;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  user-select: none;
+}
+
+#disponible.disponible {
+  color: #22c55e;
+  border-color: #22c55e;
+  background-color: #dcfce7;
 }
 
 #disponible.no-disponible {
-  color: red;
-
-}
-#conectarProf{
-width: 150px;
-height:30px ;
+  color: #ef4444;
+  border-color: #ef4444;
+  background-color: #fee2e2;
 }
 
-@media (max-width: 700px)  {
-
-/*Tarjeta Profesional*/
-.tarjetaProfesional{
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-margin-top: 150px;
-margin-bottom: 150px;
-width: 100%;
-height: 400px;
+#conectarProf,
+#contratarProf {
+  width: 160px;
+  height: 40px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 17px;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.tarjetaProfesional img{
-width: 150px;
-height: 150px;
-margin: 0;
-margin-left: 0;
-margin-top: 5px;
-margin-bottom: 5px;
+#conectarProf {
+  background-color: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 8px rgb(59 130 246 / 0.4);
 }
 
-.datosProfesional{
-margin-left: 0;
-background-color: white;
-height: 59%;
-width: 100%;
-}   
-
-.datosProfesional li{
-font-size: 23px;
-}   
-
-/*Descripcion Profesional*/
-.descripcionProfesional{
-margin-top: 0 ;
-margin-bottom: 0 ;
-width: 95%;
-height:400px ;
-margin-bottom: 150px;
+#conectarProf:hover {
+  background-color: #2563eb;
+  box-shadow: 0 6px 14px rgb(37 99 235 / 0.6);
 }
 
-/*Caja Imagenes*/
-.cajaImagenes{
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-background-color: rgb(201, 198, 204);
-width: 95%;
-height: 900px;
+#contratarProf {
+  background-color: #10b981;
+  color: white;
+  box-shadow: 0 4px 8px rgb(16 185 129 / 0.4);
 }
 
-.cajaImagenes img{
-margin: 15px;
+#contratarProf:hover {
+  background-color: #059669;
+  box-shadow: 0 6px 14px rgb(5 150 105 / 0.6);
 }
 
-/*Caja Comentario*/
-.cajaComentario{
-margin-top: 25px ;
-margin-bottom: 15px ;
-width: 95%;
-height:300px ;
-background-color: rgb(201, 198, 204);
-}
+/* Responsive */
+@media (max-width: 700px) {
+  main {
+    padding: 15px 10px;
+  }
 
-/*Boton Conectar*/
-#conectarProf{
-width: 150px;
-height:30px ;
-}
+  .tarjetaProfesional {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+  }
+
+  .tarjetaProfesional img {
+    width: 150px;
+    height: 150px;
+    margin: 5px 0;
+  }
+
+  .datosProfesional {
+    margin-left: 0;
+    height: auto;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .datosProfesional li {
+    font-size: 18px;
+  }
+
+  .descripcionProfesional {
+    margin: 25px 0;
+    width: 100%;
+    height: auto;
+    padding: 15px 20px;
+  }
+
+  .cajaImagenes {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 10px 0;
+  }
+
+  .cajaImagenes img {
+    width: 200px;
+    height: 200px;
+    margin: 15px 0;
+  }
+
+  #trabajos-container {
+    grid-template-columns: 1fr;
+  }
+
+  #conectarProf,
+  #contratarProf {
+    width: 100%;
+    max-width: 320px;
+    height: 42px;
+  }
 }

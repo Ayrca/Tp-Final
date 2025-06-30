@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   direccionEl.value = currentUser.direccion || '';
   empresaEl.value = currentUser.empresa || '';
   descripcionTexto.textContent = descripcion;
-  estadoBtn.textContent = estado ? 'Activo' : 'Inactivo';
+  estadoBtn.textContent = estado ? 'Disponible' : 'No disponible';
   estadoBtn.classList.toggle('inactivo', !estado);
   avatarEl.src = avatar;
   renderRubros();
@@ -146,11 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Cambiar estado activo/inactivo
-  estadoBtn.addEventListener('click', () => {
-    estado = !estado;
-    estadoBtn.textContent = estado ? 'Activo' : 'Inactivo';
-    estadoBtn.classList.toggle('inactivo', !estado);
-  });
+estadoBtn.addEventListener('click', () => {
+  if (!modoEdicion) return;
+
+  estado = !estado;
+  estadoBtn.textContent = estado ? 'Disponible' : 'No disponible';
+  estadoBtn.classList.toggle('inactivo', !estado);
+});
 
   // Habilitar edición
   editarBtn.addEventListener('click', () => {
@@ -321,13 +323,123 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('cerrar-sesion').addEventListener('click', () => {
+async function cargarTrabajosDelProfesional() {
+  const trabajosContainer = document.getElementById('trabajos-container');
+  if (!trabajosContainer) return;
+
+  try {
+    const [trabajosRes, usuariosRes] = await Promise.all([
+      fetch('../datos/trabajos.json'),
+      fetch('../datos/usuarios.json')
+    ]);
+
+    const trabajos = await trabajosRes.json();
+    const usuarios = await usuariosRes.json();
+
+    const emailToNombre = {};
+    usuarios.forEach(u => {
+      emailToNombre[u.email] = `${u.nombre} ${u.apellido}`;
+    });
+
+    //Filtrar trabajos del profesional actual
+    const trabajosDelProfesional = trabajos.filter(
+      t => t.profesionalEmail === currentUser.email
+    );
+
+    if (trabajosDelProfesional.length === 0) {
+      trabajosContainer.innerHTML = '<p class="cartelNoHay">No tenés trabajos contratados aún.</p>';
+      return;
+    }
+
+// Renderizar trabajos
+trabajosContainer.innerHTML = '';
+trabajosDelProfesional.forEach(trabajo => {
+  let fecha = '';
+  if (trabajo.fechaContratacion) {
+    const fechaObj = new Date(trabajo.fechaContratacion);
+    const dia = fechaObj.getDate();
+    const mes = fechaObj.getMonth() + 1;
+    const anio = fechaObj.getFullYear();
+    fecha = `${dia}/${mes}/${anio}`;
+  }
+
+  const comentario = (trabajo.comentario ?? '').trim() !== '' ? trabajo.comentario : 'Aún no se comentó';
+  const valoracion = (trabajo.valoracion ?? '').toString().trim() !== '' && trabajo.valoracion !== null
+    ? trabajo.valoracion
+    : 'Aún no se valoró';
+
+  // Crear elemento del trabajo
+  const trabajoDiv = document.createElement('div');
+  trabajoDiv.className = 'trabajo-item';
+  trabajoDiv.innerHTML = `
+    <p><strong>Cliente:</strong> ${emailToNombre[trabajo.usuarioEmail] || trabajo.usuarioEmail}</p>
+    <p><strong>Rubro:</strong> ${trabajo.rubro}</p>
+    <p><strong>Estado:</strong> <span class="estado-label">${trabajo.estado}</span></p>
+    <p><strong>Fecha de contratación:</strong> ${fecha}</p>
+    <p><strong>Comentario:</strong> ${comentario}</p>
+    <p><strong>Valoración:</strong> ${valoracion}</p>
+    <div class="botones-trabajo">
+      <button class="finalizar-btn">✅ Finalizar</button>
+      <button class="cancelar-btn">❌ Cancelar</button>
+    </div>
+  `;
+
+  // Deshabilitar botones si ya está finalizado o cancelado
+  if (trabajo.estado === 'Finalizado' || trabajo.estado === 'Cancelado') {
+    trabajoDiv.querySelector('.finalizar-btn').disabled = true;
+    trabajoDiv.querySelector('.cancelar-btn').disabled = true;
+  } else {
+    // Eventos para los botones
+    trabajoDiv.querySelector('.finalizar-btn').addEventListener('click', () => actualizarEstadoTrabajo(trabajo.id, 'Finalizado'));
+    trabajoDiv.querySelector('.cancelar-btn').addEventListener('click', () => actualizarEstadoTrabajo(trabajo.id, 'Cancelado'));
+  }
+
+  trabajosContainer.appendChild(trabajoDiv);
+});
+
+  } catch (err) {
+    console.error('Error cargando trabajos del profesional:', err);
+    trabajosContainer.innerHTML = '<p class="cartelError">Error al cargar trabajos.</p>';
+  }
+}
+
+//funcion para actualizar estado de trabajo: de pendiente a finalizado o cancelado
+async function actualizarEstadoTrabajo(id, nuevoEstado) {
+  try {
+    const res = await fetch('http://localhost:3000/actualizarEstadoTrabajo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, estado: nuevoEstado })
+    });
+
+    if (!res.ok) throw new Error('Error actualizando estado');
+
+    await Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: `Trabajo marcado como ${nuevoEstado}.`,
+      confirmButtonColor: '#28a745'
+    });
+
+    // Volver a cargar trabajos
+    cargarTrabajosDelProfesional();
+
+  } catch (err) {
+    console.error('Error actualizando estado del trabajo:', err);
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo actualizar el estado del trabajo.',
+      confirmButtonColor: '#dc3545'
+    });
+  }
+}
+
+document.getElementById('cerrar-sesion').addEventListener('click', () => {
   localStorage.removeItem('currentUser');  // Borra la sesión local
   window.location.href = '../index.html';  // Redirige al home o login
 });
 
-
-  // Renderizar imágenes inicial
   renderImagenes();
-
+  cargarTrabajosDelProfesional();
 });

@@ -7,20 +7,21 @@
     "tipo": "profesional",
     "rubros": [
       "Abogado",
-      "Contador",
-      "Plomero"
+      "Plomero",
+      "Electricista"
     ],
     "empresa": "Nacho Inc",
     "telefono": "2284502063",
     "direccion": "25 de Mayo 1755",
-    "descripcion": "",
-    "estado": true,
+    "descripcion": "Hola",
+    "estado": false,
     "imagenes": [
-      "/assets/imagenesProfesionales/bf227f12-6fc9-489f-befe-3485de041dab.jpg",
-      "/assets/imagenesProfesionales/5c7de501-afd0-4b01-b8c2-61c7e481d76c.jpg",
-      "/assets/imagenesProfesionales/6daab32e-fec4-49da-8fc0-38a6755e6bd9.jpg"
+      "/assets/imagenesProfesionales/195a6aa7-1334-4f0b-827e-43d67037eb07.jpg",
+      "/assets/imagenesProfesionales/4f0da9a7-ef65-4239-9471-8b2a126fb18e.jpg",
+      "/assets/imagenesProfesionales/0c014501-df66-4b04-9680-5b76902c493e.jpg",
+      "/assets/imagenesProfesionales/b776d7ee-f65a-49a1-9872-e7579f61ea03.jpg"
     ],
-    "avatar": "/assets/imagenesProfesionales/8ca86ef6-bedb-47dc-9bd5-5b084029ef9a.jpg"
+    "avatar": "/assets/imagenesProfesionales/b1ef4993-e20f-4386-bdfe-e37668f2ab4e.jpeg"
   },
   {
     "nombre": "Franker",
@@ -28,13 +29,17 @@
     "email": "rbc_ocp@hotmail.com",
     "password": "123456",
     "tipo": "profesional",
-    "rubros": [],
+    "rubros": [
+      "Abogado"
+    ],
     "empresa": "FrankerAcount",
     "telefono": "2284589286",
     "direccion": "gralpaz1233",
-    "descripcion": "",
+    "descripcion": "Me gusta mirar netflix por las tardes",
     "estado": true,
-    "imagenes": []
+    "imagenes": [],
+    "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
+    "estadoCuenta": true
   },
   {
     "nombre": "Ayrton",
@@ -45,6 +50,8 @@
     "rubros": [],
     "empresa": "",
     "telefono": "2284",
-    "direccion": "Bolivar 1943"
+    "direccion": "Bolivar 1943",
+    "avatar": "",
+    "estadoCuenta": true
   }
 ]

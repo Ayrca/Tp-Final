@@ -284,3 +284,82 @@
 #cerrar-sesion:hover {
   background-color: #b02a37;
 }
+
+/* trabajos contratados */
+.trabajos-contratados {
+  margin-bottom: 30px;
+}
+
+.trabajos-contratados h3 {
+  margin-bottom: 15px;
+  font-size: 1.4em;
+  color: #2e7d32;
+}
+
+#trabajos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.trabajo-item {
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.trabajo-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.trabajo-item p {
+  margin: 6px 0;
+}
+
+.trabajo-item p strong {
+  color: #4caf50;
+}
+
+.cartelNoHay,
+.cartelError {
+  text-align: center;
+  padding: 15px;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 8px;
+}
+
+.botones-trabajo {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.botones-trabajo button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.finalizar-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.cancelar-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.finalizar-btn:disabled,
+.cancelar-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
