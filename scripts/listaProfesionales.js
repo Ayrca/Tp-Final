@@ -141,7 +141,7 @@ function contratarProfesional(emailProfesional) {
   const emailUsuario = currentUser ? currentUser.email : null;
   const rubro = localStorage.getItem('categoria');
 
-  // ✅ Validar login
+  // Validar login
   if (!emailUsuario) {
     Swal.fire({
       icon: 'warning',
@@ -152,7 +152,7 @@ function contratarProfesional(emailProfesional) {
     return;
   }
 
-  // ✅ Validar tipo de usuario
+  // Validar tipo de usuario
   if (currentUser.tipo !== 'comun') {
     Swal.fire({
       icon: 'error',
