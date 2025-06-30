@@ -1,0 +1,50 @@
+[
+  {
+    "nombre": "Ignacio Gaston",
+    "apellido": "Amaya",
+    "email": "ignacioamaya04@gmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "Abogado",
+      "Contador",
+      "Plomero"
+    ],
+    "empresa": "Nacho Inc",
+    "telefono": "2284502063",
+    "direccion": "25 de Mayo 1755",
+    "descripcion": "",
+    "estado": true,
+    "imagenes": [
+      "/assets/imagenesProfesionales/bf227f12-6fc9-489f-befe-3485de041dab.jpg",
+      "/assets/imagenesProfesionales/5c7de501-afd0-4b01-b8c2-61c7e481d76c.jpg",
+      "/assets/imagenesProfesionales/6daab32e-fec4-49da-8fc0-38a6755e6bd9.jpg"
+    ],
+    "avatar": "/assets/imagenesProfesionales/8ca86ef6-bedb-47dc-9bd5-5b084029ef9a.jpg"
+  },
+  {
+    "nombre": "Franker",
+    "apellido": "Arcidiacono",
+    "email": "rbc_ocp@hotmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [],
+    "empresa": "FrankerAcount",
+    "telefono": "2284589286",
+    "direccion": "gralpaz1233",
+    "descripcion": "",
+    "estado": true,
+    "imagenes": []
+  },
+  {
+    "nombre": "Ayrton",
+    "apellido": "Carli",
+    "email": "ayrton@gmail.com",
+    "password": "123456",
+    "tipo": "comun",
+    "rubros": [],
+    "empresa": "",
+    "telefono": "2284",
+    "direccion": "Bolivar 1943"
+  }
+]

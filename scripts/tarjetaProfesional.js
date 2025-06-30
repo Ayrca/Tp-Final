@@ -1,6 +1,5 @@
 function mostrarTarjetaProfesional() {
 // Obtener el índice del profesional seleccionado desde localStorage
-
   const indexProfesional = localStorage.getItem('idProfesional');
   const categoria = localStorage.getItem('categoria');
 
@@ -9,8 +8,14 @@ function mostrarTarjetaProfesional() {
     .then(response => response.json())
     .then(data => {
 
-      const profesionales = data[categoria];
-      const profesional = profesionales[indexProfesional];
+  const profesionales = data[categoria];
+  const profesional = profesionales[indexProfesional];
+
+  const disponible = profesional.disponible; 
+  const labelDisponible = document.getElementById('disponible');
+
+labelDisponible.textContent = disponible ? 'Disponible' : 'No Disponible';
+labelDisponible.className = disponible ? 'disponible' : 'no-disponible';
 
       // Crear la tarjeta del profesional
       const tarjetaProfesional = document.querySelector('.tarjetaProfesional');
@@ -30,5 +35,5 @@ function mostrarTarjetaProfesional() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  mostrarTarjetaProfesional();
+mostrarTarjetaProfesional();
 });

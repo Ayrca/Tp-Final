@@ -3,9 +3,9 @@
 { "nombre": "Abogado", "imagen": "assets/images/oficios/abogado.png"},
 { "nombre": "Arquitecto", "imagen": "assets/images/oficios/arquitecto.png" },
 { "nombre": "Contador", "imagen": "assets/images/oficios/contador.png" },
-{"nombre": "Diseñador gráfico", "imagen": "assets/images/oficios/disenador-grafico.png" },
-{"nombre": "Docente", "imagen": "assets/images/oficios/docente.png" },
-{"nombre": "Enfermero", "imagen": "assets/images/oficios/enfermero.png" },
+{ "nombre": "Diseñador gráfico", "imagen": "assets/images/oficios/disenador-grafico.png" },
+{ "nombre": "Docente", "imagen": "assets/images/oficios/docente.png" },
+{ "nombre": "Enfermero", "imagen": "assets/images/oficios/enfermero.png" },
 { "nombre": "Ingeniero", "imagen": "assets/images/oficios/ingeniero.png" },
 { "nombre": "Médico", "imagen": "assets/images/oficios/medico.png" },
 { "nombre": "Plomero", "imagen": "assets/images/oficios/plomero.png" },
@@ -22,39 +22,6 @@
 { "nombre": "Soldador", "imagen": "assets/images/oficios/soldador.png" }
 ],
 
-"publicidad" : [
-{ "nombre": "Casa Ropa Puro Marcas", "imagen": "assets/images/patro/patroN1.png" },
-{ "nombre": "Ferreterias Expres", "imagen": "assets/images/patro/patroN2.png" },
-{ "nombre": "Casa Gary", "imagen": "assets/images/patro/patroN3.png" },
-{ "nombre": "La Cocina", "imagen": "assets/images/patro/patroN4.png" },
-{ "nombre": "Tropi Podas", "imagen":"assets/images/patro/patroN5.png" }
-],
-
-"publicidad1" : [
-{ "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
-{ "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
-{ "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
-{ "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
-{ "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" },
-{ "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
-{ "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
-{ "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
-{ "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
-{ "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" }
-],
-
-"publicidad2" : [
-{ "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
-{ "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
-{ "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
-{ "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
-{ "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" },
-{ "nombre": "Casa Ropa Puro Marcas", "imagen": "../assets/images/patro/patroN1.png" },
-{ "nombre": "Ferreterias Expres", "imagen": "../assets/images/patro/patroN2.png" },
-{ "nombre": "Casa Gary", "imagen": "../assets/images/patro/patroN3.png" },
-{ "nombre": "La Cocina", "imagen": "../assets/images/patro/patroN4.png" },
-{ "nombre": "Tropi Podas", "imagen":"../assets/images/patro/patroN5.png" }
-],
 
 "Abogado" :[
 {"nombre":"Carlos",
@@ -62,7 +29,8 @@
 "email":"carlos@hotmail.com",
 "direccion":"Hornos 1212",
 "valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
+"imagen":"../assets/images/profesionales/prof0.png",
+"disponible": true
 },
 
 {"nombre":"Pablo",
@@ -70,118 +38,16 @@
 "email":"pablo@hotmail.com",
 "direccion":"Beruti 1212",
 "valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
+"imagen":"../assets/images/profesionales/prof1.png",
+"disponible": false
 },
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
-},
-
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
-},
-
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
-},
-
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
-},
-
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
-},
-
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
-},
-
-{"nombre":"Carlos",
-"apellido":"Perez",
-"email":"carlos@hotmail.com",
-"direccion":"Hornos 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
-},
-
-{"nombre":"Pablo",
-"apellido":"Gonzales",
-"email":"pablo@hotmail.com",
-"direccion":"Beruti 1212",
-"valuacion": 3,
-"imagen":"../assets/images/patro/patroN5.png"
+{"nombre":"Pedro",
+"apellido":"Blonder",
+"email":"pedro@hotmail.com",
+"direccion":"Funes 4212",
+"valuacion": 2,
+"imagen":"../assets/images/profesionales/prof3.png",
+"disponible": false
 }
 ],
 
@@ -190,16 +56,18 @@
 "apellido":"Palida",
 "email":"Arndrea@hotmail.com",
 "direccion":"Tacuari 1212",
-"valuacion": 5,
-"imagen":"../assets/images/patro/patroN3.png"
+"valuacion": 1,
+"imagen":"../assets/images/profesionales/prof5.png",
+"disponible": true
 },
 
 {"nombre":"Ana",
 "apellido":"Rosal",
 "email":"anapana@hotmail.com",
 "direccion":"Merlo 1212",
-"valuacion": 4,
-"imagen":"../assets/images/patro/patroN5.png"
+"valuacion": 2,
+"imagen":"../assets/images/profesionales/prof4.png",
+"disponible": true
 }
 ]
 

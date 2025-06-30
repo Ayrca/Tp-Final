@@ -42,24 +42,21 @@
           <img src="./styles/logo-afip.jpg" alt="Logo" width="70" height="52" />
         </a>
       </div>
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="./index.html" class="nav-link px-2 link-secondary fs-3">Home</a></li>
-        <li><a href="#" class="nav-link px-2 link-secondary fs-3">Features</a></li>
-        <li><a href="#" class="nav-link px-2 link-secondary fs-3">Pricing</a></li>
-        <li><a href="#" class="nav-link px-2 link-secondary fs-3">FAQs</a></li>
-        <li><a href="#" class="nav-link px-2 link-secondary fs-3">About</a></li>
+      <ul class="nav col-md-auto mb-2 mb-md-0 ms-auto">
+        <li><a href="index.html" class="nav-link px-2 link-secondary">Inicio</a></li>
+        <li><a href="#" class="nav-link px-2 link-secondary">Oficios</a></li>
       </ul>
       <div class="col-md-3 text-end p-2">
         <button
           type="button"
-          class="btn btn-outline-secondary d-inline-flex align-items-center"
+          class="btn btn-dark d-inline-flex align-items-center"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
           Iniciar Sesion
         </button>
         <a href="./pages/pre-registro.html">
-          <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center">
+          <button type="button" class="btn btn-dark d-inline-flex align-items-center">
             Registrarse
           </button>
         </a>
@@ -129,13 +126,14 @@
     <!-- Main -->
     <main class="indexmain">
       <div class="texto1">
+        <a href="./pages/admin1.html">boton administrador</a>
         <h2>El Oficio para vos</h2>
         <p>
           La aplicación que te permitirá encontrar los mejores profesionales de
           manera fácil y rápida.
         </p>
         <div>
-        <input type="search" id="buscador" placeholder="Buscar oficio..." />
+        <input  type="search" id="buscador" placeholder="Buscar oficio..." />
         <a id="irTodos" href="pages/listaOficios.html">
         <button>Todos</button></a>
         </div>
@@ -146,9 +144,10 @@
         <section id="propaganda1"></section>
       </section>
 
-      <section class="contenedorCarrusel1">
-        <section id="oficio-container"></section>
 
+      <section class="contenedorCarrusel1">
+        <h3>Categorías relevantes</h3>
+        <section id="oficio-container"></section>
         <div class="cajaBtn1">
           <button id="anterior1">&#60;</button>
           <h2 class="catalogoCartel">Oficios</h2>
@@ -189,9 +188,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="scripts/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="scripts/sesion.js"></script>
     <script src="scripts/modal-login.js"></script>
+    <script src="scripts/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"

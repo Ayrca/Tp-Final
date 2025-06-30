@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Cuenta - Profesional</title>
+  <link rel="stylesheet" href="../styles/global.css">
+  <link rel="stylesheet" href="../styles/mi-cuenta.css">
+</head>
+<body>
+  <main class="cuenta-container">
+    <section class="perfil-usuario">
+      <div id="avatar-container" class="avatar-container">
+        <img id="avatar" src="../assets/images/avatar-de-usuario.png" alt="Avatar" class="avatar-img" />
+        <div id="cambiar-avatar" class="cambiar-avatar">+</div>
+        <input type="file" id="input-avatar" accept="image/*" hidden />
+      </div>
+
+      <div class="info">
+        <h2 id="profesion">Profesional</h2>
+        <p><strong>Nombre y apellido:</strong> <span id="nombre"></span></p>
+        <p><strong>Email:</strong> <input type="email" id="email" disabled /></p>
+        <p><strong>Teléfono:</strong> <input type="tel" id="telefono" disabled /></p>
+        <p><strong>Dirección:</strong> <input type="text" id="direccion" disabled /></p>
+        <p><strong>Empresa:</strong> <input type="text" id="empresa" disabled /></p>
+
+        <p><strong>Rubros:</strong></p>
+        <div id="rubros" class="rubros-container">
+          <ul id="lista-rubros"></ul>
+          <div id="rubro-nuevo-container" hidden>
+            <select id="nuevo-rubro">
+              <option value="">Seleccioná un rubro</option>
+            </select>
+            <button id="agregar-rubro">➕</button>
+          </div>
+        </div>
+
+        <div class="estado">
+          <strong><span id="estado-label">Estado: </span></strong>
+          <button id="toggle-estado" class="estado-btn">Activo</button>
+        </div>
+
+        <div class="botones-edicion">
+          <button id="editar-datos">✏️ Modificar datos</button>
+          <button id="guardar-datos" hidden>✔️ Guardar cambios</button>
+          <button id="cancelar-datos" hidden>❌ Cancelar</button>
+          <!-- Botón Cerrar Sesión agregado -->
+          <button id="cerrar-sesion">🚪 Cerrar sesión</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="descripcion">
+      <div class="descripcion-header">
+        <h3>Descripción de habilidades, conocimientos y trabajos anteriores</h3>
+      </div>
+      <div id="descripcion-texto" contenteditable="false" class="descripcion-texto"></div>
+    </section>
+
+    <section class="galeria">
+      <h3>Trabajos anteriores</h3>
+      <div class="imagenes-container" id="imagenes-container"></div>
+      <input type="file" id="file-input" accept="image/*" hidden />
+      <button id="agregar-imagen">➕ Agregar imagen</button>
+    </section>
+  </main>
+
+  <script src="../scripts/mi-cuenta.js"></script>
+</body>
+</html>
