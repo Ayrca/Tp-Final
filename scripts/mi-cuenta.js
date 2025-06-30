@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   direccionEl.value = currentUser.direccion || '';
   empresaEl.value = currentUser.empresa || '';
   descripcionTexto.textContent = descripcion;
-  estadoBtn.textContent = estado ? 'Activo' : 'Inactivo';
+  estadoBtn.textContent = estado ? 'Disponible' : 'No disponible';
   estadoBtn.classList.toggle('inactivo', !estado);
   avatarEl.src = avatar;
   renderRubros();
@@ -146,11 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Cambiar estado activo/inactivo
-  estadoBtn.addEventListener('click', () => {
-    estado = !estado;
-    estadoBtn.textContent = estado ? 'Activo' : 'Inactivo';
-    estadoBtn.classList.toggle('inactivo', !estado);
-  });
+estadoBtn.addEventListener('click', () => {
+  if (!modoEdicion) return;
+
+  estado = !estado;
+  estadoBtn.textContent = estado ? 'Disponible' : 'No disponible';
+  estadoBtn.classList.toggle('inactivo', !estado);
+});
 
   // Habilitar edición
   editarBtn.addEventListener('click', () => {

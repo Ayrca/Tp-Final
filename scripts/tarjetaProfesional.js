@@ -102,7 +102,6 @@ if (trabajosProfesional.length === 0) {
 
 mainContainer.appendChild(cajaValoraciones);
 
-
     // Contenedor botones conectar y contratar
     const conectarContainer = document.createElement('div');
     conectarContainer.classList.add('conectarContainer');
