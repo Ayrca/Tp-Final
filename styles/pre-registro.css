@@ -1,14 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-body {
+/* Reset básico y configuración global */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   font-family: 'Inter', sans-serif;
   background: linear-gradient(to right, #eafaf1, #f4f4f4);
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El main ocupa todo el alto disponible para empujar el footer */
+main {
+  flex: 1;
   padding: 20px;
+}
+
+/* centrado vertical y horizontal */
+main.centrado {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  flex-direction: column;
 }
 
 .pre-registro-container {
@@ -26,12 +40,14 @@ body {
   transform: scale(1.01);
 }
 
+/* Título */
 h2 {
   margin-bottom: 30px;
   font-size: 1.8rem;
   color: #2c3e50;
 }
 
+/* Botones de selección de tipo de cuenta */
 .opciones {
   display: flex;
   gap: 20px;
