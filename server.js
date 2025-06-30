@@ -450,6 +450,60 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   return;
 }
 
+//actualizar estado de trabajo
+else if (req.method === 'POST' && req.url === '/actualizarEstadoTrabajo') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const { id, estado } = JSON.parse(body);
+
+      if (!id || !estado) {
+        sendJSON(res, 400, { error: 'Faltan datos: id y estado' });
+        return;
+      }
+
+      const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+      fs.readFile(trabajosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo trabajos.json' });
+          return;
+        }
+
+        let trabajos = [];
+        try {
+          trabajos = JSON.parse(data);
+        } catch {
+          sendJSON(res, 500, { error: 'Error parseando trabajos.json' });
+          return;
+        }
+
+        const index = trabajos.findIndex(t => t.id === id);
+        if (index === -1) {
+          sendJSON(res, 404, { error: 'Trabajo no encontrado' });
+          return;
+        }
+
+        trabajos[index].estado = estado;
+
+        fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error guardando cambios' });
+            return;
+          }
+
+          sendJSON(res, 200, { success: true });
+        });
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
 //subir imagen de trabajos, publicidad y avatar
 else if (req.method === 'POST' && req.url === '/subirImagen') {
   const formidable = require('formidable');
