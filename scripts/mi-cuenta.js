@@ -401,6 +401,7 @@ trabajosDelProfesional.forEach(trabajo => {
   }
 }
 
+//funcion para actualizar estado de trabajo: de pendiente a finalizado o cancelado
 async function actualizarEstadoTrabajo(id, nuevoEstado) {
   try {
     const res = await fetch('http://localhost:3000/actualizarEstadoTrabajo', {
@@ -432,7 +433,7 @@ async function actualizarEstadoTrabajo(id, nuevoEstado) {
   }
 }
 
-  document.getElementById('cerrar-sesion').addEventListener('click', () => {
+document.getElementById('cerrar-sesion').addEventListener('click', () => {
   localStorage.removeItem('currentUser');  // Borra la sesión local
   window.location.href = '../index.html';  // Redirige al home o login
 });
