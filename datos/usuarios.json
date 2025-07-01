@@ -53,5 +53,17 @@
     "direccion": "Bolivar 1943",
     "avatar": "",
     "estadoCuenta": true
+  },
+  {
+    "nombre": "Ayelen",
+    "apellido": "Soto",
+    "email": "ayelensoto1994@gmail.com",
+    "password": "123456",
+    "tipo": "Cliente",
+    "rubros": [],
+    "empresa": "",
+    "telefono": "02284502063",
+    "direccion": "Leal 441",
+    "avatar": "/assets/imagenesProfesionales/4d4f37be-5c1d-4445-a642-90789178e4f9.jpg"
   }
 ]

@@ -180,7 +180,7 @@ function contratarProfesional(emailProfesional) {
   }
 
   // Validar tipo de usuario
-  if (currentUser.tipo !== 'comun') {
+  if (currentUser.tipo !== 'Cliente') {
     Swal.fire({
       icon: 'error',
       title: 'Acceso denegado',
