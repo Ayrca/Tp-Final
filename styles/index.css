@@ -3,6 +3,11 @@
     padding: 0;
     box-sizing: border-box;
 }
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
+}
 
 /*body y main */
 body {
@@ -10,8 +15,7 @@ body {
     background-size: cover;
     background-position: center;
     line-height: 1.6;
-    position: relative;
-    
+    position: relative;    
 }
 
 /*header */
@@ -147,8 +151,7 @@ color: #34495e;
     display: flex;
     flex-direction: row;
     justify-items: center;
-    width:250px ;
-
+    width:250px ;  
 }
 
 .cajaBtn1 button { 
@@ -156,6 +159,7 @@ color: #34495e;
     height: 30px;
     margin: 10px;
     margin-top: 15px;
+    border-radius: 5px;
   }
 
 .contenedorCarrusel2{

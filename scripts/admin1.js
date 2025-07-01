@@ -119,7 +119,6 @@ inputListaArray.addEventListener('change', () => {
 let selectedIdGlobal = null;
 let currentItem = null;
 
-
 inputLista.addEventListener('change', async () => {
   const selectedArray = inputListaArray.value;
   const selectedIndex = inputLista.selectedIndex;
@@ -141,35 +140,78 @@ inputLista.addEventListener('change', async () => {
 document.getElementById('borrarDato').addEventListener('click', async () => {
   const selectedArray = inputListaArray.value;
   const selectedId = inputLista.value;
-  await eliminarPublicidad(selectedId, selectedArray);
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: '¿Quieres borrar este dato?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, borrar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      eliminarPublicidad(selectedId, selectedArray).then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Dato borrado con éxito',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        // Actualizar la lista de datos
+        inputListaArray.dispatchEvent(new Event('change'));
+      });
+    }
+  });
 });
 
-// Función para modificar publicidad
 
+// Función para modificar publicidad
 document.getElementById('modificarDato').addEventListener('click', async () => {
   const publicidad = {
     nombre: document.getElementById('input-Nombre').value,
     imagen: inputImagen.value,
     pagina: inputPagina.value
   };
-  const selectedArray = inputListaArray.value; // obtén el nombre del array seleccionado
-  await actualizarPublicidad(currentItem.id, selectedArray, publicidad);
+  const selectedArray = inputListaArray.value;
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: '¿Quieres modificar este dato?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, modificar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      actualizarPublicidad(currentItem.id, selectedArray, publicidad).then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Dato modificado con éxito',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        // Actualizar la lista de datos
+        inputListaArray.dispatchEvent(new Event('change'));
+      });
+    }
+  });
 });
 
-// Evento para agregar publicidad
+
+// Evento despliega botones para agregar publicidad
 document.getElementById('agregarDato').addEventListener('click', () => {
   const agregarBotones = document.getElementById('agregar-botones');
   agregarBotones.innerHTML = `
     <input type="text" id="nombre-nuevo" placeholder="Nombre">
     <input type="text" id="imagen-nueva-ruta" placeholder="Ruta de la imagen" readonly>
     <input type="text" id="pagina-nueva" placeholder="URL de la página web">
-
     <input type="file" id="imagen" accept="image/*">
     <button id="subir-imagen">Subir imagen</button>
     <button id="aceptar-agregar">Aceptar</button>
     <button id="cancelar-agregar">Cancelar</button>
   `;
 
+// Evento para subir la imagen desde el dispositivo
 document.getElementById('subir-imagen').addEventListener('click', () => {
   const archivo = document.getElementById('imagen').files[0];
   const formData = new FormData();
@@ -191,17 +233,40 @@ fetch('/subirImagen', {
 .catch((error) => console.error('Error al subir imagen:', error));
 });
 
-  document.getElementById('aceptar-agregar').addEventListener('click', async () => {
-    const nombreArray = inputListaArray.value;
-    const objeto = {
-      nombre: document.getElementById('nombre-nuevo').value,
-      imagen: document.getElementById('imagen-nueva-ruta').value,
-      pagina: document.getElementById('pagina-nueva').value
-    };
-    await agregarPublicidad(nombreArray, objeto);
-    agregarBotones.innerHTML = '';
-  });
 
+// Evento para confirmar agregar publicidad
+document.getElementById('aceptar-agregar').addEventListener('click', async () => {
+  const nombreArray = inputListaArray.value;
+  const objeto = {
+    nombre: document.getElementById('nombre-nuevo').value,
+    imagen: document.getElementById('imagen-nueva-ruta').value,
+    pagina: document.getElementById('pagina-nueva').value
+  };
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: '¿Quieres agregar este dato?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, agregar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      agregarPublicidad(nombreArray, objeto).then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Dato agregado con éxito',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        agregarBotones.innerHTML = '';
+        inputListaArray.dispatchEvent(new Event('change'));
+      });
+    }
+  });
+});
+
+// Evento cancela agregar publicidad y guarda botones
   document.getElementById('cancelar-agregar').addEventListener('click', () => {
     agregarBotones.innerHTML = '';
   });

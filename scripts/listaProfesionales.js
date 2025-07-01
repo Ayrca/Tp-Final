@@ -163,24 +163,39 @@ function contratarProfesional(emailProfesional) {
     return;
   }
 
-  const nuevoTrabajo = {
-    id: generarUUID(),
-    profesionalEmail: emailProfesional,
-    usuarioEmail: emailUsuario,
-    rubro: rubro,
-    estado: 'pendiente',
-    valoracion: null,
-    comentario: "",
-    fechaContratacion: new Date().toISOString().split('T')[0]
-  };
+// Traer usuarios para buscar el teléfono del profesional
+fetch('../datos/usuarios.json')
+  .then(res => res.json())
+  .then(usuarios => {
+    const profesional = usuarios.find(u => u.email === emailProfesional);
 
-  // Enviar al servidor
-  fetch('http://localhost:3000/api/trabajos', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(nuevoTrabajo)
+    if (!profesional) {
+      throw new Error('Profesional no encontrado');
+    }
+
+    //Traer el teléfono del cliente desde currentUser
+    const telefonoCliente = currentUser.telefono || '';
+
+    const nuevoTrabajo = {
+      id: generarUUID(),
+      profesionalEmail: emailProfesional,
+      usuarioEmail: emailUsuario,
+      rubro: rubro,
+      telefonoProfesional: profesional.telefono || '',
+      telefonoCliente: telefonoCliente,               
+      estado: 'pendiente',
+      valoracion: null,
+      comentario: '',
+      fechaContratacion: new Date().toISOString().split('T')[0]
+    };
+
+    return fetch('http://localhost:3000/api/trabajos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(nuevoTrabajo)
+    });
   })
   .then(res => {
     if (!res.ok) {
@@ -234,8 +249,17 @@ function startCarruselHorizontal(containerId, items, interval) {
     carruselItem.style.width = '100vw';
     carruselItem.style.flexShrink = 0;
     carruselItem.style.display = 'inline-block';
-    carruselItem.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}";">`;
+    carruselItem.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}" data-url="${item.pagina}">`;
     container.appendChild(carruselItem);
+  });
+
+
+// Agregar evento de clic a cada imagen
+  container.addEventListener('click', (e) => {
+    if (e.target.tagName === 'IMG') {
+      const url = e.target.getAttribute('data-url');
+      window.open(url, '_blank');
+    }
   });
 
   let currentIndex = 0;
@@ -261,6 +285,13 @@ function startCarruselVertical(containerId, items, interval) {
     container.appendChild(carruselItem);
   });
 
+// Agregar evento de clic a cada imagen
+  container.addEventListener('click', (e) => {
+    if (e.target.tagName === 'IMG') {
+      const url = e.target.getAttribute('data-url');
+      window.open(url, '_blank');
+    }
+  });
   let currentIndex = 0;
   setInterval(() => {
     currentIndex = (currentIndex + 1) % items.length;

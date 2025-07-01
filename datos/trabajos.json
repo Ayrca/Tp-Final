@@ -1,52 +1,72 @@
 [
   {
-    "id": "552b88ad-6ee4-481f-98b3-b59857291cf0",
+    "id": "39f394be-39d0-43cc-824a-769150a50be2",
     "profesionalEmail": "ignacioamaya04@gmail.com",
-    "usuarioEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
     "rubro": "Abogado",
+    "telefonoProfesional": "2284502063",
+    "telefonoCliente": "02284502063",
+    "estado": "Finalizado",
+    "valoracion": 5,
+    "comentario": "Hola",
+    "fechaContratacion": "2025-07-01"
+  },
+  {
+    "id": "6177e292-3b40-4d34-8910-99ba9e571ed9",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Abogado",
+    "telefonoProfesional": "2284502063",
+    "telefonoCliente": "02284502063",
+    "estado": "Cancelado",
+    "valoracion": null,
+    "comentario": "No tenia las herramientas",
+    "fechaContratacion": "2025-07-01"
+  },
+  {
+    "id": "47e97d77-59ef-482a-954d-c3a428839616",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Abogado",
+    "telefonoProfesional": "2284502063",
+    "telefonoCliente": "02284502063",
     "estado": "Finalizado",
     "valoracion": null,
     "comentario": "",
-    "fechaContratacion": "2025-06-30"
+    "fechaContratacion": "2025-07-01"
   },
   {
-    "id": "4e0254e5-000f-47fd-8527-b55d32859d63",
+    "id": "25ce2461-9c75-4891-a284-46d862fccb2e",
     "profesionalEmail": "ignacioamaya04@gmail.com",
     "usuarioEmail": "ayelensoto1994@gmail.com",
     "rubro": "Abogado",
     "estado": "Finalizado",
-    "valoracion": null,
-    "comentario": "",
-    "fechaContratacion": "2025-06-30"
+    "valoracion": 4,
+    "comentario": "Muy bueno",
+    "fechaContratacion": "2025-07-01"
   },
   {
-    "id": "063dfe67-2187-4d6b-8a7e-70a355284fd9",
+    "id": "4ab3c14d-6254-4648-992e-f900a5bb55b9",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Abogado",
+    "telefonoProfesional": "2284502063",
+    "telefonoCliente": "02284502063",
+    "estado": "Cancelado",
+    "valoracion": null,
+    "comentario": "Porque no vino",
+    "fechaContratacion": "2025-07-01"
+  },
+  {
+    "id": "2741ac56-43aa-455a-869d-319d58b4683f",
     "profesionalEmail": "rbc_ocp@hotmail.com",
     "usuarioEmail": "ayelensoto1994@gmail.com",
     "rubro": "Abogado",
+    "telefonoProfesional": "2284589286",
+    "telefonoCliente": "02284502063",
     "estado": "pendiente",
     "valoracion": null,
     "comentario": "",
-    "fechaContratacion": "2025-06-30"
-  },
-  {
-    "id": "615af088-7208-42a4-9a9a-45fb308a956d",
-    "profesionalEmail": "ignacioamaya04@gmail.com",
-    "usuarioEmail": "ayelensoto1994@gmail.com",
-    "rubro": "Abogado",
-    "estado": "pendiente",
-    "valoracion": null,
-    "comentario": "",
-    "fechaContratacion": "2025-06-30"
-  },
-  {
-    "id": "5f66a2b3-e8c9-4bf9-b8ae-c45c3b7b91bb",
-    "profesionalEmail": "ignacioamaya04@gmail.com",
-    "usuarioEmail": "ayelensoto1994@gmail.com",
-    "rubro": "Abogado",
-    "estado": "pendiente",
-    "valoracion": null,
-    "comentario": "",
-    "fechaContratacion": "2025-06-30"
+    "fechaContratacion": "2025-07-01"
   }
 ]

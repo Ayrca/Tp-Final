@@ -4,15 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mi cuenta</title>
-    <link rel="icon" href="../assets/images/logo-afip.jpg" type="image/jpg">    
-    <link rel="stylesheet" href="../styles/mi-cuenta.css">
+    <link rel="icon" href="../assets/images/logo-afip.jpg" type="image/jpg" />
+    <link rel="stylesheet" href="../styles/mi-cuenta.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- cargo el header -->
     <script>
       fetch("/pages/header.html")
-        .then(response => response.text())
-        .then(data => {
+        .then((response) => response.text())
+        .then((data) => {
           document.getElementById("header-container").innerHTML = data;
 
           // Script de login
@@ -37,10 +37,10 @@
               }
 
               try {
-                const response = await fetch('http://localhost:3000/login', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ email, password })
+                const response = await fetch("http://localhost:3000/login", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email, password }),
                 });
 
                 const data = await response.json();
@@ -58,10 +58,14 @@
                 user.isLoggedIn = true;
                 localStorage.setItem("currentUser", JSON.stringify(user));
 
-                const modalInstance = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
+                const modalInstance = bootstrap.Modal.getInstance(
+                  document.getElementById("exampleModal")
+                );
                 modalInstance.hide();
 
-                const loginBtn = document.querySelector("button[data-bs-target='#exampleModal']");
+                const loginBtn = document.querySelector(
+                  "button[data-bs-target='#exampleModal']"
+                );
                 if (loginBtn) {
                   loginBtn.outerHTML = `
                     <a href="/pages/mi-cuenta.html" class="btn btn-outline-success">
@@ -69,14 +73,16 @@
                     </a>
                   `;
                 }
-
+                const btnRegistrar1 = document.getElementById("btnRegistrar");
+                if (btnRegistrar1) {
+                 btnRegistrar1.style.display = "none";
+  }                   
                 Swal.fire({
                   icon: "success",
                   title: `¡Bienvenido, ${user.nombre}!`,
                   timer: 1500,
                   showConfirmButton: false,
                 });
-
               } catch (error) {
                 Swal.fire({
                   icon: "error",
@@ -91,7 +97,9 @@
           // verificar si hay un currentUser y cambia el boton a mi cuenta
           const currentUser = JSON.parse(localStorage.getItem("currentUser"));
           if (currentUser?.isLoggedIn) {
-            const loginBtn = document.querySelector("button[data-bs-target='#exampleModal']");
+            const loginBtn = document.querySelector(
+              "button[data-bs-target='#exampleModal']"
+            );
             if (loginBtn) {
               loginBtn.outerHTML = `
                 <a href="/pages/mi-cuenta.html" class="btn btn-outline-success">
@@ -99,6 +107,11 @@
                 </a>
               `;
             }
+            const registerBtn = document.querySelector("button[data-bs-target='#registerModal']");
+      if (registerBtn) {
+        registerBtn.style.display = "none"; // Oculta el botón "Registrarse"
+      }
+
           }
         });
     </script>
@@ -110,7 +123,12 @@
     <main class="cuenta-container">
       <section class="perfil-usuario">
         <div id="avatar-container" class="avatar-container">
-          <img id="avatar" src="../assets/images/avatar-de-usuario.png" alt="Avatar" class="avatar-img" />
+          <img
+            id="avatar"
+            src="../assets/images/avatar-de-usuario.png"
+            alt="Avatar"
+            class="avatar-img"
+          />
           <div id="cambiar-avatar" class="cambiar-avatar">+</div>
           <input type="file" id="input-avatar" accept="image/*" hidden />
         </div>
@@ -118,10 +136,21 @@
         <div class="info">
           <h2 id="profesion">Mi perfil</h2>
           <p><strong>Nombre y apellido:</strong> <span id="nombre"></span></p>
-          <p><strong>Email:</strong> <input type="email" id="email" disabled /></p>
-          <p><strong>Teléfono:</strong> <input type="tel" id="telefono" disabled /></p>
-          <p><strong>Dirección:</strong> <input type="text" id="direccion" disabled /></p>
-          <p id="empresa-row"><strong>Empresa:</strong> <input type="text" id="empresa" disabled /></p>
+          <p>
+            <strong>Email:</strong> <input type="email" id="email" disabled />
+          </p>
+          <p>
+            <strong>Teléfono:</strong>
+            <input type="tel" id="telefono" disabled />
+          </p>
+          <p>
+            <strong>Dirección:</strong>
+            <input type="text" id="direccion" disabled />
+          </p>
+          <p id="empresa-row">
+            <strong>Empresa:</strong>
+            <input type="text" id="empresa" disabled />
+          </p>
 
           <div id="rubros-section">
             <p><strong>Rubros:</strong></p>
@@ -152,9 +181,15 @@
 
       <section class="descripcion" id="descripcion-section">
         <div class="descripcion-header">
-          <h3>Descripción de habilidades, conocimientos y trabajos anteriores</h3>
+          <h3>
+            Descripción de habilidades, conocimientos y trabajos anteriores
+          </h3>
         </div>
-        <div id="descripcion-texto" contenteditable="false" class="descripcion-texto"></div>
+        <div
+          id="descripcion-texto"
+          contenteditable="false"
+          class="descripcion-texto"
+        ></div>
       </section>
 
       <section class="galeria" id="galeria-section">
@@ -176,15 +211,17 @@
     <!-- cargo el footer -->
     <script>
       fetch("/pages/footer.html")
-        .then(response => response.text())
-        .then(data => {
+        .then((response) => response.text())
+        .then((data) => {
           document.getElementById("footer-container").innerHTML = data;
         });
     </script>
 
     <script src="../scripts/mi-cuenta.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

@@ -59,6 +59,16 @@
               return;
             }
 
+            // Verificar estado de cuenta
+      if (!data.estadoCuenta) {
+        Swal.fire({
+          icon: "error",
+          title: "Cuenta inactiva",
+          text: "Tu cuenta está inactiva. Por favor, contacta con el administrador para activarla.",
+        });
+        return;
+      }
+
             // Usuario correcto
             const user = data;
             user.isLoggedIn = true;
@@ -116,12 +126,12 @@
     <!-- Header -->
     <div id="header-container"></div>
 
-    <!-- Main -->
+<!-- Main -->
     <main class="indexmain">
       <div class="texto1">
         <a href="./pages/admin1.html">boton administrador</a>
          <a href="./pages/admin2.html">boton administrador2</a>
-
+           <a href="./pages/admin3.html">boton administrador3</a>
         <h2>El Oficio para vos</h2>
         <p>
           La aplicación que te permitirá encontrar los mejores profesionales de
@@ -138,6 +148,7 @@
       <section class="contenedorCarrusel2">
         <section id="propaganda1"></section>
       </section>
+
 
       <section class="contenedorCarrusel1">
         <h3>Categorías relevantes</h3>

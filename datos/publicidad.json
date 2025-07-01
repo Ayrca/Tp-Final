@@ -13,8 +13,8 @@
       "id": 2
     },
     {
-      "nombre": "Prueba3",
-      "imagen": "../assets/imagenesPatrocinio/a80b7300-2891-47e7-82ca-3a61d120742c.jpeg",
+      "nombre": "Prueba",
+      "imagen": "../assets/imagenesPatrocinio/482056a3-07a6-4de0-852c-23de1c4d84c4.jpg",
       "pagina": "http://localhost:3000/pages/",
       "id": 3
     }

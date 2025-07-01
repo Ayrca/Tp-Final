@@ -100,7 +100,11 @@ margin-top: 25px;
   height:100%;
 }
 
-
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
+}
 
 
 .cartelNoHay{

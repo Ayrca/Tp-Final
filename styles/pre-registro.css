@@ -6,7 +6,7 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(to right, #eafaf1, #f4f4f4);
+  background: #fff;
   display: flex;
   flex-direction: column;
 }
@@ -74,4 +74,10 @@ h2 {
 .btn-opcion:hover {
   background-color: #219150;
   transform: scale(1.03);
+}
+
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
 }

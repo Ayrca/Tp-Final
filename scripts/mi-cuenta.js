@@ -286,159 +286,218 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cargar trabajos (profesional o cliente)
   cargarTrabajos();
 
-  async function cargarTrabajos() {
-    const trabajosContainer = document.getElementById('trabajos-container');
-    if (!trabajosContainer) return;
-    try {
-      const [trabajosRes, usuariosRes] = await Promise.all([
-        fetch('../datos/trabajos.json'),
-        fetch('../datos/usuarios.json')
-      ]);
-      const trabajos = await trabajosRes.json();
-      const usuarios = await usuariosRes.json();
+// Al final de tu archivo dentro de DOMContentLoaded:
 
-      const emailToNombre = {};
-      usuarios.forEach(u => {
-        emailToNombre[u.email] = `${u.nombre} ${u.apellido}`;
-      });
+async function cargarTrabajos() {
+  const trabajosContainer = document.getElementById('trabajos-container');
+  if (!trabajosContainer) return;
+  try {
+    const [trabajosRes, usuariosRes] = await Promise.all([
+      fetch('../datos/trabajos.json'),
+      fetch('../datos/usuarios.json')
+    ]);
+    const trabajos = await trabajosRes.json();
+    const usuarios = await usuariosRes.json();
 
-      let trabajosFiltrados;
+    const emailToNombre = {};
+    usuarios.forEach(u => {
+      emailToNombre[u.email] = `${u.nombre} ${u.apellido}`;
+    });
+
+    let trabajosFiltrados;
+    if (esProfesional) {
+      trabajosFiltrados = trabajos.filter(t => t.profesionalEmail === currentUser.email);
+    } else {
+      trabajosFiltrados = trabajos.filter(t => t.usuarioEmail === currentUser.email);
+    }
+
+    if (trabajosFiltrados.length === 0) {
+      trabajosContainer.innerHTML = `<p class="cartelNoHay">No tenés trabajos ${
+        esProfesional ? 'contratados' : 'realizados'
+      } aún.</p>`;
+      return;
+    }
+
+    trabajosContainer.innerHTML = '';
+    trabajosFiltrados.forEach(trabajo => {
+      const fecha = trabajo.fechaContratacion ? new Date(trabajo.fechaContratacion).toLocaleDateString('es-AR') : '';
+      const comentario = trabajo.comentario?.trim() || 'Aún no se comentó';
+      const valoracion = (trabajo.valoracion ?? '').toString().trim() || 'Aún no se valoró';
+
+      const trabajoDiv = document.createElement('div');
+      trabajoDiv.className = 'trabajo-item';
+
+      // Contenido común
+      let contenidoHTML = `
+        <p><strong>${esProfesional ? 'Cliente' : 'Profesional'}:</strong> ${esProfesional ? (emailToNombre[trabajo.usuarioEmail] || trabajo.usuarioEmail) : (emailToNombre[trabajo.profesionalEmail] || trabajo.profesionalEmail)}</p>
+        <p><strong>Rubro:</strong> ${trabajo.rubro}</p>
+        <p><strong>Estado:</strong> <span class="estado-label">${trabajo.estado}</span></p>
+        <p><strong>Fecha de contratación:</strong> ${fecha}</p>
+      `;
+
+      // Mostrar teléfonos
+      if (esProfesional && trabajo.telefonoCliente) {
+        contenidoHTML += `<p><strong>Teléfono del cliente:</strong> ${trabajo.telefonoCliente}</p>`;
+      }
+      if (!esProfesional && trabajo.telefonoProfesional) {
+        contenidoHTML += `<p><strong>Teléfono del profesional:</strong> ${trabajo.telefonoProfesional}</p>`;
+      }
+
+      // Mostrar comentario y valoración si es profesional
       if (esProfesional) {
-        trabajosFiltrados = trabajos.filter(t => t.profesionalEmail === currentUser.email);
-      } else {
-        trabajosFiltrados = trabajos.filter(t => t.usuarioEmail === currentUser.email);
-      }
-
-      if (trabajosFiltrados.length === 0) {
-        trabajosContainer.innerHTML = `<p class="cartelNoHay">No tenés trabajos ${
-          esProfesional ? 'contratados' : 'realizados'
-        } aún.</p>`;
-        return;
-      }
-
-      trabajosContainer.innerHTML = '';
-      trabajosFiltrados.forEach(trabajo => {
-        const fecha = trabajo.fechaContratacion ? new Date(trabajo.fechaContratacion).toLocaleDateString('es-AR') : '';
-        const comentario = trabajo.comentario?.trim() || 'Aún no se comentó';
-        const valoracion = (trabajo.valoracion ?? '').toString().trim() || 'Aún no se valoró';
-
-        const trabajoDiv = document.createElement('div');
-        trabajoDiv.className = 'trabajo-item';
-
-        // Contenido común
-        let contenidoHTML = `
-          <p><strong>${esProfesional ? 'Cliente' : 'Profesional'}:</strong> ${esProfesional ? (emailToNombre[trabajo.usuarioEmail] || trabajo.usuarioEmail) : (emailToNombre[trabajo.profesionalEmail] || trabajo.profesionalEmail)}</p>
-          <p><strong>Rubro:</strong> ${trabajo.rubro}</p>
-          <p><strong>Estado:</strong> <span class="estado-label">${trabajo.estado}</span></p>
-          <p><strong>Fecha de contratación:</strong> ${fecha}</p>
+        contenidoHTML += `
+          <p><strong>Comentario:</strong> ${comentario}</p>
+          <p><strong>Valoración:</strong> ${valoracion}</p>
         `;
+      }
 
-        // Comentarios y valoraciones solo para cliente (editable)
-        if (!esProfesional) {
-          contenidoHTML += `
-            <label for="comentario-${trabajo.id}"><strong>Comentario:</strong></label><br>
-            <textarea id="comentario-${trabajo.id}" rows="3" placeholder="Dejá tu comentario">${trabajo.comentario || ''}</textarea><br>
-            <label for="valoracion-${trabajo.id}"><strong>Valoración (1-5):</strong></label><br>
-            <input id="valoracion-${trabajo.id}" type="number" min="1" max="5" value="${trabajo.valoracion ?? ''}" placeholder="Valoración"><br>
-            <button class="guardar-valoracion-btn">💾 Guardar valoración</button>
-          `;
-        } else {
-          contenidoHTML += `
-            <p><strong>Comentario:</strong> ${comentario}</p>
-            <p><strong>Valoración:</strong> ${valoracion}</p>
-          `;
-        }
-
-        // Botones finalizar/cancelar si no está finalizado o cancelado
+        // Botones si el trabajo está pendiente
         if (trabajo.estado !== 'Finalizado' && trabajo.estado !== 'Cancelado') {
-          contenidoHTML += `
-            <div class="botones-trabajo">
-              <button class="finalizar-btn">✅ Finalizar</button>
-              <button class="cancelar-btn">❌ Cancelar</button>
-            </div>
-          `;
+          if (esProfesional) {
+            // Profesional puede finalizar/cancelar pero sin comentario ni valoración
+            contenidoHTML += `
+              <div class="botones-trabajo">
+                <button class="finalizar-btn">✅ Finalizar</button>
+                <button class="cancelar-btn">❌ Cancelar</button>
+              </div>
+            `;
+          } else {
+            // Cliente puede finalizar/cancelar y deja comentario y valoración
+            contenidoHTML += `
+              <div class="botones-trabajo">
+                <button class="finalizar-btn">✅ Finalizar</button>
+                <button class="cancelar-btn">❌ Cancelar</button>
+              </div>
+            `;
+          }
         }
 
         trabajoDiv.innerHTML = contenidoHTML;
         trabajosContainer.appendChild(trabajoDiv);
 
-        // Agregar listeners a botones (finalizar/cancelar)
+        // Evento para botones
         if (trabajo.estado !== 'Finalizado' && trabajo.estado !== 'Cancelado') {
-          trabajoDiv.querySelector('.finalizar-btn').addEventListener('click', () => actualizarEstadoTrabajo(trabajo.id, 'Finalizado'));
-          trabajoDiv.querySelector('.cancelar-btn').addEventListener('click', () => actualizarEstadoTrabajo(trabajo.id, 'Cancelado'));
-        }
+          const finalizarBtn = trabajoDiv.querySelector('.finalizar-btn');
+          const cancelarBtn = trabajoDiv.querySelector('.cancelar-btn');
 
-        // Listener para guardar comentario/valoracion (solo cliente)
-        if (!esProfesional) {
-          trabajoDiv.querySelector('.guardar-valoracion-btn').addEventListener('click', () => {
-            const nuevoComentario = trabajoDiv.querySelector(`#comentario-${trabajo.id}`).value.trim();
-            const nuevaValoracion = trabajoDiv.querySelector(`#valoracion-${trabajo.id}`).value.trim();
-            if(nuevaValoracion && (nuevaValoracion < 1 || nuevaValoracion > 5)) {
-              alert('La valoración debe estar entre 1 y 5.');
-              return;
-            }
-            actualizarComentarioValoracion(trabajo.id, nuevoComentario, nuevaValoracion);
-          });
-        }
-      });
-    } catch (err) {
-      console.error('Error cargando trabajos:', err);
-      const trabajosContainer = document.getElementById('trabajos-container');
-      if (trabajosContainer) trabajosContainer.innerHTML = '<p class="cartelError">Error al cargar trabajos.</p>';
-    }
-  }
+          if (esProfesional) {
+            // Profesional: finaliza/cancela directo
+            finalizarBtn.addEventListener('click', () => {
+              actualizarEstadoTrabajo(trabajo.id, 'Finalizado');
+            });
+            cancelarBtn.addEventListener('click', () => {
+              actualizarEstadoTrabajo(trabajo.id, 'Cancelado');
+            });
+          } else {
+            // Cliente: pide comentario y valoración
+            finalizarBtn.addEventListener('click', () => {
+              Swal.fire({
+                title: 'Finalizar trabajo',
+                html: `
+                  <textarea id="popup-comentario" class="swal2-textarea" placeholder="Dejá tu comentario"></textarea>
+                  <input id="popup-valoracion" class="swal2-input" type="number" min="1" max="5" placeholder="Valoración (1-5)">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Guardar',
+                cancelButtonText: 'Cancelar',
+                preConfirm: () => {
+                  const comentario = document.getElementById('popup-comentario').value.trim();
+                  const valoracion = parseInt(document.getElementById('popup-valoracion').value.trim(), 10);
+                  if (!comentario || isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
+                    Swal.showValidationMessage('Debés completar comentario y valoración entre 1 y 5.');
+                    return false;
+                  }
+                  return { comentario, valoracion };
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  const { comentario, valoracion } = result.value;
+                  actualizarComentarioValoracion(trabajo.id, comentario, valoracion)
+                    .then(() => actualizarEstadoTrabajo(trabajo.id, 'Finalizado'));
+                }
+              });
+            });
 
-  // Cambia el estado de un trabajo (finalizado/cancelado)
-  async function actualizarEstadoTrabajo(id, nuevoEstado) {
-    try {
-      const res = await fetch('http://localhost:3000/actualizarEstadoTrabajo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, estado: nuevoEstado })
-      });
-      if (!res.ok) throw new Error('Error actualizando estado');
-      await Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: `Trabajo marcado como ${nuevoEstado}.`,
-        confirmButtonColor: '#28a745'
-      });
-      cargarTrabajos();
-    } catch (err) {
-      console.error('Error actualizando estado del trabajo:', err);
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo actualizar el estado del trabajo.',
-        confirmButtonColor: '#dc3545'
-      });
-    }
-  }
+            cancelarBtn.addEventListener('click', () => {
+              Swal.fire({
+                title: 'Cancelar trabajo',
+                html: `
+                  <textarea id="popup-cancelar-comentario" class="swal2-textarea" placeholder="¿Por qué cancelás el trabajo?"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Guardar',
+                cancelButtonText: 'Volver',
+                preConfirm: () => {
+                  const comentario = document.getElementById('popup-cancelar-comentario').value.trim();
+                  if (!comentario) {
+                    Swal.showValidationMessage('Debés ingresar un motivo.');
+                    return false;
+                  }
+                  return comentario;
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  const comentario = result.value;
+                  actualizarComentarioValoracion(trabajo.id, comentario, null)
+                    .then(() => actualizarEstadoTrabajo(trabajo.id, 'Cancelado'));
+                }
+              });
+            });
+          }
+}
 
-  // Actualiza comentario y valoración
-  async function actualizarComentarioValoracion(id, comentario, valoracion) {
-    try {
-      const res = await fetch('http://localhost:3000/actualizarComentarioValoracion', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, comentario, valoracion })
-      });
-      if (!res.ok) throw new Error('Error actualizando comentario/valoración');
-      await Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'Comentario y valoración guardados.',
-        confirmButtonColor: '#28a745'
-      });
-      cargarTrabajos();
-    } catch (err) {
-      console.error('Error actualizando comentario y valoración:', err);
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo guardar comentario y valoración.',
-        confirmButtonColor: '#dc3545'
-      });
-    }
+    });
+  } catch (err) {
+    console.error('Error cargando trabajos:', err);
+    if (trabajosContainer) trabajosContainer.innerHTML = '<p class="cartelError">Error al cargar trabajos.</p>';
   }
+}
+
+// Función para actualizar estado (finalizado/cancelado)
+async function actualizarEstadoTrabajo(id, nuevoEstado) {
+  try {
+    const res = await fetch('http://localhost:3000/actualizarEstadoTrabajo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, estado: nuevoEstado })
+    });
+    if (!res.ok) throw new Error('Error actualizando estado');
+    await Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: `Trabajo marcado como ${nuevoEstado}.`,
+      confirmButtonColor: '#28a745'
+    });
+    cargarTrabajos();
+  } catch (err) {
+    console.error('Error actualizando estado del trabajo:', err);
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo actualizar el estado del trabajo.',
+      confirmButtonColor: '#dc3545'
+    });
+  }
+}
+
+// Función para actualizar comentario y valoración
+async function actualizarComentarioValoracion(id, comentario, valoracion) {
+  try {
+    const res = await fetch('http://localhost:3000/actualizarComentarioValoracion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, comentario, valoracion })
+    });
+    if (!res.ok) throw new Error('Error actualizando comentario/valoración');
+    cargarTrabajos();
+  } catch (err) {
+    console.error('Error actualizando comentario y valoración:', err);
+    await Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo guardar comentario y valoración.',
+      confirmButtonColor: '#dc3545'
+    });
+  }
+}
 });

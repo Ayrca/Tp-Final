@@ -9,17 +9,17 @@
       crossorigin="anonymous" referrerpolicy="no-referrer"/>
       
       <!-- Header -->
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-between py-3 mb-4 border-bottom">
       <div class="col-md-3 mb-2 mb-md-0">
         <a href="/index.html" class="d-inline-flex link-body-emphasis text-decoration-none">
-          <img class="me-2 rounded-circle" src="/assets/images/logo-afip.jpg" alt="Logo" width="60" height="60" />
+          <img class="logo" src="/assets/images/logo-afip.jpg" alt="Logo" width="60" height="60" />
         </a>
       </div>
       <ul class="nav col-md-auto mb-2 mb-md-0 ms-auto">
-      <li><a href="/index.html" class="nav-link px-2 link-secondary">Inicio</a></li>
-      <li><a href="/pages/listaOficios.html" class="nav-link px-2 link-secondary">Oficios</a></li>
+      <li class="nav-item me-2"><a href="/index.html" class="btn btn-outline-secondary">Inicio</a></li>
+      <li class="nav-item me-2"><a href="/pages/listaOficios.html" class="btn btn-outline-secondary">Oficios</a></li>
       </ul>
-      <div class="col-md-3 text-end p-2">
+      <div class="d-flex flex-column flex-md-row align-items-center gap-2">
         <button
           type="button"
           class="btn btn-dark d-inline-flex align-items-center"
@@ -29,7 +29,7 @@
           Iniciar Sesion
         </button>
         <a href="/pages/pre-registro.html">
-          <button type="button" class="btn btn-dark d-inline-flex align-items-center">
+          <button id="btnRegistrar" data-bs-target="#registerModal" type="button" class="btn btn-dark d-inline-flex align-items-center">
             Registrarse
           </button>
         </a>
@@ -83,12 +83,9 @@
                   </label>
                 </div>
 
-                <div class="text-center">
-                  <a href="#" id="modalForgotPassword">¿Olvidaste tu contraseña?</a>
-                </div>
+              <button class="btn btn-primary w-100 py-2" type="submit" style="background-color: #17c264; 
+              border-color: #90ee90; color: #000;">Ingresar</button>
 
-                <button class="btn btn-primary w-100 py-2 boton-personalizado" type="submit">Ingresar</button>
-                </button>
               </form>
             </main>
           </div>
