@@ -222,8 +222,17 @@ function startCarruselHorizontal(containerId, items, interval) {
     carruselItem.style.width = '100vw';
     carruselItem.style.flexShrink = 0;
     carruselItem.style.display = 'inline-block';
-    carruselItem.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}";">`;
+    carruselItem.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}" data-url="${item.pagina}">`;
     container.appendChild(carruselItem);
+  });
+
+
+// Agregar evento de clic a cada imagen
+  container.addEventListener('click', (e) => {
+    if (e.target.tagName === 'IMG') {
+      const url = e.target.getAttribute('data-url');
+      window.open(url, '_blank');
+    }
   });
 
   let currentIndex = 0;
@@ -249,6 +258,13 @@ function startCarruselVertical(containerId, items, interval) {
     container.appendChild(carruselItem);
   });
 
+// Agregar evento de clic a cada imagen
+  container.addEventListener('click', (e) => {
+    if (e.target.tagName === 'IMG') {
+      const url = e.target.getAttribute('data-url');
+      window.open(url, '_blank');
+    }
+  });
   let currentIndex = 0;
   setInterval(() => {
     currentIndex = (currentIndex + 1) % items.length;

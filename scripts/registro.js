@@ -140,7 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
         rubros,
         empresa: tipoUsuario === 'profesional' ? empresa : '',
         telefono,
-        direccion
+        direccion,
+        estadoCuenta: true
       };
 
     try {

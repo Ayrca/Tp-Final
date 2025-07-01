@@ -1,24 +1,84 @@
-{ 
-"oficios" : [
-{ "nombre": "Abogado", "imagen": "assets/images/oficios/abogado.png"},
-{ "nombre": "Arquitecto", "imagen": "assets/images/oficios/arquitecto.png" },
-{ "nombre": "Contador", "imagen": "assets/images/oficios/contador.png" },
-{ "nombre": "Diseñador gráfico", "imagen": "assets/images/oficios/disenador-grafico.png" },
-{ "nombre": "Docente", "imagen": "assets/images/oficios/docente.png" },
-{ "nombre": "Enfermero", "imagen": "assets/images/oficios/enfermero.png" },
-{ "nombre": "Ingeniero", "imagen": "assets/images/oficios/ingeniero.png" },
-{ "nombre": "Médico", "imagen": "assets/images/oficios/medico.png" },
-{ "nombre": "Plomero", "imagen": "assets/images/oficios/plomero.png" },
-{ "nombre": "Psicólogo", "imagen": "assets/images/oficios/psicologo.png" },
-{ "nombre": "Programador", "imagen": "assets/images/oficios/programador.png" },
-{ "nombre": "Técnico en informática", "imagen": "assets/images/oficios/tecnico-informatica.png" },
-{ "nombre": "Veterinario", "imagen": "assets/images/oficios/veterinario.png" },
-{ "nombre": "Administrador de empresas", "imagen": "assets/images/oficios/administrador-empresas.png" },
-{ "nombre": "Comerciante", "imagen": "assets/images/oficios/comerciante.png" },
-{ "nombre": "Electricista", "imagen": "assets/images/oficios/electricista.png" },
-{ "nombre": "Mecánico", "imagen": "assets/images/oficios/mecanico.png" },
-{ "nombre": "Pintor", "imagen": "assets/images/oficios/pintor.png" },
-{ "nombre": "Plomero", "imagen": "assets/images/oficios/plomero.png" },
-{ "nombre": "Soldador", "imagen": "assets/images/oficios/soldador.png" }
-]
+{
+  "oficios": [
+    {
+      "nombre": "Abogado",
+      "imagen": "assets/images/oficios/abogado.png"
+    },
+    {
+      "nombre": "Arquitecto",
+      "imagen": "assets/images/oficios/arquitecto.png"
+    },
+    {
+      "nombre": "Contador",
+      "imagen": "assets/images/oficios/contador.png"
+    },
+    {
+      "nombre": "Diseñador gráfico",
+      "imagen": "assets/images/oficios/disenador-grafico.png"
+    },
+    {
+      "nombre": "Docente",
+      "imagen": "assets/images/oficios/docente.png"
+    },
+    {
+      "nombre": "Enfermero",
+      "imagen": "assets/images/oficios/enfermero.png"
+    },
+    {
+      "nombre": "Ingeniero",
+      "imagen": "assets/images/oficios/ingeniero.png"
+    },
+    {
+      "nombre": "Médico",
+      "imagen": "assets/images/oficios/medico.png"
+    },
+    {
+      "nombre": "Plomero",
+      "imagen": "assets/images/oficios/plomero.png"
+    },
+    {
+      "nombre": "Psicólogo",
+      "imagen": "assets/images/oficios/psicologo.png"
+    },
+    {
+      "nombre": "Programador",
+      "imagen": "assets/images/oficios/programador.png"
+    },
+    {
+      "nombre": "Técnico en informática",
+      "imagen": "assets/images/oficios/tecnico-informatica.png"
+    },
+    {
+      "nombre": "Veterinario",
+      "imagen": "assets/images/oficios/veterinario.png"
+    },
+    {
+      "nombre": "Administrador de empresas",
+      "imagen": "assets/images/oficios/administrador-empresas.png"
+    },
+    {
+      "nombre": "Comerciante",
+      "imagen": "assets/images/oficios/comerciante.png"
+    },
+    {
+      "nombre": "Electricista",
+      "imagen": "assets/images/oficios/electricista.png"
+    },
+    {
+      "nombre": "Mecánico",
+      "imagen": "assets/images/oficios/mecanico.png"
+    },
+    {
+      "nombre": "Pintor",
+      "imagen": "assets/images/oficios/pintor.png"
+    },
+    {
+      "nombre": "Plomero",
+      "imagen": "assets/images/oficios/plomero.png"
+    },
+    {
+      "nombre": "Soldador",
+      "imagen": "assets/images/oficios/soldador.png"
+    }
+  ]
 }

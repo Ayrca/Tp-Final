@@ -4,19 +4,37 @@
       "id": 1,
       "nombre": "Tropi Podas",
       "imagen": "../assets/images/patro/patroN5.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
-      "nombre": "Prueba2",
+      "nombre": "Mundo Magico",
       "imagen": "../assets/imagenesPatrocinio/59df43e2-6666-4109-94a6-fe6cea11538e.png",
-      "pagina": "http://localhost:3000/pages/admin1.html",
+      "pagina": "www.google.com",
       "id": 2
     },
     {
-      "nombre": "Prueba3",
-      "imagen": "../assets/imagenesPatrocinio/a80b7300-2891-47e7-82ca-3a61d120742c.jpeg",
-      "pagina": "http://localhost:3000/pages/",
+      "nombre": "Casa Gary",
+      "imagen": "../assets/imagenesPatrocinio/2c4f7e91-5993-4a57-b02f-29450c7d4d0a.png",
+      "pagina": "www.google.com",
       "id": 3
+    },
+    {
+      "nombre": "La Cocina de cacho",
+      "imagen": "../assets/imagenesPatrocinio/bd4633b0-4a6e-4716-8d51-e2909dbb9b51.png",
+      "pagina": "www.google.com",
+      "id": 4
+    },
+    {
+      "nombre": "Casa Ropa Puro Marcas",
+      "imagen": "../assets/imagenesPatrocinio/0a4d9890-22a7-4f67-80a5-f358d6dd393e.png",
+      "pagina": "www.google.com",
+      "id": 5
+    },
+    {
+      "nombre": "Casa Ropa Puro Marcas12",
+      "imagen": "../assets/imagenesPatrocinio/0eafa03a-a9c4-4f86-8c43-2cbbfc9ed978.png",
+      "pagina": "www.google.com",
+      "id": 6
     }
   ],
   "publicidad1": [
@@ -24,55 +42,55 @@
       "id": 1,
       "nombre": "Casa Ropa Puro Marcas",
       "imagen": "../assets/images/patro/patroN1.png",
-      "pagina": "cositas"
+      "pagina": "www.google.com"
     },
     {
       "id": 2,
       "nombre": "Ferreterias Expres",
       "imagen": "../assets/images/patro/patroN2.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 3,
       "nombre": "Casa Gary",
       "imagen": "../assets/images/patro/patroN3.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 4,
       "nombre": "La Cocina",
       "imagen": "../assets/images/patro/patroN4.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 5,
       "nombre": "Tropi Podas",
       "imagen": "../assets/images/patro/patroN5.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 6,
       "nombre": "Casa Ropa Puro Marcas",
       "imagen": "../assets/images/patro/patroN1.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 7,
       "nombre": "Ferreterias Expres",
       "imagen": "../assets/images/patro/patroN2.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 8,
       "nombre": "Casa Gary",
       "imagen": "../assets/images/patro/patroN3.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 9,
       "nombre": "La Cocina",
       "imagen": "../assets/images/patro/patroN4.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     }
   ],
   "publicidad2": [
@@ -80,61 +98,61 @@
       "id": 1,
       "nombre": "Casa Ropa Puro Marcas",
       "imagen": "../assets/images/patro/patroN1.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 2,
       "nombre": "Ferreterias Expres",
       "imagen": "../assets/images/patro/patroN2.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 3,
       "nombre": "Casa Gary",
       "imagen": "../assets/images/patro/patroN3.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 4,
       "nombre": "La Cocina",
       "imagen": "../assets/images/patro/patroN4.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 5,
       "nombre": "Tropi Podas",
       "imagen": "../assets/images/patro/patroN5.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 6,
       "nombre": "Casa Ropa Puro Marcas",
       "imagen": "../assets/images/patro/patroN1.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 7,
       "nombre": "Ferreterias Expres",
       "imagen": "../assets/images/patro/patroN2.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 8,
       "nombre": "Casa Gary",
       "imagen": "../assets/images/patro/patroN3.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 9,
       "nombre": "La Cocina",
       "imagen": "../assets/images/patro/patroN4.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     },
     {
       "id": 10,
       "nombre": "Tropi Podas",
       "imagen": "../assets/images/patro/patroN5.png",
-      "pagina": ""
+      "pagina": "www.google.com"
     }
   ]
 }

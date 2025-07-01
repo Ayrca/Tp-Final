@@ -36,6 +36,17 @@ if (loginForm) {
         return;
       }
 
+// Verificar estado de cuenta
+      if (!data.estadoCuenta) {
+        Swal.fire({
+          icon: "error",
+          title: "Cuenta inactiva",
+          text: "Tu cuenta está inactiva. Por favor, contacta con el administrador para activarla.",
+        });
+        return;
+      }
+
+
       // Usuario correcto
       const user = data;
 

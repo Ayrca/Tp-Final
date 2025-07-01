@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const port = 3000;
 
+
 // Función para servir archivos estáticos
 const serveStaticFile = (filePath, res) => {
   fs.readFile(filePath, (err, content) => {
@@ -27,6 +28,7 @@ const serveStaticFile = (filePath, res) => {
     }
   });
 };
+
 
 // Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
@@ -149,6 +151,7 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     }
   });
 }
+
 
   // Rutas para usuarios y login
   if (req.method === 'POST' && req.url === '/registro') {
@@ -363,6 +366,8 @@ else if (req.method === 'GET' && req.url === '/api/trabajos') {
   });
 }
 
+
+//Rutas Oficios
 //leer oficios de datos.json
 else if (req.method === 'GET' && req.url === '/datos/oficios') {
   const filePath = path.join(__dirname, 'datos', 'datos.json');
@@ -380,7 +385,124 @@ else if (req.method === 'GET' && req.url === '/datos/oficios') {
   });
 }
 
+// Modificar un oficio
+else if (req.method === 'PUT' && req.url.startsWith('/datos/oficios/')) {
+  const index = req.url.split('/').pop();
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const nuevosDatos = JSON.parse(body);
+      const filePath = path.join(__dirname, 'datos', 'datos.json');
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo datos.json' });
+          return;
+        }
+        try {
+          const datos = JSON.parse(data);
+          if (index >= 0 && index < datos.oficios.length) {
+            datos.oficios[index] = { ...datos.oficios[index], ...nuevosDatos };
+            fs.writeFile(filePath, JSON.stringify(datos, null, 2), (err) => {
+              if (err) {
+                sendJSON(res, 500, { error: 'Error guardando cambios' });
+                return;
+              }
+              sendJSON(res, 200, { success: true });
+            });
+          } else {
+            sendJSON(res, 404, { error: 'Índice inválido' });
+          }
+        } catch {
+          sendJSON(res, 500, { error: 'Error procesando JSON' });
+        }
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+}
+
+// Borrar un oficio
+else if (req.method === 'DELETE' && req.url.startsWith('/datos/oficios/')) {
+  const idOficio = decodeURIComponent(req.url.split('/').pop());
+  const filePath = path.join(__dirname, 'datos', 'datos.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      sendJSON(res, 500, { error: 'Error leyendo datos.json' });
+      return;
+    }
+    try {
+      const datos = JSON.parse(data);
+      const oficioIndex = datos.oficios.findIndex(oficio => oficio.nombre === idOficio);
+      if (oficioIndex === -1) {
+        sendJSON(res, 404, { error: 'Oficio no encontrado' });
+        return;
+      }
+      datos.oficios.splice(oficioIndex, 1);
+      fs.writeFile(filePath, JSON.stringify(datos, null, 2), (err) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error guardando cambios' });
+          return;
+        }
+        sendJSON(res, 200, { success: true });
+      });
+    } catch {
+      sendJSON(res, 500, { error: 'Error procesando JSON' });
+    }
+  });
+}
+
+// Agregar un oficio
+else if (req.method === 'POST' && req.url === '/datos/oficios') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const nuevoOficio = JSON.parse(body);
+      const filePath = path.join(__dirname, 'datos', 'datos.json');
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo datos.json' });
+          return;
+        }
+        try {
+          const datos = JSON.parse(data);
+          datos.oficios.push(nuevoOficio);
+          fs.writeFile(filePath, JSON.stringify(datos, null, 2), (err) => {
+            if (err) {
+              sendJSON(res, 500, { error: 'Error guardando cambios' });
+              return;
+            }
+            sendJSON(res, 201, { success: true });
+          });
+        } catch {
+          sendJSON(res, 500, { error: 'Error procesando JSON' });
+        }
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
 //Actualizar datos del profesional
+
 else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   let body = '';
   req.on('data', chunk => {
@@ -388,42 +510,28 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   });
   req.on('end', () => {
     try {
-    const {
-      emailOriginal,
-      email,
-      descripcion,
-      estado,
-      imagenes,
-      telefono,
-      direccion,
-      empresa,
-      rubros,
-      avatar 
-    } = JSON.parse(body);
-
-
+      const { emailOriginal, email, descripcion, estado, imagenes, telefono, direccion, empresa, rubros, avatar, nombre, apellido } = JSON.parse(body);
       const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
       fs.readFile(usuariosPath, 'utf8', (err, data) => {
         if (err) {
           sendJSON(res, 500, { error: 'Error leyendo usuarios' });
           return;
         }
-
         let usuarios = JSON.parse(data);
         const index = usuarios.findIndex(u => u.email === emailOriginal);
         if (index === -1) {
           sendJSON(res, 404, { error: 'Usuario no encontrado' });
           return;
         }
-
         // Verificar que el nuevo email no esté siendo usado por otro usuario
         if (email !== emailOriginal && usuarios.some(u => u.email === email)) {
           sendJSON(res, 409, { error: 'El nuevo email ya está en uso' });
           return;
         }
-
         // Actualizar campos
         usuarios[index].email = email;
+        usuarios[index].nombre = nombre !== undefined && nombre !== '' ? nombre : usuarios[index].nombre;
+        usuarios[index].apellido = apellido !== undefined && apellido !== '' ? apellido : usuarios[index].apellido;
         usuarios[index].descripcion = descripcion;
         usuarios[index].estado = estado;
         usuarios[index].imagenes = imagenes;
@@ -432,13 +540,11 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
         usuarios[index].empresa = empresa || usuarios[index].empresa;
         usuarios[index].rubros = rubros || usuarios[index].rubros;
         usuarios[index].avatar = avatar || usuarios[index].avatar;
-
         fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
           if (err) {
             sendJSON(res, 500, { error: 'Error al guardar cambios' });
             return;
           }
-
           const { password, ...usuarioSinPassword } = usuarios[index];
           sendJSON(res, 200, usuarioSinPassword);
         });
@@ -449,6 +555,79 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   });
   return;
 }
+
+else if (req.method === 'POST' && req.url === '/actualizarEstadoCuenta') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const { email, estadoCuenta } = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+          return;
+        }
+        let usuarios = JSON.parse(data);
+        const index = usuarios.findIndex(u => u.email === email);
+        if (index === -1) {
+          sendJSON(res, 404, { error: 'Usuario no encontrado' });
+          return;
+        }
+        usuarios[index].estadoCuenta = estadoCuenta;
+        fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error al guardar cambios' });
+            return;
+          }
+          sendJSON(res, 200, { message: 'Estado de cuenta actualizado' });
+        });
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+
+// Eliminar usuario
+else if (req.method === 'POST' && req.url === '/eliminarUsuario') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const { email } = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+          return;
+        }
+        let usuarios = JSON.parse(data);
+        usuarios = usuarios.filter(usuario => usuario.email !== email);
+        fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error al guardar cambios' });
+            return;
+          }
+          sendJSON(res, 200, { message: 'Usuario eliminado' });
+        });
+      });
+    } catch {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+
+
+
 
 //subir imagen de trabajos, publicidad y avatar
 else if (req.method === 'POST' && req.url === '/subirImagen') {
@@ -464,45 +643,52 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
       return;
     }
 
-    // Decidir carpeta según 'tipo'
-    const tipo = (fields.tipo && fields.tipo[0]) || '';
-    const uploadDir = tipo === 'patrocinio'
-      ? path.join(__dirname, 'assets', 'imagenesPatrocinio')
-      : path.join(__dirname, 'assets', 'imagenesProfesionales');
 
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+// Decidir carpeta según 'tipo' o 'oficios'
+const tipo = (fields.tipo && fields.tipo[0]) || '';
+let uploadDir;
+if (tipo === 'patrocinio') {
+  uploadDir = path.join(__dirname, 'assets', 'imagenesPatrocinio');
+} else if (fields.tipo && fields.tipo[0] === 'oficios') {
+  uploadDir = path.join(__dirname, 'assets', 'images', 'oficios');
+} else {
+  uploadDir = path.join(__dirname, 'assets', 'imagenesProfesionales');
+}
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+let file = files.imagen;
+if (Array.isArray(file)) file = file[0];
+if (!file || !file.originalFilename) {
+  sendJSON(res, 400, { error: 'No se recibió ninguna imagen válida' });
+  return;
+}
+
+const ext = path.extname(file.originalFilename);
+const newFileName = uuidv4() + ext;
+const newPath = path.join(uploadDir, newFileName);
+
+// Usar copy+unlink para soportar cross-device
+fs.copyFile(file.filepath, newPath, (err) => {
+  if (err) {
+    console.error('Error al copiar archivo:', err);
+    sendJSON(res, 500, { error: 'Error al guardar imagen' });
+    return;
+  }
+  fs.unlink(file.filepath, (unlinkErr) => {
+    if (unlinkErr) {
+      console.error('Error al borrar temporal:', unlinkErr);
     }
+    sendJSON(res, 200, { success: true, filename: newFileName });
+  });
+});
 
-    let file = files.imagen;
-    if (Array.isArray(file)) file = file[0];
-
-    if (!file || !file.originalFilename) {
-      sendJSON(res, 400, { error: 'No se recibió ninguna imagen válida' });
-      return;
-    }
-
-    const ext = path.extname(file.originalFilename);
-    const newFileName = uuidv4() + ext;
-    const newPath = path.join(uploadDir, newFileName);
-
-    //Usar copy+unlink para soportar cross-device
-    fs.copyFile(file.filepath, newPath, (err) => {
-      if (err) {
-        console.error('Error al copiar archivo:', err);
-        sendJSON(res, 500, { error: 'Error al guardar imagen' });
-        return;
-      }
-      fs.unlink(file.filepath, (unlinkErr) => {
-        if (unlinkErr) {
-          console.error('Error al borrar temporal:', unlinkErr);
-        }
-        sendJSON(res, 200, { success: true, filename: newFileName });
-      });
-    });
   });
   return;
 }
+
 
 // Eliminar imagen del servidor
 else if (req.method === 'POST' && req.url === '/eliminarImagen') {
@@ -533,15 +719,28 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
 }
 
   // Archivos estáticos  
+
+  else if (req.url.startsWith('/pages/assets/')) {
+  const newUrl = req.url.replace('/pages/', '/');
+  const filePath = path.join(__dirname, newUrl);
+  serveStaticFile(filePath, res);
+  return;
+}
   else {
-  if (req.url.startsWith('/assets/imagenesPatrocinio/')) {
-    const filePath = path.join(__dirname, req.url);
+
+ const urlPath = req.url.split('/');
+ 
+  if (urlPath.includes('assets') && urlPath.includes('images') && urlPath.includes('oficios')) {
+    const fileName = urlPath.pop();
+    const filePath = path.join(__dirname, 'assets', 'images', 'oficios', fileName);
     serveStaticFile(filePath, res);
   } else {
     const filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
     serveStaticFile(filePath, res);
   }
 }
+
+
   
   } catch (error) {
     console.error('Error en el servidor:', error);

@@ -12,10 +12,20 @@ buscador.addEventListener('keydown', (e) => {
 });
 
 /*Buscador*/
+
 function buscarOficios() {
   const textoBusqueda = buscador.value.toLowerCase();
   const resultadosFiltrados = oficiosData.filter(oficio => oficio && oficio.nombre && oficio.nombre.toLowerCase().startsWith(textoBusqueda));
-
+  // Ordena los resultados para que los que empiezan con la cadena de búsqueda aparezcan primero
+  resultadosFiltrados.sort((a, b) => {
+    const aStartsWith = a.nombre.toLowerCase().startsWith(textoBusqueda);
+    const bStartsWith = b.nombre.toLowerCase().startsWith(textoBusqueda);
+    
+    if (aStartsWith && !bStartsWith) return -1;
+    if (!aStartsWith && bStartsWith) return 1;
+    return 0;
+  });
+  
   if (resultadosFiltrados.length > 0) {
     const htmlResultados = resultadosFiltrados.map((oficio, index) => `
       <div class="resultado" data-index="${index}">
@@ -23,6 +33,7 @@ function buscarOficios() {
       </div>
     `).join('');
     resultados.innerHTML = htmlResultados;
+    
     const resultadoDivs = document.querySelectorAll('.resultado');
     resultadoDivs.forEach((div, index) => {
       div.addEventListener('mousedown', (e) => {
@@ -37,7 +48,8 @@ function buscarOficios() {
   } else {
     resultados.innerHTML = '<p>No se encontraron resultados</p>';
   }
-};
+}
+
 
 buscador.addEventListener('blur', () => {
   if (!seleccionRealizada) {
@@ -186,16 +198,27 @@ let intervalId;
 
 
 /*Crea el carrusel de propaganda*/ 
+
+
 function crearPropaganda(publicidad) {
   const propagandaContainer = document.getElementById('propaganda1');
   publicidad.forEach((anuncio) => {
     const articuloHTML = `
-      <article class="propaganda2">
-      <h2>${anuncio.nombre}</h2>
+      <article class="propaganda2" data-url="${anuncio.pagina}">
+        <h2>${anuncio.nombre}</h2>
         <img src="${anuncio.imagen}" alt="${anuncio.nombre}">
       </article>
     `;
     propagandaContainer.insertAdjacentHTML('beforeend', articuloHTML);
+  });
+
+  // Agregar evento de clic a cada imagen o card
+  const propagandaItems = document.querySelectorAll('.propaganda2');
+  propagandaItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const url = item.getAttribute('data-url');
+      window.open(url, '_blank'); // Abrir en una nueva pestaña
+    });
   });
 
       // Agregar eventos de mouse y touch para desplazar el carrusel
@@ -293,19 +316,3 @@ Promise.all([
   });
 })
 .catch(error => console.error('Error al cargar datos:', error));
-/*
-fetch('datos/datos.json')
-  .then(response => response.json())
-  .then(data => {
-    oficiosData = data.oficios;
-    crearArticulos(oficiosData);
-    crearPropaganda(data.publicidad);
-    buscador.addEventListener('input', buscarOficios);
-    buscador.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && oficioSeleccionado) {
-        localStorage.setItem('categoria', oficioSeleccionado.nombre);
-        window.location.href = 'pages/listaProfesionales.html';
-      }
-    });
-  })
-  .catch(error => console.error('Error al cargar datos:', error));*/
