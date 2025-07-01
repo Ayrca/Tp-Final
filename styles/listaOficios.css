@@ -26,8 +26,16 @@ display: grid;
   grid-template-columns: repeat(3, 1fr); /* grid-template-columns: repeat(3, 1fr); / / Para tres columnas */
   gap: 10px; /* Espacio entre elementos */
   margin-left: 25px;
-  cursor: pointer;
+  
 }
+#listaOficios .oficio-item {
+  cursor: pointer; /* Solo en los elementos hijos */
+}
+#listaOficios p:hover {
+  text-decoration: underline;
+}
+
+
 
 #footer { 
 width: 100%;

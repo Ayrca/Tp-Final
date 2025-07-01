@@ -8,5 +8,45 @@
     "valoracion": null,
     "comentario": "",
     "fechaContratacion": "2025-06-30"
+  },
+  {
+    "id": "4e0254e5-000f-47fd-8527-b55d32859d63",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Abogado",
+    "estado": "Finalizado",
+    "valoracion": null,
+    "comentario": "",
+    "fechaContratacion": "2025-06-30"
+  },
+  {
+    "id": "063dfe67-2187-4d6b-8a7e-70a355284fd9",
+    "profesionalEmail": "rbc_ocp@hotmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Abogado",
+    "estado": "pendiente",
+    "valoracion": null,
+    "comentario": "",
+    "fechaContratacion": "2025-06-30"
+  },
+  {
+    "id": "615af088-7208-42a4-9a9a-45fb308a956d",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Abogado",
+    "estado": "pendiente",
+    "valoracion": null,
+    "comentario": "",
+    "fechaContratacion": "2025-06-30"
+  },
+  {
+    "id": "5f66a2b3-e8c9-4bf9-b8ae-c45c3b7b91bb",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Abogado",
+    "estado": "pendiente",
+    "valoracion": null,
+    "comentario": "",
+    "fechaContratacion": "2025-06-30"
   }
 ]

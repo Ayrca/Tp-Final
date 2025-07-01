@@ -87,6 +87,7 @@ background-color: #6e6d6d;
   
 /*Tarjeta Oficios (dentro de oficio container)*/
 .oficio-item {
+ 
     width: 450px;
     height: 550px;
     transition: transform 0.2s;
@@ -94,7 +95,7 @@ background-color: #6e6d6d;
     border: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin: 20px;
-    padding: 20px;
+    padding: 2px;
     margin-right: 20px;
     display: flex;
     flex-direction: column;
@@ -102,11 +103,13 @@ background-color: #6e6d6d;
     justify-content: center;
     align-items: center;
     scroll-snap-align: center;
-    flex-shrink: 0;    
+    flex-shrink: 0;  
+    
 }
 
 .oficio-item:hover {
     transform: scale(1.05);
+   
 }
 
 /*los a son los contenedores de las fotos boton y h2 de las tarjetas*/

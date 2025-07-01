@@ -28,6 +28,17 @@
         >
           Iniciar Sesion
         </button>
+        
+
+<script>
+// Añade evento al botón
+document.getElementById("logoutBtn").addEventListener("click", function() {
+  // Elimina el ítem currentUser del localStorage
+  localStorage.removeItem("currentUser");
+  // Redirige a la página index
+  window.location.href = "index.html"; // Cambia esto si tu index tiene otro nombre o ruta
+});
+</script>
         <a href="/pages/pre-registro.html">
           <button type="button" class="btn btn-dark d-inline-flex align-items-center">
             Registrarse

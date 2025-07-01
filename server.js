@@ -380,129 +380,184 @@ else if (req.method === 'GET' && req.url === '/datos/oficios') {
   });
 }
 
-//Actualizar datos del profesional
-else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk.toString();
-  });
-  req.on('end', () => {
-    try {
-    const {
-      emailOriginal,
-      email,
-      descripcion,
-      estado,
-      imagenes,
-      telefono,
-      direccion,
-      empresa,
-      rubros,
-      avatar 
-    } = JSON.parse(body);
-
-
-      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
-      fs.readFile(usuariosPath, 'utf8', (err, data) => {
-        if (err) {
-          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
-          return;
-        }
-
-        let usuarios = JSON.parse(data);
-        const index = usuarios.findIndex(u => u.email === emailOriginal);
-        if (index === -1) {
-          sendJSON(res, 404, { error: 'Usuario no encontrado' });
-          return;
-        }
-
-        // Verificar que el nuevo email no esté siendo usado por otro usuario
-        if (email !== emailOriginal && usuarios.some(u => u.email === email)) {
-          sendJSON(res, 409, { error: 'El nuevo email ya está en uso' });
-          return;
-        }
-
-        // Actualizar campos
-        usuarios[index].email = email;
-        usuarios[index].descripcion = descripcion;
-        usuarios[index].estado = estado;
-        usuarios[index].imagenes = imagenes;
-        usuarios[index].telefono = telefono || usuarios[index].telefono;
-        usuarios[index].direccion = direccion || usuarios[index].direccion;
-        usuarios[index].empresa = empresa || usuarios[index].empresa;
-        usuarios[index].rubros = rubros || usuarios[index].rubros;
-        usuarios[index].avatar = avatar || usuarios[index].avatar;
-
-        fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
-          if (err) {
-            sendJSON(res, 500, { error: 'Error al guardar cambios' });
-            return;
-          }
-
-          const { password, ...usuarioSinPassword } = usuarios[index];
-          sendJSON(res, 200, usuarioSinPassword);
-        });
+ // Actualizar datos del profesional
+    else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
       });
-    } catch {
-      sendJSON(res, 400, { error: 'JSON inválido' });
-    }
-  });
-  return;
-}
-
-//actualizar estado de trabajo
-else if (req.method === 'POST' && req.url === '/actualizarEstadoTrabajo') {
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk.toString();
-  });
-  req.on('end', () => {
-    try {
-      const { id, estado } = JSON.parse(body);
-
-      if (!id || !estado) {
-        sendJSON(res, 400, { error: 'Faltan datos: id y estado' });
-        return;
-      }
-
-      const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
-      fs.readFile(trabajosPath, 'utf8', (err, data) => {
-        if (err) {
-          sendJSON(res, 500, { error: 'Error leyendo trabajos.json' });
-          return;
-        }
-
-        let trabajos = [];
+      req.on('end', () => {
         try {
-          trabajos = JSON.parse(data);
+          const {
+            emailOriginal,
+            email,
+            descripcion,
+            estado,
+            imagenes,
+            telefono,
+            direccion,
+            empresa,
+            rubros,
+            avatar
+          } = JSON.parse(body);
+
+          const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+          fs.readFile(usuariosPath, 'utf8', (err, data) => {
+            if (err) {
+              sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+              return;
+            }
+
+            let usuarios = JSON.parse(data);
+            const index = usuarios.findIndex(u => u.email === emailOriginal);
+            if (index === -1) {
+              sendJSON(res, 404, { error: 'Usuario no encontrado' });
+              return;
+            }
+
+            // Verificar que el nuevo email no esté siendo usado por otro usuario
+            if (email !== emailOriginal && usuarios.some(u => u.email === email)) {
+              sendJSON(res, 409, { error: 'El nuevo email ya está en uso' });
+              return;
+            }
+
+            // Actualizar campos
+            usuarios[index].email = email;
+            usuarios[index].descripcion = descripcion;
+            usuarios[index].estado = estado;
+            usuarios[index].imagenes = imagenes;
+            usuarios[index].telefono = telefono || usuarios[index].telefono;
+            usuarios[index].direccion = direccion || usuarios[index].direccion;
+            usuarios[index].empresa = empresa || usuarios[index].empresa;
+            usuarios[index].rubros = rubros || usuarios[index].rubros;
+            usuarios[index].avatar = avatar || usuarios[index].avatar;
+
+            fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
+              if (err) {
+                sendJSON(res, 500, { error: 'Error al guardar cambios' });
+                return;
+              }
+
+              const { password, ...usuarioSinPassword } = usuarios[index];
+              usuarioSinPassword.isLoggedIn = true;
+              sendJSON(res, 200, usuarioSinPassword);
+            });
+          });
         } catch {
-          sendJSON(res, 500, { error: 'Error parseando trabajos.json' });
-          return;
+          sendJSON(res, 400, { error: 'JSON inválido' });
         }
+      });
+      return;
+    }
 
-        const index = trabajos.findIndex(t => t.id === id);
-        if (index === -1) {
-          sendJSON(res, 404, { error: 'Trabajo no encontrado' });
-          return;
-        }
+    // Actualizar estado de trabajo
+    else if (req.method === 'POST' && req.url === '/actualizarEstadoTrabajo') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        try {
+          const { id, estado } = JSON.parse(body);
 
-        trabajos[index].estado = estado;
-
-        fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
-          if (err) {
-            sendJSON(res, 500, { error: 'Error guardando cambios' });
+          if (!id || !estado) {
+            sendJSON(res, 400, { error: 'Faltan datos: id y estado' });
             return;
           }
 
-          sendJSON(res, 200, { success: true });
-        });
+          const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+          fs.readFile(trabajosPath, 'utf8', (err, data) => {
+            if (err) {
+              sendJSON(res, 500, { error: 'Error leyendo trabajos.json' });
+              return;
+            }
+
+            let trabajos = [];
+            try {
+              trabajos = JSON.parse(data);
+            } catch {
+              sendJSON(res, 500, { error: 'Error parseando trabajos.json' });
+              return;
+            }
+
+            const index = trabajos.findIndex(t => t.id === id);
+            if (index === -1) {
+              sendJSON(res, 404, { error: 'Trabajo no encontrado' });
+              return;
+            }
+
+            trabajos[index].estado = estado;
+
+            fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+              if (err) {
+                sendJSON(res, 500, { error: 'Error guardando cambios' });
+                return;
+              }
+
+              sendJSON(res, 200, { success: true });
+            });
+          });
+        } catch {
+          sendJSON(res, 400, { error: 'JSON inválido' });
+        }
       });
-    } catch {
-      sendJSON(res, 400, { error: 'JSON inválido' });
+      return;
     }
-  });
-  return;
-}
+
+    // Actualizar comentario y valoración del trabajo (cliente)
+    else if (req.method === 'POST' && req.url === '/actualizarComentarioValoracion') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        try {
+          const { id, comentario, valoracion } = JSON.parse(body);
+
+          if (!id || typeof valoracion !== 'number') {
+            sendJSON(res, 400, { error: 'Faltan datos: id y valoración numérica' });
+            return;
+          }
+
+          const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+          fs.readFile(trabajosPath, 'utf8', (err, data) => {
+            if (err) {
+              sendJSON(res, 500, { error: 'Error leyendo trabajos.json' });
+              return;
+            }
+
+            let trabajos = [];
+            try {
+              trabajos = JSON.parse(data);
+            } catch {
+              sendJSON(res, 500, { error: 'Error parseando trabajos.json' });
+              return;
+            }
+
+            const index = trabajos.findIndex(t => t.id === id);
+            if (index === -1) {
+              sendJSON(res, 404, { error: 'Trabajo no encontrado' });
+              return;
+            }
+
+            trabajos[index].comentario = comentario || trabajos[index].comentario || '';
+            trabajos[index].valoracion = valoracion;
+
+            fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+              if (err) {
+                sendJSON(res, 500, { error: 'Error guardando cambios' });
+                return;
+              }
+
+              sendJSON(res, 200, { success: true });
+            });
+          });
+        } catch {
+          sendJSON(res, 400, { error: 'JSON inválido' });
+        }
+      });
+      return;
+    }
 
 //subir imagen de trabajos, publicidad y avatar
 else if (req.method === 'POST' && req.url === '/subirImagen') {
@@ -540,7 +595,6 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
     const newFileName = uuidv4() + ext;
     const newPath = path.join(uploadDir, newFileName);
 
-    //Usar copy+unlink para soportar cross-device
     fs.copyFile(file.filepath, newPath, (err) => {
       if (err) {
         console.error('Error al copiar archivo:', err);
@@ -567,7 +621,6 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
       const { filename } = JSON.parse(body);
       if (!filename) throw new Error('Falta filename');
 
-      // Sanitizar filename para evitar path traversal
       const safeFilename = path.basename(filename);
       const imgPath = path.join(__dirname, 'assets', 'imagenesProfesionales', safeFilename);
 
