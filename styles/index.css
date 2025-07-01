@@ -3,107 +3,290 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-.header{
-    width: 100%;
-    height: 250px;
-    border: 2px solid #000;
-    display: flex;
-    flex-direction: column;
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
 }
 
-.publicidadPrincipal {
-    display: flex;
-    flex-direction: row;
-}
-
-.publicidadPrincipal img{
+/*body y main */
+body {
+  background-color: #fdfdfd;
     background-size: cover;
-    width: 50%;
-    height: 175px;
+    background-position: center;
+    line-height: 1.6;
+    position: relative;    
 }
 
-.main{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-} 
-.cuerpo1{
-    width: 33%;
-    height: 500px;
+/*header */
+#header {
+background-color: #24b388;
+width: 100%;
+height: 100px;
+}
+
+.texto1 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 225px;
+  text-align: left;
+}
+
+/*buscador*/
+#buscador{
+  padding: 5px;
+margin-top: 35PX;
+height: 35px;
+margin-left: 60px;
+width: 350px;
+}
+
+#irTodos{
+margin-left: 10px;
+}
+
+#irTodos button{
+height: 37px;
+width: 80px;
+border-radius: 10px;
+background-color:white;
+}
+
+#irTodos button:hover{
+background-color: #6e6d6d;
+}
+
+.resultado {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer; 
+}
+
+.resultado:hover {
+  background-color: #f0f0f0;
+}
+
+.boton-personalizado {
+  background-color: #57b894 !important;
+  border-color: #57b894 !important;
+}
+
+/*contenedor de oficios*/
+.contenedorCarrusel1{
+    height: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    margin-top: 25px;
+  } 
+
+#oficio-container {
+    width: 100%;
+    height: 600px;
+    display: flex;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
 }
-.cuerpo1 div{
-    width:100%;
-    height: 200px;
-
-
+  
+/*Tarjeta Oficios (dentro de oficio container)*/
+.oficio-item {
+    width: 450px;
+    height: 550px;
+    transition: transform 0.2s;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    padding: 20px;
+    margin-right: 20px;
     display: flex;
     flex-direction: column;
+    overflow-x: auto;
+    justify-content: center;
     align-items: center;
-    border: 2px solid #000;
+    scroll-snap-align: center;
+    flex-shrink: 0;    
 }
 
-.cuerpo1 div h3{ 
-    width: 100%;
-    height: 25px;
+.oficio-item:hover {
+    transform: scale(1.05);
+}
+
+/*los a son los contenedores de las fotos boton y h2 de las tarjetas*/
+.Acard {
     display: flex;
+    flex-direction: column;
+    text-decoration: none;        
+}
+
+.btnIndexcard {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
     justify-content: center;
 }
 
-.cuerpo1 div img{ 
-    width: 100%;
-    height: 175px;
+.oficio-item img {
+  width: 100%;
+  height: 450px; 
+  object-fit: contain;
 }
 
-.cuerpo2{
-    width: 33%;
-    height: 500px;
+.oficio-item h2 {
+    color: #34495e;
+    font-size: 2em;
+    text-align: center;
+}
+
+/* carteles de carruseles */
+.catalogoCartel {
+display: flex;
+justify-content: center;
+font-size: 2rem;
+color: #34495e;
+}
+
+.cajaBtn1{ 
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 2px solid #000;
+    flex-direction: row;
+    justify-items: center;
+    width:250px ;  
 }
 
-.cuerpo2 div{
-margin: 3px;
-width: 100%;
-height: 150px;
+.cajaBtn1 button { 
+    width: 50px;
+    height: 30px;
+    margin: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+  }
+
+.contenedorCarrusel2{
+width:100%;
+}
+
+/*propaganda*/
+#propaganda1{
+margin-bottom: -200px;
+width:100%;
+height: 650px;
+display: flex;
+flex-direction: row;
+overflow-x: auto;
+scroll-behavior: smooth;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
+-ms-overflow-style: none; /* Oculta la barra de desplazamiento en IE y Edge */
+}
+
+.propaganda2 { 
+width:450px;
+height: 400px;
+margin: 15px;
+transition: transform 0.2s;
+border-radius: 10px;  
+border: 1px solid #ddd;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);    
+padding: 20px;
+margin-right: 20px;
 display: flex;
 flex-direction: column;
-align-items: start;
-border: 2px solid #000;
+overflow-x: auto;
+justify-content: center;
+align-items: center;
+scroll-snap-align: center;
+flex-shrink: 0;
 }
 
-.cuerpo3{
-    width: 33%;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.propaganda2 h2 {
+color: #34495e;
+font-size: 2em;
+text-align: center;
 }
 
-.cuerpo3 div{
-    width:100%;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 2px solid #000;
+.propaganda2 img{
+width: 350px;
+height: 300px;
+object-fit: cover;
 }
 
-.cuerpo3 div h3{ 
-    width: 100%;
-    height: 25px;
-    display: flex;
-    justify-content: center;
+#footer {
+background-color: #24b388;
+width: 100%;
+height: 100px;
+} 
+
+@media (max-width: 700px) {   
+
+.texto1{
+margin: 0;
+margin-left: 0;
+margin-left: 5px;
+margin-top: 15px;
 }
 
-.cuerpo3 div img{ 
-    width: 100%;
-    height: 175px;
+/*buscador*/
+#buscador{
+margin: 0;
+margin-left: 0;
+margin-left: 5px;
+width: 200px;
+margin-top: 15px;
+}
+
+/*contenedor de oficios*/
+.contenedorCarrusel1{
+display: flex;
+flex-direction: column;
+align-items: center;
+height: 600px;
+margin-top: 15px;
+} 
+
+/*Tarjeta Oficios (dentro de oficio container)*/
+.oficio-item {
+border-radius: 10px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+overflow: hidden;
+transition: transform 0.2s;
+height: 300px;
+width: 250px;
+}
+
+.oficio-item img {
+border-radius: 30px;
+width: 200px;
+height: 250px;
+}
+
+.oficio-item h2 {
+font-size: 1.1em;
+font-style: unset;
+text-align: center;
+}
+
+.cajaBtn1{  
+margin-bottom: 200px;
+}
+
+/*propaganda*/
+.contenedorCarrusel2{
+width: 100%;
+margin-top: 15px;
+}
+
+#propaganda1{
+width: 100%;
+}
+
+.propaganda2 {
+width: 100%;
+height: 400px;
+}
+
+.propaganda2 img{
+width: 80%;
+height: 300px;
+}
 }

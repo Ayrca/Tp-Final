@@ -1,0 +1,62 @@
+[
+  {
+    "nombre": "Ignacio Gaston",
+    "apellido": "Amaya",
+    "email": "ignacioamaya04@gmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "Abogado",
+      "Plomero",
+      "Electricista"
+    ],
+    "empresa": "Nacho Inc",
+    "telefono": "228450206",
+    "direccion": "25 de Mayo 1755",
+    "descripcion": "Hola",
+    "estado": false,
+    "imagenes": [
+      "/assets/imagenesProfesionales/4f0da9a7-ef65-4239-9471-8b2a126fb18e.jpg",
+      "/assets/imagenesProfesionales/0c014501-df66-4b04-9680-5b76902c493e.jpg",
+      "/assets/imagenesProfesionales/b776d7ee-f65a-49a1-9872-e7579f61ea03.jpg",
+      "/assets/imagenesProfesionales/6652dbcf-617c-41b4-95c6-b4b119300f20.jpg"
+    ],
+    "avatar": "/assets/imagenesProfesionales/b1ef4993-e20f-4386-bdfe-e37668f2ab4e.jpeg",
+    "estadoCuenta": true
+  },
+  {
+    "nombre": "Franker",
+    "apellido": "Arcidiacono",
+    "email": "rbc_ocp@hotmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "Abogado",
+      "Mecánico"
+    ],
+    "empresa": "FrankerAcount",
+    "telefono": "2284589286",
+    "direccion": "gralpaz1238",
+    "descripcion": "Me gusta mirar netflix por las tardes",
+    "estado": true,
+    "imagenes": [],
+    "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
+    "estadoCuenta": true,
+    "isAdmin": true
+  },
+  {
+    "nombre": "Ayelen",
+    "apellido": "Sot",
+    "email": "ayelensoto1994@gmail.com",
+    "password": "123456",
+    "tipo": "Cliente",
+    "rubros": [
+      ""
+    ],
+    "empresa": "",
+    "telefono": "02284502063",
+    "direccion": "Leal 441",
+    "avatar": "/assets/imagenesProfesionales/0ec8b3ab-4055-4d8f-a3ed-65be69faf5e6.jpg",
+    "estadoCuenta": true
+  }
+]

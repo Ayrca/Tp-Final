@@ -1,0 +1,377 @@
+.cuenta-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* --- PERFIL USUARIO --- */
+.perfil-usuario {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.avatar-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.cambiar-avatar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 128, 0, 0.7);
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  width: 60px;
+  height: 60px;
+  line-height: 55px;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  user-select: none;
+}
+
+.avatar-container:hover .cambiar-avatar {
+  opacity: 1;
+}
+
+.info p {
+  margin: 8px 0;
+}
+
+.info input {
+  width: 100%;
+  max-width: 400px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.info input:disabled {
+  background-color: #f5f5f5;
+  color: #555;
+}
+
+/* --- BOTONES DE EDICIÓN --- */
+#editar-datos,
+#guardar-datos,
+#cancelar-datos {
+  margin-top: 15px;
+  margin-right: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#editar-datos {
+  background-color: #007bff;
+  color: white;
+}
+
+#guardar-datos {
+  background-color: #28a745;
+  color: white;
+}
+
+#cancelar-datos {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* --- ESTADO --- */
+.estado {
+  margin-top: 15px;
+}
+
+.estado-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  background-color: #28a745;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.estado-btn.inactivo {
+  background-color: #dc3545;
+}
+
+/* --- RUBROS --- */
+.rubros-container {
+  margin-top: 10px;
+}
+
+#lista-rubros {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+#lista-rubros li {
+  background-color: #4caf50;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#lista-rubros li button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+#rubro-nuevo-container {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+#nuevo-rubro {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#agregar-rubro {
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#agregar-rubro:hover {
+  background-color: #0056b3;
+}
+
+/* --- DESCRIPCIÓN --- */
+.descripcion {
+  margin-bottom: 30px;
+}
+
+.descripcion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.descripcion-texto {
+  background-color: #f9f9f9;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.descripcion-texto[contenteditable="true"] {
+  border: 1px dashed #999;
+  background-color: #fff;
+  outline: none;
+}
+
+/* --- GALERÍA --- */
+.galeria {
+  margin-bottom: 30px;
+}
+
+.imagenes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.imagen-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+}
+
+.imagen-wrapper button {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(255, 0, 0, 0.8);
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.3s ease;
+}
+
+.imagen-wrapper button:hover {
+  background-color: rgba(255, 0, 0, 1);
+}
+
+.imagen-wrapper img {
+  width: 280px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+#agregar-imagen {
+  margin-top: 15px;
+  padding: 8px 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#agregar-imagen:hover {
+  background-color: #0056b3;
+}
+
+#cerrar-sesion {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+#cerrar-sesion:hover {
+  background-color: #b02a37;
+}
+
+/* trabajos contratados */
+.trabajos-contratados {
+  margin-bottom: 30px;
+}
+
+.trabajos-contratados h3 {
+  margin-bottom: 15px;
+  font-size: 1.4em;
+  color: #2e7d32;
+}
+
+#trabajos-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 0;
+}
+
+.trabajo-item {
+  background-color: #fff;
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  margin-bottom: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trabajo-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+.trabajo-item p {
+  margin: 5px 0;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: #222;
+}
+
+.trabajo-item p strong {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.cartelNoHay,
+.cartelError {
+  text-align: center;
+  padding: 15px;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 8px;
+}
+
+.botones-trabajo {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.botones-trabajo button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.finalizar-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.cancelar-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.finalizar-btn:disabled,
+.cancelar-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
+}
