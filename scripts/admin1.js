@@ -5,7 +5,6 @@ const inputNombre = document.getElementById('input-Nombre');
 const inputPagina = document.getElementById('input-pagina');
 const inputImagen = document.getElementById('input-Imagen');
 const inputImagen1 = document.getElementById('imagen');
-
 const botonSubir = document.getElementById('subir-imagen');
 
 async function obtenerPublicidad() {
@@ -164,7 +163,6 @@ document.getElementById('borrarDato').addEventListener('click', async () => {
   });
 });
 
-
 // Función para modificar publicidad
 document.getElementById('modificarDato').addEventListener('click', async () => {
   const publicidad = {
@@ -196,7 +194,6 @@ document.getElementById('modificarDato').addEventListener('click', async () => {
     }
   });
 });
-
 
 // Evento despliega botones para agregar publicidad
 document.getElementById('agregarDato').addEventListener('click', () => {
@@ -232,7 +229,6 @@ fetch('/subirImagen', {
 })
 .catch((error) => console.error('Error al subir imagen:', error));
 });
-
 
 // Evento para confirmar agregar publicidad
 document.getElementById('aceptar-agregar').addEventListener('click', async () => {

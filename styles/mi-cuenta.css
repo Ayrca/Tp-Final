@@ -1,3 +1,9 @@
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block;
+  margin-left: 15px;
+}
+
 .cuenta-container {
   max-width: 900px;
   margin: 0 auto;
@@ -10,7 +16,7 @@
   display: none !important;
 }
 
-/* --- PERFIL USUARIO --- */
+/* Perfil usuario */
 .perfil-usuario {
   display: flex;
   gap: 20px;
@@ -73,7 +79,7 @@
   color: #555;
 }
 
-/* --- BOTONES DE EDICIÓN --- */
+/* Botones de edicion */
 #editar-datos,
 #guardar-datos,
 #cancelar-datos {
@@ -101,7 +107,7 @@
   color: white;
 }
 
-/* --- ESTADO --- */
+/* Estado */
 .estado {
   margin-top: 15px;
 }
@@ -121,7 +127,7 @@
   background-color: #dc3545;
 }
 
-/* --- RUBROS --- */
+/* Rubros */
 .rubros-container {
   margin-top: 10px;
 }
@@ -179,7 +185,7 @@
   background-color: #0056b3;
 }
 
-/* --- DESCRIPCIÓN --- */
+/* Descripcion */
 .descripcion {
   margin-bottom: 30px;
 }
@@ -206,7 +212,7 @@
   outline: none;
 }
 
-/* --- GALERÍA --- */
+/* Galeria de trabajos anteriores */
 .galeria {
   margin-bottom: 30px;
 }
@@ -368,10 +374,4 @@
 .cancelar-btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
-}
-
-.logo {
-  transform: scale(1.7); /* aumenta el tamaño en un 20% */
-  display: inline-block; /* asegurarse de que el transform funcione correctamente */
-  margin-left: 15px;
 }

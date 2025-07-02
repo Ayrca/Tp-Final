@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
+}
+
 .texto1 {
   display: flex;
   flex-direction: column;
@@ -13,34 +19,28 @@
 
 main{
   justify-items: center;
-
 }
+
 .cartelPrincipal{
-font-size: 3rem;
-color: #34495e;
+  font-size: 3rem;
+  color: #34495e;
 }
 
 /*contenedor de tarjetas y carruseles*/
 .contenedormedio{
-width: 100%;
-display: flex;
-flex-direction: row;
-justify-items: center;
-
-margin-top: 25px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  margin-top: 25px;
 }
-/*contenedor de tarjetas y carruseles*/
-
 
 /*carrusel propaganda */
-
-.carrusel-container {
-  
+.carrusel-container {  
   position: relative;
   height: 200px; /* Ajusta la altura según tus necesidades */
   overflow: hidden;
 }
-
 
 .carrusel-item {
   height: 200px; /* Ajusta la altura según tus necesidades */
@@ -56,20 +56,11 @@ margin-top: 25px;
  object-fit: cover; /* sacar si no anda */
 }
 
-
-
-/*carrusel propaganda */
-
-
-
 /*carrusel propaganda 1*/
-
 .carruselvertical1 {
   width: 33%;
-  position: relative;
-  
+  position: relative;  
   overflow: hidden;
-
 }
 
 #prop1 {
@@ -77,17 +68,15 @@ margin-top: 25px;
   top: 0;
   left: 0;
   width: 100%;
-
   transition: top 0.5s ease-in-out;
-   height:100%;
+  height:100%;
 }
 
 /*carrusel propaganda 2*/
 .carruselvertical2 {
   width: 33%;
   position: relative;
-  overflow: hidden;
- 
+  overflow: hidden; 
 }
 
 #prop2 {
@@ -95,76 +84,50 @@ margin-top: 25px;
   top: 0;
   left: 0;
   width: 100%;
-
   transition: top 0.5s ease-in-out;
   height:100%;
 }
 
-.logo {
-  transform: scale(1.7); /* aumenta el tamaño en un 20% */
-  display: inline-block; /* asegurarse de que el transform funcione correctamente */
-  margin-left: 15px;
-}
-
-
 .cartelNoHay{
-height: 900px;
-font-size: 35px;
-
+  height: 900px;
+  font-size: 35px;
 }
 
-
-/*tarjeta profecionales*/
-
-
-#listaProfecionales{
- 
-  
-}
-
-.profesional-item{
-width: 710px;
-height: 300px;
-background-color: #f0f0f0;
-
-display: flex;
-flex-direction: row;
-margin: 15px;
-
+.profesional-item {
+  width: 710px;
+  min-height: 300px;
+  height: auto;
+  background-color: #f0f0f0;
+  display: flex;
+  flex-direction: row;
+  margin: 15px;
 }
 
 .profesional-item img{
-width: 150px;
-height: 150px;
-margin: 15px;
-
+  width: 150px;
+  height: 150px;
+  margin: 15px;
 }
+
 .profesional-data{
-width: 35%;
-
+  width: 35%;
 }
+
 .profesional-item h2{
-margin-top: 10px;
-
-}    
-.profesional-item p{
-
+  margin-top: 10px;
 }    
 
 .profesional-buttons{
-display: flex;
-flex-direction: column;
-gap: 15px;
-margin-top: 40px;
-margin-left: 90px;
-
-
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+  margin-left: 90px;
 }
 
 .profesional-buttons button{
   width: 150px;
   height: 35px;
-
 }
 
 #disponible{
@@ -172,218 +135,106 @@ margin-left: 90px;
   height: 35px;
   text-align: center;
   line-height: 35px; /* Altura de la línea de texto */
-border: solid black 1.5px;
-font-size: 15px;
-
+  border: solid black 1.5px;
+  font-size: 15px;
 }
+
 #disponible.disponible {
   color: green;
-
 }
 
 #disponible.no-disponible {
   color: red;
-
 }
-
-
-#verMas{
-
-}
-
-#conectar{
-
-}     
-
 
 /* Cuando la pantalla sea menor a 700px, cambia la dirección del flex a columna */
-
 @media (max-width: 700px) {
-  /*Carruseles de publicidad*/
-  .carruselvertical1, .carruselvertical2 {
-    width: 100%;
-    height: 300px;
-  }
 
-  #prop1, #prop2 {
-     
+/*Carruseles de publicidad*/
+.carruselvertical1, .carruselvertical2 {
+  width: 100%;
+  height: 300px;
+}
+
+#prop1, #prop2 {     
   transition: transform 0.5s ease-in-out;
   height: 300px;
-  width: 100%;
- 
-  }
+  width: 100%; 
+}
 
-  .carrusel-item {
-    position: relative;
-     display: flex;
+.carrusel-item {
+  position: relative;
+  display: flex;
   flex-direction: row;
-     justify-items:center;
+  justify-items:center;
   align-items: center;
-    width: 100%;
-    height: 300px;
-
+  width: 100%;
+  height: 300px;
   margin: 0;
   margin-top: 0;
   margin-bottom: 0;
+}
 
-
-  }
-  .carrusel-item img {
+.carrusel-item img {
   width:250px;
   height: 250px;
   margin-top: 15px;
-  margin-left: 35px;
-  
+  margin-left: 35px;  
   }
 
-  
-   .contenedormedio {
-    flex-direction: column;
-      width: 100%;
-       
+.contenedormedio {
+  flex-direction: column;
+  width: 100%;       
   }
 
-
-    .carrusel-container {
-   
-      width: 100%;
-      
-  }
-
-
-
-  /*Carruseles de publicidad*/
-
-
-
-.texto1 {
-
+.carrusel-container {   
+  width: 100%;      
 }
 
+ /*Carruseles de publicidad*/
 main{
-
-flex-direction: column;
-
-}
-.cartelPrincipal{
-
+  flex-direction: column;
 }
 
 /*contenedor de tarjetas y carruseles*/
 .contenedormedio{
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-/*contenedor de tarjetas y carruseles*/
-
-
-/*carrusel propaganda */
-
-.carrusel-container {
-  
-
-}
-
-.carrusel-item {
-
-}
-
-.carrusel-item img {
-
-}
-/*carrusel propaganda */
-
-
-
-/*carrusel propaganda 1*/
-
-.carruselvertical1 {
-
-
-}
-
-#prop1 {
-
-}
-
-/*carrusel propaganda 2*/
-.carruselvertical2 {
-
- 
-}
-
-#prop2 {
-
-}
-
-
 
 .cartelNoHay{
-height: 900px;
-font-size: 35px;
-
+  height: 900px;
+  font-size: 35px;
 }
-
 
 /*tarjeta profecionales*/
-
-
-#listaProfecionales{
-
-
-}
-
 .profesional-item{
-display: flex;
-flex-direction: column;
-width: 300px;
-height:600px ;
-align-items: center;
-justify-content: center;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height:600px ;
+  align-items: center;
+  justify-content: center;
 }
 
 .profesional-item img{
-width: 150px;
-height: 150px;
-
-
+  width: 150px;
+  height: 150px;
 }
+
 .profesional-data{
-margin-left: 0;
-
-width: 250px;
-
+  margin-left: 0;
+  width: 250px;
 }
-.profesional-item h2{
-
-}    
-.profesional-item p{
-
-}    
 
 .profesional-buttons{
-display: flex;
-flex-direction: column;
-
-gap: 5px;
-margin-top: 0;
-margin-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 0;
+  margin-left: 0;
 }
-
-.profesional-buttons button{
-
-
-}
-
-#verMas{
-
-}
-
-#conectar{
-
-}     
-
 
 }
