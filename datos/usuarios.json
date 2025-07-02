@@ -8,13 +8,14 @@
     "rubros": [
       "Abogado",
       "Plomero",
-      "Electricista"
+      "Electricista",
+      "Arquitecto"
     ],
-    "empresa": "Nacho Inc",
+    "empresa": "Nacho Asociados",
     "telefono": "228450206",
     "direccion": "25 de Mayo 1755",
     "descripcion": "Hola",
-    "estado": false,
+    "estado": true,
     "imagenes": [
       "/assets/imagenesProfesionales/4f0da9a7-ef65-4239-9471-8b2a126fb18e.jpg",
       "/assets/imagenesProfesionales/0c014501-df66-4b04-9680-5b76902c493e.jpg",

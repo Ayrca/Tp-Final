@@ -258,24 +258,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Función para mandar datos al servidor y actualizar localStorage
-  async function guardarPerfil(actualizado) {
-    try {
-      actualizado.emailOriginal = currentUser.email;
-      const res = await fetch('http://localhost:3000/actualizarPerfil', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(actualizado),
-      });
-      if (!res.ok) throw new Error('Error actualizando perfil');
-      const data = await res.json();
-      localStorage.setItem('currentUser', JSON.stringify(data));
-      return data;
-    } catch (e) {
-      console.error(e);
-      alert('Error al guardar perfil');
-      throw e;
-    }
+async function guardarPerfil(actualizado) {
+  try {
+    actualizado.emailOriginal = currentUser.email;
+    const res = await fetch('http://localhost:3000/actualizarPerfil', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(actualizado),
+    });
+    if (!res.ok) throw new Error('Error actualizando perfil');
+    const data = await res.json();
+
+    const userFinal = {
+      ...currentUser, // conserva isLoggedIn, tipo, etc.
+      ...data         // actualiza con lo que vino del servidor
+    };
+
+    localStorage.setItem('currentUser', JSON.stringify(userFinal));
+    return userFinal;
+  } catch (e) {
+    console.error(e);
+    alert('Error al guardar perfil');
+    throw e;
   }
+}
 
   // Botón para cerrar sesión
   cerrarSesionBtn.addEventListener('click', () => {
