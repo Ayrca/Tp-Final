@@ -8,6 +8,12 @@ margin: 0;
 padding: 2rem;
 }
 
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block;
+  margin-left: 15px;
+}
+
 /* Contenedor principal del formulario */
 form#registro-form {
 max-width: 50%;
@@ -249,10 +255,3 @@ background-color: #4aa880;
     padding: 0.7rem 1.2rem;
   }
 }
-
-.logo {
-  transform: scale(1.7); /* aumenta el tamaño en un 20% */
-  display: inline-block; /* asegurarse de que el transform funcione correctamente */
-  margin-left: 15px;
-}
-

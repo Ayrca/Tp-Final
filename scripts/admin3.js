@@ -51,7 +51,6 @@ document.getElementById('traeLista').addEventListener('click', async () => {
   }
 });
 
-
 // Funcion para limpiar los imputs
 function limpiarInputs() {
   inputNombre.value = '';
@@ -83,7 +82,6 @@ async function borrarOficio(nombreOficio) {
   }
 }
 
-
 async function agregarOficio(nombreArray, objeto) {
   try {
     const options = {
@@ -96,7 +94,6 @@ async function agregarOficio(nombreArray, objeto) {
     console.error('Error al agregar Oficio:', error);
   }
 }
-
 
 async function modificarDato(index, nombre, imagen) {
   try {
@@ -111,16 +108,6 @@ async function modificarDato(index, nombre, imagen) {
     console.error('Error al modificar el dato:', error);
   }
 }
-
-/*
-document.getElementById('modificarDato').addEventListener('click', async () => {
- const index = document.getElementById('input-lista').value;
-  const nombre = document.getElementById('input-Nombre').value;
-  const imagen = document.getElementById('input-Imagen').value;
-  await modificarDato(index, nombre, imagen);
-});
-*/
-
 
 document.getElementById('modificarDato').addEventListener('click', async () => {
   Swal.fire({
@@ -149,11 +136,7 @@ document.getElementById('modificarDato').addEventListener('click', async () => {
   });
 });
 
-
-
-
 // Evento despliega botones para agregar publicidad
-
 document.getElementById('agregarDato').addEventListener('click', () => {
   const agregarBotones = document.getElementById('agregar-botones');
   agregarBotones.innerHTML = `
@@ -164,6 +147,7 @@ document.getElementById('agregarDato').addEventListener('click', () => {
     <button id="aceptar-agregar">Aceptar</button>
     <button id="cancelar-agregar">Cancelar</button>
   `;
+  
 // Evento para subir la imagen desde el dispositivo
 document.getElementById('subir-imagen').addEventListener('click', () => {
   const archivo = document.getElementById('imagen').files[0];

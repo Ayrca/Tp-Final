@@ -3,19 +3,20 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 .logo {
   transform: scale(1.7); /* aumenta el tamaño en un 20% */
-  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  display: inline-block;
   margin-left: 15px;
 }
 
 /*body y main */
 body {
   background-color: #fdfdfd;
-    background-size: cover;
-    background-position: center;
-    line-height: 1.6;
-    position: relative;    
+  background-size: cover;
+  background-position: center;
+  line-height: 1.6;
+  position: relative;    
 }
 
 /*header */
@@ -36,25 +37,25 @@ height: 100px;
 /*buscador*/
 #buscador{
   padding: 5px;
-margin-top: 35PX;
-height: 35px;
-margin-left: 60px;
-width: 350px;
+  margin-top: 35PX;
+  height: 35px;
+  margin-left: 60px;
+  width: 350px;
 }
 
 #irTodos{
-margin-left: 10px;
+  margin-left: 10px;
 }
 
 #irTodos button{
-height: 37px;
-width: 80px;
-border-radius: 10px;
-background-color:white;
+  height: 37px;
+  width: 80px;
+  border-radius: 10px;
+  background-color:white;
 }
 
 #irTodos button:hover{
-background-color: #6e6d6d;
+  background-color: #6e6d6d;
 }
 
 .resultado {
@@ -141,10 +142,10 @@ background-color: #6e6d6d;
 
 /* carteles de carruseles */
 .catalogoCartel {
-display: flex;
-justify-content: center;
-font-size: 2rem;
-color: #34495e;
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+  color: #34495e;
 }
 
 .cajaBtn1{ 
