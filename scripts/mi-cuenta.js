@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const esProfesional = currentUser.tipo === 'profesional';
 
-  // Si no sos profesional, escondo las partes "pro"
+  // Si no es profesional, oculta campos
   if (!esProfesional) {
     ['rubros-section', 'estado-section', 'descripcion-section', 'galeria-section', 'empresa-row'].forEach(id => {
       const el = document.getElementById(id);
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let modoEdicion = false;
   let avatar = currentUser.avatar || '../assets/images/avatar-de-usuario.png';
 
-  // Mostramos datos del usuario
+  // datos del usuario
   document.getElementById('profesion').textContent = esProfesional ? (currentUser.rubroPrincipal || 'Profesional') : 'Mi perfil';
   nombreEl.textContent = `${currentUser.nombre} ${currentUser.apellido}`;
   emailEl.value = currentUser.email || '';
@@ -44,14 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
   empresaEl.value = currentUser.empresa || '';
   avatarEl.src = avatar;
 
-  // Si es profesional, mostramos info extra
+  // Si es profesional, muestra campos extras
   let descripcion = currentUser.descripcion || '';
   let estado = currentUser.estado !== false;
   let rubros = Array.isArray(currentUser.rubros) ? [...currentUser.rubros] : [];
   let imagenes = currentUser.imagenes || [];
 
   if (esProfesional) {
-    // Referencias específicas de profesional
+    // Referencias de profesional
     const estadoBtn = document.getElementById('toggle-estado');
     const descripcionTexto = document.getElementById('descripcion-texto');
     const listaRubros = document.getElementById('lista-rubros');
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const agregarImagenBtn = document.getElementById('agregar-imagen');
     const imagenesContainer = document.getElementById('imagenes-container');
 
-    // Mostramos info
+    // muestra info
     descripcionTexto.textContent = descripcion;
     estadoBtn.textContent = estado ? 'Disponible' : 'No disponible';
     estadoBtn.classList.toggle('inactivo', !estado);
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderImagenes();
     rubroNuevoContainer.hidden = true;
 
-    // Cargamos oficios en el selector
+    // Cara de oficios en el selector
     fetch('http://localhost:3000/datos/oficios')
       .then(res => res.json())
       .then(oficios => {
@@ -253,29 +253,34 @@ document.addEventListener('DOMContentLoaded', () => {
       await guardarPerfil(actualizado);
       window.location.reload();
     } catch {
-      // Error ya se maneja en guardarPerfil
     }
   });
 
   // Función para mandar datos al servidor y actualizar localStorage
-  async function guardarPerfil(actualizado) {
-    try {
-      actualizado.emailOriginal = currentUser.email;
-      const res = await fetch('http://localhost:3000/actualizarPerfil', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(actualizado),
-      });
-      if (!res.ok) throw new Error('Error actualizando perfil');
-      const data = await res.json();
-      localStorage.setItem('currentUser', JSON.stringify(data));
-      return data;
-    } catch (e) {
-      console.error(e);
-      alert('Error al guardar perfil');
-      throw e;
-    }
+async function guardarPerfil(actualizado) {
+  try {
+    actualizado.emailOriginal = currentUser.email;
+    const res = await fetch('http://localhost:3000/actualizarPerfil', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(actualizado),
+    });
+    if (!res.ok) throw new Error('Error actualizando perfil');
+    const data = await res.json();
+
+    const userFinal = {
+      ...currentUser, // conserva isLoggedIn, tipo, etc.
+      ...data         // actualiza con lo que vino del servidor
+    };
+
+    localStorage.setItem('currentUser', JSON.stringify(userFinal));
+    return userFinal;
+  } catch (e) {
+    console.error(e);
+    alert('Error al guardar perfil');
+    throw e;
   }
+}
 
   // Botón para cerrar sesión
   cerrarSesionBtn.addEventListener('click', () => {
@@ -285,8 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Cargar trabajos (profesional o cliente)
   cargarTrabajos();
-
-// Al final de tu archivo dentro de DOMContentLoaded:
 
 async function cargarTrabajos() {
   const trabajosContainer = document.getElementById('trabajos-container');

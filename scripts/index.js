@@ -12,7 +12,6 @@ buscador.addEventListener('keydown', (e) => {
 });
 
 /*Buscador*/
-
 function buscarOficios() {
   const textoBusqueda = buscador.value.toLowerCase();
   const resultadosFiltrados = oficiosData.filter(oficio => oficio && oficio.nombre && oficio.nombre.toLowerCase().startsWith(textoBusqueda));
@@ -49,7 +48,6 @@ function buscarOficios() {
     resultados.innerHTML = '<p>No se encontraron resultados</p>';
   }
 }
-
 
 buscador.addEventListener('blur', () => {
   if (!seleccionRealizada) {
@@ -143,7 +141,6 @@ tarjetasContainer1.addEventListener('touchmove', (e) => {
   tarjetasContainer1.scrollLeft = scrollLeft1 - walk;
 });
 
-
 function smoothScrollTo1(element, to, duration) {
   const start = element.scrollLeft;
   const change = to - start;
@@ -198,8 +195,6 @@ let intervalId;
 
 
 /*Crea el carrusel de propaganda*/ 
-
-
 function crearPropaganda(publicidad) {
   const propagandaContainer = document.getElementById('propaganda1');
   publicidad.forEach((anuncio) => {
@@ -296,9 +291,7 @@ function crearPropaganda(publicidad) {
       });
 }
 
-
 /*llamado del json y ejecucion de los carruseles, con el buscador en tiempo real*/ 
-
 Promise.all([
   fetch('datos/datos.json').then(response => response.json()),
   fetch('datos/publicidad.json').then(response => response.json())

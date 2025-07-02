@@ -5,6 +5,12 @@
   box-sizing: border-box;
 }
 
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block;
+  margin-left: 15px;
+}
+
 main {
   justify-items: center;
   display: flex;
@@ -319,10 +325,4 @@ main {
     max-width: 320px;
     height: 42px;
   }
-}
-
-.logo {
-  transform: scale(1.7); /* aumenta el tamaño en un 20% */
-  display: inline-block; /* asegurarse de que el transform funcione correctamente */
-  margin-left: 15px;
 }

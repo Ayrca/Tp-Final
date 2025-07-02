@@ -135,7 +135,6 @@ function guardarCambios() {
   });
 }
 
-
 function actualizarListaUsuarios() {
   const usuarioSeleccionado = JSON.parse(document.getElementById("input-lista").value);
   const tipo = usuarioSeleccionado.tipo;
@@ -163,7 +162,6 @@ function actualizarListaUsuarios() {
   });
 }
 
-
 function actualizarListaUsuariosDespuesDeBorrar(tipoActual) {
   const selectUsuarios = document.getElementById("input-lista");
   selectUsuarios.innerHTML = "";
@@ -187,7 +185,6 @@ function actualizarListaUsuariosDespuesDeBorrar(tipoActual) {
     document.getElementById("input-Email").value = "";
   }
 }
-
 
 /// Botón Borrar Usuario
 document.getElementById("borrarDato").addEventListener("click", () => {
@@ -235,7 +232,6 @@ document.getElementById("borrarDato").addEventListener("click", () => {
   });
 });
 
-
 // Botón Bloquear Usuario
 document.getElementById("bloquearUsuario").addEventListener("click", () => {
   const usuarioSeleccionado = JSON.parse(document.getElementById("input-lista").value);
@@ -280,8 +276,6 @@ document.getElementById("bloquearUsuario").addEventListener("click", () => {
     }
   });
 });
-
-
 
 // Botón Desbloquear Usuario
 document.getElementById("desbloquearUsuario").addEventListener("click", () => {
@@ -328,17 +322,13 @@ document.getElementById("desbloquearUsuario").addEventListener("click", () => {
   });
 });
 
-
-
   document.getElementById("traeLista").addEventListener("click", () => {
   limpiarLista();
   traerTiposUsuarios();
   });
 
   document.getElementById("modificarDato").addEventListener("click",guardarCambios);
-
   document.getElementById("limpiarLista").addEventListener("click", limpiarLista);
-
   document.getElementById("input-listaArray").addEventListener("change", traerUsuariosPorTipo);
   document.getElementById("input-lista").addEventListener("change", cargarDatosUsuario);
       

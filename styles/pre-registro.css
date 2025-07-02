@@ -11,6 +11,12 @@ html, body {
   flex-direction: column;
 }
 
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block;
+  margin-left: 15px;
+}
+
 /* El main ocupa todo el alto disponible para empujar el footer */
 main {
   flex: 1;
@@ -74,10 +80,4 @@ h2 {
 .btn-opcion:hover {
   background-color: #219150;
   transform: scale(1.03);
-}
-
-.logo {
-  transform: scale(1.7); /* aumenta el tamaño en un 20% */
-  display: inline-block; /* asegurarse de que el transform funcione correctamente */
-  margin-left: 15px;
 }

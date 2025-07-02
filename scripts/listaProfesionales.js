@@ -253,7 +253,6 @@ function startCarruselHorizontal(containerId, items, interval) {
     container.appendChild(carruselItem);
   });
 
-
 // Agregar evento de clic a cada imagen
   container.addEventListener('click', (e) => {
     if (e.target.tagName === 'IMG') {
