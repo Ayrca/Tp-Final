@@ -79,6 +79,10 @@
     {
       "nombre": "Soldador",
       "imagen": "assets/images/oficios/soldador.png"
+    },
+    {
+      "nombre": "Oficio Cualquiera",
+      "imagen": "../assets/images/oficios/4f4e25e9-89fe-4951-822e-d8e192a3382f.jpg"
     }
   ]
 }

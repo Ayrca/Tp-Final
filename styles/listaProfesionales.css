@@ -100,7 +100,11 @@ margin-top: 25px;
   height:100%;
 }
 
-
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
+}
 
 
 .cartelNoHay{
@@ -120,7 +124,7 @@ font-size: 35px;
 
 .profesional-item{
 width: 710px;
-height: 330px;
+height: 300px;
 background-color: #f0f0f0;
 
 display: flex;
@@ -335,7 +339,7 @@ font-size: 35px;
 display: flex;
 flex-direction: column;
 width: 300px;
-height:640px ;
+height:600px ;
 align-items: center;
 justify-content: center;
 }

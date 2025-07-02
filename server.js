@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const port = 3000;
 
-
 // Función para servir archivos estáticos
 const serveStaticFile = (filePath, res) => {
   fs.readFile(filePath, (err, content) => {
@@ -28,7 +27,6 @@ const serveStaticFile = (filePath, res) => {
     }
   });
 };
-
 
 // Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
@@ -151,7 +149,6 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     }
   });
 }
-
 
   // Rutas para usuarios y login
   if (req.method === 'POST' && req.url === '/registro') {
@@ -366,8 +363,6 @@ else if (req.method === 'GET' && req.url === '/api/trabajos') {
   });
 }
 
-
-//Rutas Oficios
 //leer oficios de datos.json
 else if (req.method === 'GET' && req.url === '/datos/oficios') {
   const filePath = path.join(__dirname, 'datos', 'datos.json');
@@ -490,19 +485,7 @@ else if (req.method === 'POST' && req.url === '/datos/oficios') {
   });
 }
 
-
-
-
-
-
-
-
-
-
-
-
-//Actualizar datos del profesional
-
+  // Actualizar datos del profesional
 else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   let body = '';
   req.on('data', chunk => {
@@ -556,7 +539,8 @@ else if (req.method === 'POST' && req.url === '/actualizarPerfil') {
   return;
 }
 
-else if (req.method === 'POST' && req.url === '/actualizarEstadoCuenta') {
+    //actualizar estadoCuenta
+    else if (req.method === 'POST' && req.url === '/actualizarEstadoCuenta') {
   let body = '';
   req.on('data', chunk => {
     body += chunk.toString();
@@ -592,8 +576,61 @@ else if (req.method === 'POST' && req.url === '/actualizarEstadoCuenta') {
   return;
 }
 
+    // Actualizar estado de trabajo
+    else if (req.method === 'POST' && req.url === '/actualizarEstadoTrabajo') {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        try {
+          const { id, estado } = JSON.parse(body);
 
-// Eliminar usuario
+          if (!id || !estado) {
+            sendJSON(res, 400, { error: 'Faltan datos: id y estado' });
+            return;
+          }
+
+          const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+          fs.readFile(trabajosPath, 'utf8', (err, data) => {
+            if (err) {
+              sendJSON(res, 500, { error: 'Error leyendo trabajos.json' });
+              return;
+            }
+
+            let trabajos = [];
+            try {
+              trabajos = JSON.parse(data);
+            } catch {
+              sendJSON(res, 500, { error: 'Error parseando trabajos.json' });
+              return;
+            }
+
+            const index = trabajos.findIndex(t => t.id === id);
+            if (index === -1) {
+              sendJSON(res, 404, { error: 'Trabajo no encontrado' });
+              return;
+            }
+
+            trabajos[index].estado = estado;
+
+            fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+              if (err) {
+                sendJSON(res, 500, { error: 'Error guardando cambios' });
+                return;
+              }
+
+              sendJSON(res, 200, { success: true });
+            });
+          });
+        } catch {
+          sendJSON(res, 400, { error: 'JSON inválido' });
+        }
+      });
+      return;
+    }
+
+    // Eliminar usuario
 else if (req.method === 'POST' && req.url === '/eliminarUsuario') {
   let body = '';
   req.on('data', chunk => {
@@ -625,9 +662,74 @@ else if (req.method === 'POST' && req.url === '/eliminarUsuario') {
   return;
 }
 
+    // Actualizar comentario y valoración del trabajo (cliente)
+else if (req.method === 'POST' && req.url === '/actualizarComentarioValoracion') {
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    try {
+      const { id, comentario, valoracion } = JSON.parse(body);
 
+      if (!id) {
+        sendJSON(res, 400, { error: 'Falta el ID del trabajo' });
+        return;
+      }
 
+      const trabajosPath = path.join(__dirname, 'datos', 'trabajos.json');
+      fs.readFile(trabajosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo trabajos.json' });
+          return;
+        }
 
+        let trabajos = [];
+        try {
+          trabajos = JSON.parse(data);
+        } catch {
+          sendJSON(res, 500, { error: 'Error parseando trabajos.json' });
+          return;
+        }
+
+        const index = trabajos.findIndex(t => t.id === id);
+        if (index === -1) {
+          sendJSON(res, 404, { error: 'Trabajo no encontrado' });
+          return;
+        }
+
+        if (typeof comentario === 'string') {
+          trabajos[index].comentario = comentario;
+        }
+
+        // Se guarda valoracion si es un numero del 1 al 5 o viene null
+        if (valoracion === null || valoracion === undefined) {
+          trabajos[index].valoracion = null;
+        } else {
+          const valoracionNum = Number(valoracion);
+          if (isNaN(valoracionNum) || valoracionNum < 1 || valoracionNum > 5) {
+            sendJSON(res, 400, { error: 'Valoración inválida. Debe ser entre 1 y 5.' });
+            return;
+          }
+          trabajos[index].valoracion = valoracionNum;
+        }
+
+        fs.writeFile(trabajosPath, JSON.stringify(trabajos, null, 2), (err) => {
+          if (err) {
+            sendJSON(res, 500, { error: 'Error guardando cambios' });
+            return;
+          }
+
+          sendJSON(res, 200, { success: true });
+        });
+      });
+    } catch (e) {
+      console.error(e);
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
 
 //subir imagen de trabajos, publicidad y avatar
 else if (req.method === 'POST' && req.url === '/subirImagen') {
@@ -642,7 +744,6 @@ else if (req.method === 'POST' && req.url === '/subirImagen') {
       sendJSON(res, 500, { error: 'Error al procesar archivo' });
       return;
     }
-
 
 // Decidir carpeta según 'tipo' o 'oficios'
 const tipo = (fields.tipo && fields.tipo[0]) || '';
@@ -689,7 +790,6 @@ fs.copyFile(file.filepath, newPath, (err) => {
   return;
 }
 
-
 // Eliminar imagen del servidor
 else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   let body = '';
@@ -699,7 +799,6 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
       const { filename } = JSON.parse(body);
       if (!filename) throw new Error('Falta filename');
 
-      // Sanitizar filename para evitar path traversal
       const safeFilename = path.basename(filename);
       const imgPath = path.join(__dirname, 'assets', 'imagenesProfesionales', safeFilename);
 
@@ -718,7 +817,7 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   return;
 }
 
-  // Archivos estáticos  
+ // Archivos estáticos  
 
   else if (req.url.startsWith('/pages/assets/')) {
   const newUrl = req.url.replace('/pages/', '/');
@@ -729,7 +828,7 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
   else {
 
  const urlPath = req.url.split('/');
- 
+
   if (urlPath.includes('assets') && urlPath.includes('images') && urlPath.includes('oficios')) {
     const fileName = urlPath.pop();
     const filePath = path.join(__dirname, 'assets', 'images', 'oficios', fileName);
@@ -739,8 +838,6 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
     serveStaticFile(filePath, res);
   }
 }
-
-
   
   } catch (error) {
     console.error('Error en el servidor:', error);

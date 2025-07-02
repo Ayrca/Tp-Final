@@ -141,6 +141,7 @@ function contratarProfesional(emailProfesional) {
   const emailUsuario = currentUser ? currentUser.email : null;
   const rubro = localStorage.getItem('categoria');
 
+  // Validar login
   if (!emailUsuario) {
     Swal.fire({
       icon: 'warning',
@@ -151,24 +152,50 @@ function contratarProfesional(emailProfesional) {
     return;
   }
 
-  const nuevoTrabajo = {
-    id: generarUUID(),
-    profesionalEmail: emailProfesional,
-    usuarioEmail: emailUsuario,
-    rubro: rubro,
-    estado: 'pendiente',
-    valoracion: null,
-    comentario: "",
-    fechaContratacion: new Date().toISOString().split('T')[0]
-  };
+  // Validar tipo de usuario
+  if (currentUser.tipo !== 'Cliente') {
+    Swal.fire({
+      icon: 'error',
+      title: 'Acceso denegado',
+      text: 'Solo los usuarios registrados como clientes pueden contratar profesionales.',
+      confirmButtonColor: '#ef4444'
+    });
+    return;
+  }
 
-  // Enviar al servidor
-  fetch('http://localhost:3000/api/trabajos', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(nuevoTrabajo)
+// Traer usuarios para buscar el teléfono del profesional
+fetch('../datos/usuarios.json')
+  .then(res => res.json())
+  .then(usuarios => {
+    const profesional = usuarios.find(u => u.email === emailProfesional);
+
+    if (!profesional) {
+      throw new Error('Profesional no encontrado');
+    }
+
+    //Traer el teléfono del cliente desde currentUser
+    const telefonoCliente = currentUser.telefono || '';
+
+    const nuevoTrabajo = {
+      id: generarUUID(),
+      profesionalEmail: emailProfesional,
+      usuarioEmail: emailUsuario,
+      rubro: rubro,
+      telefonoProfesional: profesional.telefono || '',
+      telefonoCliente: telefonoCliente,               
+      estado: 'pendiente',
+      valoracion: null,
+      comentario: '',
+      fechaContratacion: new Date().toISOString().split('T')[0]
+    };
+
+    return fetch('http://localhost:3000/api/trabajos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(nuevoTrabajo)
+    });
   })
   .then(res => {
     if (!res.ok) {
@@ -188,7 +215,7 @@ function contratarProfesional(emailProfesional) {
     console.error('Error:', error);
     Swal.fire({
       icon: 'error',
-      title: 'Oops...',
+      title: 'Error',
       text: 'Hubo un problema al contratar el servicio.',
       confirmButtonColor: '#ef4444'
     });

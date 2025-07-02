@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+.logo {
+  transform: scale(1.7); /* aumenta el tamaño en un 20% */
+  display: inline-block; /* asegurarse de que el transform funcione correctamente */
+  margin-left: 15px;
+}
 /*body y main */
 body {
   background-color: #fdfdfd;
@@ -22,12 +27,17 @@ height: 100px;
 }
 
 #listaOficios{
-display: grid;
-  grid-template-columns: repeat(3, 1fr); /* grid-template-columns: repeat(3, 1fr); / / Para tres columnas */
-  gap: 10px; /* Espacio entre elementos */
-  margin-left: 25px;
-  cursor: pointer;
-}
+  display: grid;
+    grid-template-columns: repeat(3, 1fr); /* grid-template-columns: repeat(3, 1fr); / / Para tres columnas */
+    gap: 10px; /* Espacio entre elementos */
+    margin-left: 25px;
+  }
+  
+ 
+  #listaOficios p:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 
 #footer { 
 width: 100%;
