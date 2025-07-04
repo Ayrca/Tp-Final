@@ -15,7 +15,11 @@
     "telefono": "228450206",
     "direccion": "25 de Mayo 1755",
     "avatar": "/assets/imagenesProfesionales/b1ef4993-e20f-4386-bdfe-e37668f2ab4e.jpeg",
-    "estadoCuenta": true
+    "estadoCuenta": true,
+    "isAdmin": true,
+    "imagenes": [
+      "/assets/imagenesProfesionales/c7c8ebfa-4111-4ebd-b9ca-a080e609e59b.jpg"
+    ]
   },
   {
     "nombre": "Franker",
@@ -36,8 +40,13 @@
   },
   {
     "nombre": "Ayelen",
+<<<<<<< HEAD
     "apellido": "Sot3",
     "email": "ayelensoto19945561@gmail.com",
+=======
+    "apellido": "Soto",
+    "email": "ayelensoto1994@gmail.com",
+>>>>>>> 4ef9d2b4cbe0409361e893dc4df57c12dee19469
     "password": "123456",
     "tipo": "Cliente",
     "rubros": [
