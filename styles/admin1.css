@@ -30,10 +30,28 @@ height: 300px;
 height: 300px;
 }
 
-#imagen-propaganda img{
-width: 250px;
-height: 250px;
+
+
+/*imagenes*/
+#imagen-container {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ccc;
+  padding: 10px;
 }
+
+#imagen-seleccionada {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#imagen-previa{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
 #agregar-botones{
 display: flex;
@@ -70,6 +88,67 @@ margin-top: 25px;
 width: 150px;
 height: 35px;
 }
+
+/*tabla */
+.tablaContainer{
+  display: flex;
+  flex-wrap: wrap;
+  width:100%;
+  
+}
+
+#tabla-publicidades {
+  border-collapse: collapse;
+  width:100%;
+table-layout: fixed;
+  
+}
+
+#tabla-publicidades th, #tabla-publicidades td {
+  border: 1px solid #dddddd;
+  padding: 15px;
+  text-align: left;
+    
+}
+
+#tabla-publicidades th {
+  background-color: #f0f0f0;
+}
+
+
+
+th, td {
+
+border: 1px solid #ddd;
+padding: 5px;
+}
+
+
+
+th:nth-child(1) { width: 5px; } /* Array */
+th:nth-child(2) { width: 250px; } /* Nombre */
+th:nth-child(3) { width: 250px; } /* Imagen */
+th:nth-child(4) { width: 200px; } /* Pagina */
+th:nth-child(5) { width: 250px; } /* Acciones */
+/*tabla */
+
+
+.modificar{
+width: 100px;
+height: 30px;
+} 
+
+.borrar{
+width: 100px;
+height: 30px;
+}
+
+
+
+
+
+
+
 
 @media (max-width: 700px)  {
 }

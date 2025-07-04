@@ -112,38 +112,44 @@
  <!-- Main -->
     <main class="containerProfesional">
         <h2>Manejo de Propagandas</h2>
-<div>
-   <div class="inputs1">
-                    
-                    <select id="input-listaArray" size="5"></select>
-                    <select id="input-lista" size="5"></select>
-              
-                    <div class="datos1">
-                    <input type="text" id="input-Nombre" placeholder= "Nombre Publicación">
-                    <input type="text"  id="input-Imagen" placeholder= "Imagen">
-                    <input type="text" id="input-pagina" placeholder= "referencia pagina">
-                    </div>
+        <div class="tablaContainer">
+<table>
+  <thead>
+    <tr>
+      <th>Array</th>
+    </tr>
+  </thead>
+  <tbody id="tabla-arrays"></tbody>
+</table>
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Nombre</th>
+      <th>Imagen</th>
+      <th>Pagina</th>
+    </tr>
+  </thead>
+  <tbody id="tabla-datos"></tbody>
+</table>
 </div>
+
+<div>
 <div class="botonera1">
-  <div>
-    <button id="traeLista">Traer Lista</button>
-    <button id="limpiarLista">Limpiar Lista</button>
-  </div>
-  <div>
-    <button id="modificarDato">Modificar Dato</button>
-    <button id="borrarDato">Borrar Dato</button>
-  </div>
-  <div>
+    <div>
+       <div id="imagen-container">
+       <img id="imagen-seleccionada" src="" alt="Imagen seleccionada">
+       </div>
     <button id="agregarDato">Agregar Dato</button>
     <div id="agregar-botones"></div>
-    <div id="imagen-propaganda"></div>
+    <div id="imagen-container">
+    <img id="imagen-previa" src="" alt="Imagen previa">
+    </div>
   </div>
-  
-  
     </div>
 </div>
 
-</div>
+
 
 </main>
 

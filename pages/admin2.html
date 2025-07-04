@@ -112,37 +112,35 @@
      <!-- Main -->
       <main class="containerProfesional">
         <h2>Manejo de Usuarios</h2>
-<div>
-   <div class="inputs1">
-                    
-                    <select id="input-listaArray" size="5"></select>
-                    <select id="input-lista" size="5"></select>
-              
-                    <div class="datos1">
-                    <input type="text" id="input-Tipo" placeholder= "Tipo Usuario">
-                    <input type="text" id="input-Nombre" placeholder= "Nombre Usuario">
-                    <input type="text" id="input-Apellido" placeholder= "Apellido Usuario">
-                    <input type="text" id="input-Email" placeholder= "Email Usuario">
-                    <input type="text" id="input-Rubros" placeholder= "Rubros Usuario">
-                    <input type="text" id="input-Empresa" placeholder= "Empresa Usuario">
-                    <input type="number" id="input-Telefono" placeholder= "Telefono Usuario">
-                    <input type="text" id="input-Direccion" placeholder= "Direccion Usuario">
-                    <input type="text" id="input-EstadoCuenta" placeholder= "Estado Cuenta Usuario">
-                    </div>
+
+<div class="containerTabla">
+
+  <table id="tabla-usuarios">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Email</th>
+      <th>Tipo</th>
+      <th>Rubros</th>
+      <th>Empresa</th>
+      <th>Teléfono</th>
+      <th>Dirección</th>
+      <th>Estado Cuenta</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="tbody-usuarios">
+    <!-- Aquí se insertarán las filas de la tabla -->
+  </tbody>
+</table>
+
 </div>
+ 
 <div class="botonera1">
     <button id="traeLista">Traer Lista</button>
-    <button id="limpiarLista">Limpiar Lista</button>
-<div>
-    <button id="modificarDato">Modificar Dato</button>
-    <button id="borrarDato">Borrar Dato</button>
-</div>
-<div>
-    <button id="bloquearUsuario">Bloquear Usuario</button>
-    <button id="desbloquearUsuario">Desbloquear Usuario</button>
-</div>
-    </div>
-</div>
+   <button id="traer-clientes">Traer Clientes</button>
+<button id="traer-profesionales">Traer Profesionales</button>
 
 </div>
 

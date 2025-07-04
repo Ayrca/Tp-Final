@@ -72,5 +72,51 @@ width: 200px;
 height: 40px;
 }
 
+
+
+/*tabla*/
+#tabla-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  
+}
+
+#tabla-usuarios th, #tabla-usuarios td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+#tabla-usuarios th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+#tabla-usuarios tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#tabla-usuarios tbody tr:hover {
+  background-color: #ddd;
+}
+
+#tabla-usuarios td {
+  font-size: 14px;
+}
+
+.containerTabla{
+width: 98%;
+}
+
+
+
+
+
+
+
+
+
+
 @media (max-width: 700px)  {
 }
