@@ -40,13 +40,8 @@
   },
   {
     "nombre": "Ayelen",
-<<<<<<< HEAD
-    "apellido": "Sot3",
-    "email": "ayelensoto19945561@gmail.com",
-=======
     "apellido": "Soto",
     "email": "ayelensoto1994@gmail.com",
->>>>>>> 4ef9d2b4cbe0409361e893dc4df57c12dee19469
     "password": "123456",
     "tipo": "Cliente",
     "rubros": [
