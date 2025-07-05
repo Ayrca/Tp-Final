@@ -64,7 +64,7 @@ function limpiarInputs() {
 }
 
 async function borrarOficio(nombreOficio) {
-   console.log('Nombre del oficio a borrar:', nombreOficio);
+  console.log('Nombre del oficio a borrar:', nombreOficio);
   try {
     const response = await fetch(`/datos/oficios/${nombreOficio}`, {
       method: 'DELETE',
@@ -234,7 +234,7 @@ document.getElementById('borrarDato').addEventListener('click', async () => {
 
 // Evento para modificar dato
 document.getElementById('modificarDato').addEventListener('click', async () => {
- const index = document.getElementById('input-lista').value;
+  const index = document.getElementById('input-lista').value;
   const nombre = document.getElementById('input-Nombre').value;
   const imagen = document.getElementById('input-Imagen').value;
   await modificarDato(index, nombre, imagen);

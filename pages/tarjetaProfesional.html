@@ -12,9 +12,11 @@
   <body class="d-flex flex-column">
     <!-- Header -->
     <div id="header-container"></div>
+
     <!-- Main -->
-<main 
-    class="containerProfesional">
+<main class="containerProfesional">
+  <h1 class="titulo-profesional">Detalles del Profesional</h1>
+  <div id="contenidoProfesional"></div>
       <!--
     Este contenedor se llena dinámicamente con:
     - .tarjetaProfesional
@@ -42,7 +44,7 @@
         document.getElementById("footer-container").innerHTML = data;
       });
   </script>
- 
+
     <!-- Scripts -->
     <script src="/scripts/login.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   

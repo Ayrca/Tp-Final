@@ -32,7 +32,7 @@
 
         <!-- NUEVOS CAMPOS -->
         <label for="telefono">Teléfono:</label>
-        <input type="tel" id="telefono" name="telefono" placeholder="Ej: 2284555555" required>
+        <input type="tel" id="telefono" name="telefono" placeholder="Ej: 2284555555" pattern="[0-9]+" title="Solo números" required>
       </div>
 
 
@@ -106,7 +106,7 @@
         document.getElementById("footer-container").innerHTML = data;
       });
   </script>
- 
+
     <!-- Scripts -->
     <script src="/scripts/login.js" defer></script>
     <script src="../scripts/registro.js"></script>
