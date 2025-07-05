@@ -6,6 +6,8 @@
   <title>Tu Oficio</title>
   <link rel="icon" href="assets/images/logo-afip.jpg" type="image/jpg" />
   <link rel="stylesheet" href="styles/index.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
 
   <!-- Swiper CSS -->
   <link
@@ -18,48 +20,51 @@
   <!-- Header -->
   <div id="header-container"></div>
 
-  <!-- Main -->
-  <main class="indexmain">
-    <div class="texto1">
-      <h2>El Oficio para vos</h2>
-      <p>
-        La aplicación que te permitirá encontrar los mejores profesionales de
-        manera fácil y rápida.
-      </p>
-      <div>
-        <input type="search" id="buscador" placeholder="Buscar oficio..." />
-        <a id="irTodos" href="pages/listaOficios.html">
-          <button>Todos</button>
-        </a>
-      </div>
+<!-- Main -->
+<main class="indexmain">
+  <div class="texto1">
+    <h2>El Oficio para vos</h2>
+    <p>
+      La aplicación que te permitirá encontrar los mejores profesionales de
+      manera fácil y rápida.
+    </p>
+
+    <div class="buscador-wrapper">
+      <input type="search" id="buscador" placeholder="Buscar oficio..." />
+      <a id="irTodos" href="pages/listaOficios.html">
+        <button>Todos</button>
+      </a>
       <div id="resultados"></div>
     </div>
+  </div>
 
-    <section class="contenedorCarrusel2">
-      <section id="propaganda1"></section>
-    </section>
+  <section class="contenedorCarrusel2">
+    <section id="propaganda1"></section>
+  </section>
 
-    <section class="contenedorCarrusel1">
-      <h3>Categorías relevantes</h3>
-      <section id="oficio-container"></section>
-      <div class="cajaBtn1">
-        <button id="anterior1">&#60;</button>
-        <h2 class="catalogoCartel">Oficios</h2>
-        <button id="siguiente1">&#62;</button>
-      </div>
-    </section>
-  </main>
+  <section class="contenedorCarrusel1">
+    <h3>Categorías relevantes</h3>
+    <section id="oficio-container"></section>
+    <div class="cajaBtn1">
+      <button id="anterior1">&#60;</button>
+      <h2 class="catalogoCartel">Oficios</h2>
+      <button id="siguiente1">&#62;</button>
+    </div>
+  </section>
+</main>
 
   <!-- Footer -->
   <div id="footer-container"></div>
 
   <!-- Cargo header y footer -->
   <script>
-    fetch("/pages/header.html")
-      .then((response) => response.text())
-      .then((data) => {
-        document.getElementById("header-container").innerHTML = data;
-      });
+      fetch("/pages/header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+          // toggle password
+          initPasswordToggle();
+        });
 
     fetch("/pages/footer.html")
       .then((response) => response.text())
@@ -68,7 +73,8 @@
       });
   </script>
 
-  <!-- Scripts propios y librerías -->
+  <!-- Scripts -->
+  <script src="/scripts/togglePassword.js" defer></script>
   <script src="/scripts/login.js" defer></script>
   <script src="scripts/index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
