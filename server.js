@@ -818,7 +818,6 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
 }
 
  // Archivos estáticos  
-
   else if (req.url.startsWith('/pages/assets/')) {
   const newUrl = req.url.replace('/pages/', '/');
   const filePath = path.join(__dirname, newUrl);
@@ -827,7 +826,7 @@ else if (req.method === 'POST' && req.url === '/eliminarImagen') {
 }
   else {
 
- const urlPath = req.url.split('/');
+const urlPath = req.url.split('/');
 
   if (urlPath.includes('assets') && urlPath.includes('images') && urlPath.includes('oficios')) {
     const fileName = urlPath.pop();

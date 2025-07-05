@@ -93,18 +93,20 @@ function mostrarProfesionales(categoria) {
         <article class="profesional-item" data-email="${profesional.email}" data-telefono="${profesional.telefono}">
           <img src="${profesional.avatar}" alt="${profesional.nombre}">
           <div class="profesional-data">
-            <h2>${profesional.nombre} ${profesional.apellido}.</h2>
+            <div class="profesional-header">
+              <h2>${profesional.nombre} ${profesional.apellido}.</h2>
+              <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
+            </div>
             <h2>${profesional.empresa}.</h2>
             <p>Email: ${profesional.email}</p>
             <p>Tel: ${profesional.telefono}</p>
             <p>Dirección: ${profesional.direccion}</p>
             <p>Valoración promedio: ${promedio}</p>
-          </div>
-          <div class="profesional-buttons">
-            <button class="verMas">Ver Más</button>
-            <button class="conectar">Conectar</button>
-            <button class="contratar">Contratar</button>
-            <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
+            <div class="profesional-buttons">
+              <button class="verMas">Ver Más</button>
+              <button class="conectar">Conectar</button>
+              <button class="contratar">Contratar</button>
+            </div>
           </div>
         </article>
       `;

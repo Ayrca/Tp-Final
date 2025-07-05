@@ -15,8 +15,8 @@ function mostrarTarjetaProfesional() {
       return;
     }
 
-    const mainContainer = document.querySelector('main.containerProfesional');
-    mainContainer.innerHTML = ''; // Limpiar contenido previo
+const contenidoContainer = document.getElementById('contenidoProfesional');
+contenidoContainer.innerHTML = ''; // borra solo el contenido dinámico
 
     // Tarjeta profesional (foto + datos)
     const tarjetaProfesional = document.createElement('div');
@@ -34,24 +34,32 @@ function mostrarTarjetaProfesional() {
         </ul>
       </div>
     `;
-    mainContainer.appendChild(tarjetaProfesional);
+    contenidoContainer.appendChild(tarjetaProfesional);
 
     // Descripción profesional
     const descripcionProfesional = document.createElement('div');
     descripcionProfesional.classList.add('descripcionProfesional');
     descripcionProfesional.textContent = profesional.descripcion || 'Sin descripción disponible.';
-    mainContainer.appendChild(descripcionProfesional);
+    contenidoContainer.appendChild(descripcionProfesional);
 
     // Caja imágenes
     const cajaImagenes = document.createElement('div');
     cajaImagenes.classList.add('cajaImagenes');
-    (profesional.imagenes || []).forEach(imagen => {
-      const img = document.createElement('img');
-      img.src = imagen;
-      img.alt = 'Imagen del profesional';
-      cajaImagenes.appendChild(img);
-    });
-    mainContainer.appendChild(cajaImagenes);
+
+    if (profesional.imagenes && profesional.imagenes.length > 0) {
+      profesional.imagenes.forEach(imagen => {
+        const img = document.createElement('img');
+        img.src = imagen;
+        img.alt = 'Imagen del profesional';
+        cajaImagenes.appendChild(img);
+      });
+    } else {
+      const sinImagenes = document.createElement('p');
+      sinImagenes.textContent = 'Sin imágenes disponibles.';
+      sinImagenes.classList.add('sinImagenesTexto'); // Para poder darle estilo si querés
+      cajaImagenes.appendChild(sinImagenes);
+    }
+    contenidoContainer.appendChild(cajaImagenes);
 
 // Caja valoraciones
 const cajaValoraciones = document.createElement('div');
@@ -100,7 +108,7 @@ if (trabajosProfesional.length === 0) {
   });
 }
 
-mainContainer.appendChild(cajaValoraciones);
+contenidoContainer.appendChild(cajaValoraciones);
 
     // Contenedor botones conectar y contratar
     const conectarContainer = document.createElement('div');
@@ -127,7 +135,7 @@ mainContainer.appendChild(cajaValoraciones);
     buttonContratar.classList.add('btn', 'btn-primary');
     conectarContainer.appendChild(buttonContratar);
 
-    mainContainer.appendChild(conectarContainer);
+    contenidoContainer.appendChild(conectarContainer);
 
     // Eventos botones
     buttonConectar.addEventListener('click', () => {
