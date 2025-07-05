@@ -58,32 +58,22 @@
       </div>
     </div>
 
-    <!-- Campos adicionales solo para profesionales -->
-    <div class="form-tercera-columna" id="columna-profesional" style="display: none;">
-      <label>Rubro(s):</label>
-      <div id="rubro-container">
-        <div class="rubro-item">
-          <select name="rubros[]" class="rubro-select" required>
-            <option value="">Selecciona un rubro</option>
-            <option value="electricista">Electricista</option>
-            <option value="programador">Programador</option>
-            <option value="diseñador">Diseñador</option>
-            <option value="plomero">Plomero</option>
-            <option value="carpintero">Carpintero</option>
-            <option value="arquitecto">Arquitecto</option>
-            <option value="electromecanico">Electromecánico</option>
-            <option value="contador">Contador</option>
-            <option value="economista">Economista</option>
-            <option value="abogado">Abogado</option>
-          </select>
-          <button type="button" class="btn-remove-rubro" title="Eliminar rubro">×</button>
-        </div>
-      </div>
-      <button type="button" id="btn-agregar-rubro">+ Agregar otro rubro</button>
-
-      <label for="empresa">Empresa (opcional):</label>
-      <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
+<!-- Campos adicionales solo para profesionales -->
+<div class="form-tercera-columna" id="columna-profesional" style="display: none;">
+  <div id="rubro-container">
+    <div class="rubro-item">
+      <select name="rubros[]" class="rubro-select" required>
+        <option value="">Selecciona un rubro</option>
+      </select>
+      <button type="button" class="btn-remove-rubro" title="Eliminar rubro">×</button>
     </div>
+  </div>
+
+  <button type="button" id="btn-agregar-rubro">+ Agregar otro rubro</button>
+
+  <label for="empresa">Empresa (opcional):</label>
+  <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
+</div>
 
     <button type="submit">Registrarse</button>
   </form>

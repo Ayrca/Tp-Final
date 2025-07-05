@@ -1,44 +1,80 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+
   const tipoUsuario = localStorage.getItem('tipoUsuario') || 'comun';
   const tituloForm = document.getElementById('form-titulo');
   const columnaProfesional = document.getElementById('columna-profesional');
   const btnAgregarRubro = document.getElementById('btn-agregar-rubro');
   const rubroContainer = document.getElementById('rubro-container');
 
-  // Ajustar formulario según tipo de usuario
+  let listaRubrosDisponibles = [];
+
+  //Cargar rubros desde datos.json
+  async function cargarRubros() {
+    try {
+      const response = await fetch('/datos/datos.json');
+      if (!response.ok) throw new Error('Error al cargar datos.json');
+      const data = await response.json();
+      listaRubrosDisponibles = data.oficios.map(oficio => oficio.nombre);
+    } catch (error) {
+      console.error('Error al cargar rubros:', error);
+      Swal.fire('Error al cargar la lista de rubros');
+    }
+  }
+
+  //Poblar un <select> con las opciones
+  function poblarOpcionesRubro(select) {
+    // Limpiar y agregar opción inicial
+    select.innerHTML = '<option value="">Selecciona un rubro</option>';
+    // Agregar todas las opciones ordenadas alfabéticamente
+    listaRubrosDisponibles
+      .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }))
+      .forEach(rubro => {
+        const option = document.createElement('option');
+        option.value = rubro.toLowerCase().replace(/\s+/g, '-'); // valor más URL-friendly
+        option.textContent = rubro;
+        select.appendChild(option);
+      });
+  }
+
+  //Inicialización de la página
+  await cargarRubros();
+
+  actualizarCamposRubros();
+
+  // Al cargar, poblar el primer select
+  const primerSelect = rubroContainer.querySelector('.rubro-select');
+  if (primerSelect) {
+    poblarOpcionesRubro(primerSelect);
+  }
+
+  //Ajustar visibilidad según tipo de usuario
   function actualizarCamposRubros() {
     if (tipoUsuario === 'profesional') {
       tituloForm.textContent = 'Registro de Profesional';
       columnaProfesional.style.display = 'block';
-
       rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
         select.required = true;
         select.disabled = false;
       });
-
       btnAgregarRubro.style.display = 'inline-block';
     } else {
       tituloForm.textContent = 'Registro de Usuario';
       columnaProfesional.style.display = 'none';
-
       rubroContainer.querySelectorAll('select.rubro-select').forEach(select => {
         select.required = false;
         select.disabled = true;
       });
-
       btnAgregarRubro.style.display = 'none';
     }
   }
 
-  actualizarCamposRubros();
-
-  // Ocultar botón "X" del primer rubro
+  //Ocultar botón "X" del primer rubro
   const primerBtnEliminar = rubroContainer.querySelector('.rubro-item .btn-remove-rubro');
   if (primerBtnEliminar) {
     primerBtnEliminar.style.display = 'none';
   }
 
-  // Función para agregar nuevo rubro
+  //Función para agregar nuevo rubro
   function agregarRubro() {
     const actuales = rubroContainer.querySelectorAll('.rubro-item').length;
     if (actuales >= 4) {
@@ -54,13 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
     select.required = true;
     select.disabled = false;
 
+    poblarOpcionesRubro(select);
+
     const btnEliminar = nuevoRubro.querySelector('.btn-remove-rubro');
     btnEliminar.style.display = 'inline-block';
     btnEliminar.addEventListener('click', () => {
       nuevoRubro.remove();
     });
 
-    ordenarOpciones(select);
     rubroContainer.appendChild(nuevoRubro);
   }
 
@@ -93,21 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Ordenar opciones de rubros alfabéticamente (excepto "Selecciona un rubro")
-  function ordenarOpciones(select) {
-    const opciones = Array.from(select.options).slice(1);
-    opciones.sort((a, b) => a.text.localeCompare(b.text, 'es', { sensitivity: 'base' }));
-    while (select.options.length > 1) {
-      select.remove(1);
-    }
-    opciones.forEach(opcion => select.add(opcion));
-  }
-
-  document.querySelectorAll('select.rubro-select').forEach(select => {
-    ordenarOpciones(select);
-  });
-
-  // Envío del formulario
+  //Envío del formulario
   document.getElementById('registro-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -120,36 +143,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const telefono = document.getElementById('telefono').value.trim();
     const direccion = document.getElementById('direccion').value.trim();
 
-
     if (password !== confirmarPassword) {
       Swal.fire('Las contraseñas no coinciden');
       return;
     }
 
-    // Tomar rubros solo si es profesional
     const rubros = tipoUsuario === 'profesional'
       ? [...document.querySelectorAll('.rubro-select')].map(s => s.value)
       : [];
 
-      const nuevoUsuario = {
-        nombre,
-        apellido,
-        email,
-        password,
-        tipo: tipoUsuario,
-        rubros,
-        empresa: tipoUsuario === 'profesional' ? empresa : '',
-        telefono,
-        direccion,
-        estadoCuenta: true
-      };
+    const nuevoUsuario = {
+      nombre,
+      apellido,
+      email,
+      password,
+      tipo: tipoUsuario,
+      rubros,
+      empresa: tipoUsuario === 'profesional' ? empresa : '',
+      telefono,
+      direccion,
+      estadoCuenta: true
+    };
 
     try {
-    const response = await fetch('http://localhost:3000/registro', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nuevoUsuario)
-    });
+      const response = await fetch('http://localhost:3000/registro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoUsuario)
+      });
 
       const data = await response.json();
 
@@ -167,4 +188,5 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error(error);
     }
   });
+
 });
