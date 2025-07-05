@@ -52,11 +52,13 @@
 
   <!-- Cargo header y footer -->
   <script>
-    fetch("/pages/header.html")
-      .then((response) => response.text())
-      .then((data) => {
-        document.getElementById("header-container").innerHTML = data;
-      });
+      fetch("/pages/header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+          // toggle password
+          initPasswordToggle();
+        });
 
     fetch("/pages/footer.html")
       .then((response) => response.text())
@@ -65,7 +67,8 @@
       });
   </script>
 
-    <!-- Scripts -->
+  <!-- Scripts -->
+    <script src="/scripts/togglePassword.js" defer></script>
     <script src="/scripts/login.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
     <script src="../scripts/adminUsuarios.js"></script>

@@ -13,48 +13,89 @@ buscador.addEventListener('keydown', (e) => {
 
 /*Buscador*/
 function buscarOficios() {
-  const textoBusqueda = buscador.value.toLowerCase();
-  const resultadosFiltrados = oficiosData.filter(oficio => oficio && oficio.nombre && oficio.nombre.toLowerCase().startsWith(textoBusqueda));
-  // Ordena los resultados para que los que empiezan con la cadena de búsqueda aparezcan primero
-  resultadosFiltrados.sort((a, b) => {
-    const aStartsWith = a.nombre.toLowerCase().startsWith(textoBusqueda);
-    const bStartsWith = b.nombre.toLowerCase().startsWith(textoBusqueda);
-    
-    if (aStartsWith && !bStartsWith) return -1;
-    if (!aStartsWith && bStartsWith) return 1;
-    return 0;
-  });
+  const textoBusqueda = buscador.value.trim().toLowerCase();
+  resultados.innerHTML = '';
   
-  if (resultadosFiltrados.length > 0) {
-    const htmlResultados = resultadosFiltrados.map((oficio, index) => `
-      <div class="resultado" data-index="${index}">
-        <p>${oficio.nombre}</p>
-      </div>
-    `).join('');
-    resultados.innerHTML = htmlResultados;
-    
-    const resultadoDivs = document.querySelectorAll('.resultado');
-    resultadoDivs.forEach((div, index) => {
-      div.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        oficioSeleccionado = resultadosFiltrados[index];
-        buscador.value = oficioSeleccionado.nombre;
-        resultados.innerHTML = '';
-        seleccionRealizada = true;
-        buscador.focus();
-      });
-    });
-  } else {
-    resultados.innerHTML = '<p>No se encontraron resultados</p>';
+  if (!textoBusqueda) {
+    resultados.style.display = 'none';
+    oficioSeleccionado = null;
+    return;
   }
+
+  const resultadosFiltrados = oficiosData.filter(oficio => 
+    oficio && oficio.nombre && oficio.nombre.toLowerCase().includes(textoBusqueda)
+  );
+
+  if (resultadosFiltrados.length === 0) {
+    resultados.innerHTML = `<div class="resultado-no">No se encontraron resultados</div>`;
+    resultados.style.display = 'block';
+    return;
+  }
+
+  const htmlResultados = resultadosFiltrados.map((oficio, index) => `
+    <div class="resultado" data-index="${index}">
+      ${oficio.nombre}
+    </div>
+  `).join('');
+  
+  resultados.innerHTML = htmlResultados;
+  resultados.style.display = 'block';
+
+  // Click en cada resultado
+  const resultadoDivs = document.querySelectorAll('.resultado');
+  resultadoDivs.forEach((div, index) => {
+    div.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      oficioSeleccionado = resultadosFiltrados[index];
+      buscador.value = oficioSeleccionado.nombre;
+      resultados.style.display = 'none';
+      resultados.innerHTML = '';
+      seleccionRealizada = true;
+
+      // Redirigir inmediatamente al hacer click
+      localStorage.setItem('categoria', oficioSeleccionado.nombre);
+      window.location.href = 'pages/listaProfesionales.html';
+    });
+  });
 }
 
-buscador.addEventListener('blur', () => {
-  if (!seleccionRealizada) {
-    resultados.innerHTML = '';
-  } else {
-    seleccionRealizada = false;
+// Al tipear
+buscador.addEventListener('input', buscarOficios);
+
+buscador.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+
+    const textoBusqueda = buscador.value.trim().toLowerCase();
+    if (!textoBusqueda) return;
+
+    // Buscar oficio que matchee
+    const resultado = oficiosData.find(oficio => 
+      oficio && oficio.nombre && oficio.nombre.toLowerCase().includes(textoBusqueda)
+    );
+
+    if (resultado) {
+      localStorage.setItem('categoria', resultado.nombre);
+      window.location.href = 'pages/listaProfesionales.html';
+    } else {
+      // Opcional: mostrar mensaje o limpiar selección
+      resultados.innerHTML = `<div class="resultado-no">No se encontró el oficio</div>`;
+      resultados.style.display = 'block';
+      oficioSeleccionado = null;
+    }
   }
+});
+
+// Ocultar al perder foco si no se hizo selección
+buscador.addEventListener('blur', () => {
+  setTimeout(() => {
+    if (!seleccionRealizada) {
+      resultados.style.display = 'none';
+      resultados.innerHTML = '';
+    } else {
+      seleccionRealizada = false;
+    }
+  }, 200); // Delay para permitir mousedown en resultado
 });
 
 // Función para crear carrusel de oficios
