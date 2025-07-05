@@ -18,14 +18,15 @@
     "estadoCuenta": true,
     "isAdmin": true,
     "imagenes": [
-      "/assets/imagenesProfesionales/8574b494-a2bc-48ba-a9fa-828efef37aa8.jpg"
+      "/assets/imagenesProfesionales/8574b494-a2bc-48ba-a9fa-828efef37aa8.jpg",
+      "/assets/imagenesProfesionales/c67c4ae5-fbf1-4be2-8b39-09a56137da37.png"
     ],
     "descripcion": "",
     "estado": true
   },
   {
     "nombre": "Franker",
-    "apellido": "Arcidiacono",
+    "apellido": "Arcidiacono123",
     "email": "rbc_ocp@hotmail.com",
     "password": "123456",
     "tipo": "profesional",
@@ -42,7 +43,7 @@
   },
   {
     "nombre": "Ayelen",
-    "apellido": "Soto",
+    "apellido": "Soto123",
     "email": "ayelensoto1994@gmail.com",
     "password": "123456",
     "tipo": "Cliente",

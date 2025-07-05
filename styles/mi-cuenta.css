@@ -375,3 +375,47 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+
+@media (max-width: 700px) {
+body{
+   width: 100%;
+}
+
+/*main*/
+.cuenta-container{
+display: flex;
+flex-direction: column;
+align-items: center;
+
+width: 100%;
+}
+/*main*/
+
+.perfil-usuario{
+  display: flex;
+flex-direction: column;
+
+}
+
+#avatar-container{
+}
+
+ .info{
+ }
+ 
+ /*galeria imagenes*/
+ #galeria-section{
+ }
+
+.trabajos-contratados{
+}
+
+.botones-edicion{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+}
+

@@ -8,7 +8,7 @@
     },
     {
       "id": 2,
-      "nombre": "Ferreterias Expres123",
+      "nombre": "Ferreterias Expres",
       "imagen": "../assets/images/patro/patroN2.png",
       "pagina": "www.google.com"
     },
@@ -20,7 +20,7 @@
     },
     {
       "id": 4,
-      "nombre": "La Cocina",
+      "nombre": "La Cocina123",
       "imagen": "../assets/images/patro/patroN4.png",
       "pagina": "www.google.com"
     }
