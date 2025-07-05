@@ -91,23 +91,27 @@ function mostrarProfesionales(categoria) {
       const estado = profesional.estado;
       const tarjetaHTML = `
         <article class="profesional-item" data-email="${profesional.email}" data-telefono="${profesional.telefono}">
-          <img src="${profesional.avatar}" alt="${profesional.nombre}">
+         <div class="infoContairner">
+        <img src="${profesional.avatar}" alt="${profesional.nombre}">
           <div class="profesional-data">
             <div class="profesional-header">
               <h2>${profesional.nombre} ${profesional.apellido}.</h2>
               <label id="disponible" class="${estado ? 'disponible' : 'no-disponible'}">${estado ? 'Disponible' : 'No Disponible'}</label>
             </div>
+            <div class="datosContainer">
             <h2>${profesional.empresa}.</h2>
             <p>Email: ${profesional.email}</p>
             <p>Tel: ${profesional.telefono}</p>
             <p>Dirección: ${profesional.direccion}</p>
             <p>Valoración promedio: ${promedio}</p>
+             </div>
             <div class="profesional-buttons">
               <button class="verMas">Ver Más</button>
               <button class="conectar">Conectar</button>
               <button class="contratar">Contratar</button>
             </div>
           </div>
+        </div>
         </article>
       `;
       profesionalesContainer.insertAdjacentHTML('beforeend', tarjetaHTML);

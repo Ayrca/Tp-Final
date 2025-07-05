@@ -307,39 +307,81 @@ main{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
 }
 
 .cartelNoHay{
   height: 900px;
   font-size: 35px;
+
 }
 
 /*tarjeta profecionales*/
 .profesional-item{
   display: flex;
   flex-direction: column;
-  width: 300px;
-  height:600px ;
+  width: 100%;
+  height:710px ;
   align-items: center;
+  align-content: center;
   justify-content: center;
+  justify-items: center;
+ 
+ 
 }
 
-.profesional-item img{
-  width: 150px;
-  height: 150px;
+.infoContairner{
+   display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+ 
+  
+   height:620px ;
+   width: 100%;
+
 }
 
 .profesional-data{
-  margin-left: 0;
-  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
+
+.profesional-header{
+width: 100%;
+margin-top: 10px;
+  
+}
+
+
+
+.datosContainer{
+    
+justify-items: center;
+width: 100%;
+margin-top: 25px;
+}
+
 
 .profesional-buttons{
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin-top: 0;
-  margin-left: 0;
+ margin-top: 50px;
+ 
 }
+
+
+
+.profesional-item img{
+  width: 150px;
+  height: 150px;
+  
+}
+
+
 
 }

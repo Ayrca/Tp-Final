@@ -2,10 +2,14 @@ const buscador = document.getElementById('buscador');
 const resultados = document.getElementById('resultados');
 let seleccionRealizada = false;
 let oficioSeleccionado = null;
-let oficiosData = []; /*buscador funcion de seleccionar una palabra con el enter y que se dirija a la pagina del profesional seleccionado*/ 
+let oficiosData = []; 
 
+/*buscador funcion de seleccionar una palabra con el enter y que se dirija a la pagina del profesional seleccionado*/ 
+ // El evento es de tipo keydown, lo que significa que se dispara cuando se presiona una tecla, pero antes de que se suelte.
 buscador.addEventListener('keydown', (e) => {
+  //La función que se ejecuta cuando se dispara el evento es una función flecha que toma un parámetro e, que representa el evento de teclado.
   if (e.key === 'Enter' && oficioSeleccionado) {
+
     localStorage.setItem('categoria', oficioSeleccionado.nombre);
     window.location.href = 'pages/listaProfesionales.html';
   }
