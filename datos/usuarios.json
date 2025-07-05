@@ -36,7 +36,7 @@
     "direccion": "gralpaz1238",
     "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
     "isAdmin": true,
-    "estadoCuenta": true
+    "estadoCuenta": false
   },
   {
     "nombre": "Ayelen",
@@ -51,6 +51,6 @@
     "telefono": "02284502063",
     "direccion": "Leal 441",
     "avatar": "/assets/imagenesProfesionales/0ec8b3ab-4055-4d8f-a3ed-65be69faf5e6.jpg",
-    "estadoCuenta": true
+    "estadoCuenta": false
   }
 ]
