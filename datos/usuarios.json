@@ -18,8 +18,10 @@
     "estadoCuenta": true,
     "isAdmin": true,
     "imagenes": [
-      "/assets/imagenesProfesionales/c7c8ebfa-4111-4ebd-b9ca-a080e609e59b.jpg"
-    ]
+      "/assets/imagenesProfesionales/8574b494-a2bc-48ba-a9fa-828efef37aa8.jpg"
+    ],
+    "descripcion": "",
+    "estado": true
   },
   {
     "nombre": "Franker",

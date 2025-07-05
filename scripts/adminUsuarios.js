@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   fetch('../datos/usuarios.json')
     .then(response => response.json())
     .then(usuarios => {
-     let tipoUsuariosActual = null;
-     
+    let tipoUsuariosActual = null;
+
 /*funcion para la tabla*/
 function guardarCambios(fila, email) {
   const celdas = fila.children;
@@ -58,8 +58,8 @@ function guardarCambios(fila, email) {
         })
         .then(data => {
           // Actualizar la lista de usuarios
-     
-             cargarListaActual();
+
+            cargarListaActual();
           Swal.fire({
             icon: "success",
             title: `Cambios guardados con éxito`,
@@ -73,7 +73,6 @@ function guardarCambios(fila, email) {
   });
 }
 
-
 function cargarListaActual() {
   if (tipoUsuariosActual === "Cliente" && usuarios.some(usuario => usuario.tipo.includes("Cliente"))) {
     const usuariosClientes = usuarios.filter(usuario => usuario.tipo.includes("Cliente"));
@@ -86,7 +85,6 @@ function cargarListaActual() {
     tipoUsuariosActual = null;
   }
 }
-
 
 // funcion borrar para la tabla
 function borrarUsuario(email) {
@@ -120,9 +118,9 @@ function borrarUsuario(email) {
         // Eliminar el usuario de la lista
         usuarios = usuarios.filter((usuario) => usuario.email !== email);
         // Actualizar la tabla
-         
+
      //  cargarTablaUsuarios();
-   cargarListaActual();
+      cargarListaActual();
         Swal.fire({
           icon: "success",
           title: `Usuario borrado con éxito`,
@@ -134,10 +132,6 @@ function borrarUsuario(email) {
     }
   });
 }
-
-
-
-
 
 function bloquearUsuario(email) {
   Swal.fire({
@@ -222,7 +216,7 @@ function desbloquearUsuario(email) {
           return usuario;
         });
         // Actualizar la tabla
-           cargarListaActual();
+          cargarListaActual();
       //  cargarTablaUsuarios();
         Swal.fire({
           icon: "success",
@@ -236,15 +230,10 @@ function desbloquearUsuario(email) {
   });
 }
 
-
-
-//function cargarTablaUsuarios() {
-
 function cargarTablaUsuarios(usuariosMostrar = usuarios) {
   const tbody = document.getElementById("tbody-usuarios");
   tbody.innerHTML = "";
   usuariosMostrar.forEach((usuario) => {
-
     const fila = document.createElement("tr");
     fila.setAttribute("data-email", usuario.email);
     fila.innerHTML = `
@@ -259,15 +248,12 @@ function cargarTablaUsuarios(usuariosMostrar = usuarios) {
       <td>${usuario.estadoCuenta ? "Activo" : "Inactivo"}</td>
       <td>
         <button class="btn-guardar" data-email="${usuario.email}">Guardar</button>
-
 ${usuario.estadoCuenta ? 
           `<button class="btn-bloquear" data-email="${usuario.email}">Bloquear</button>` : 
           `<button class="btn-desbloquear" data-email="${usuario.email}">Desbloquear</button>`}
-         <button class="btn-borrar" data-email="${usuario.email}">Borrar</button>
+        <button class="btn-borrar" data-email="${usuario.email}">Borrar</button>
       </td>
-
     `;
-
     tbody.appendChild(fila);
   });
 }
@@ -302,9 +288,8 @@ document.addEventListener("click", (e) => {
 
 // Evento desplegar Tabla
 document.getElementById("traeLista").addEventListener("click", () => {
- cargarTablaUsuarios();
+cargarTablaUsuarios();
 });
-
 
 document.getElementById("traer-clientes").addEventListener("click", () => {
   tipoUsuariosActual = "Cliente";
@@ -317,7 +302,6 @@ document.getElementById("traer-profesionales").addEventListener("click", () => {
   const usuariosProfesionales = usuarios.filter(usuario => usuario.tipo.includes("profesional"));
   cargarTablaUsuarios(usuariosProfesionales);
 });
-
 
   })
     .catch(error => console.error('Error:', error));
