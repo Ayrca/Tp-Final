@@ -28,6 +28,7 @@ main{
 
 /*contenedor de tarjetas y carruseles*/
 .contenedormedio{
+margin-left: 110px;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -51,9 +52,17 @@ main{
 }
 
 .carrusel-item img {
- width: 600px;
- height: 300px;
- object-fit: cover; /* sacar si no anda */
+  width: 500px; /*ancho*/
+  height: 400px; /*alto*/
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease;
+}
+
+.carrusel-item img:hover {
+  transform: scale(1.03);
+  cursor: pointer;
 }
 
 /*carrusel propaganda 1*/
@@ -93,62 +102,172 @@ main{
   font-size: 35px;
 }
 
+/* Contenedor general de cada tarjeta */
+.profesional-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profesional-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #111827;
+}
+
 .profesional-item {
-  width: 710px;
-  min-height: 300px;
-  height: auto;
-  background-color: #f0f0f0;
+  width: 100%;
+  max-width: 720px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 20px;
+  margin: 20px auto;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profesional-item:hover {
+  transform: scale(1.01);
+}
+
+/* Imagen del profesional */
+.profesional-item img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #3b82f6;
   margin: 15px;
 }
 
-.profesional-item img{
-  width: 150px;
-  height: 150px;
-  margin: 15px;
+/* Datos del profesional */
+.profesional-data {
+  flex: 1 1 250px;
+  padding: 10px 20px;
 }
 
-.profesional-data{
-  width: 35%;
+.profesional-data h2 {
+  margin: 5px 0;
+  font-size: 20px;
+  color: #111827;
 }
 
-.profesional-item h2{
-  margin-top: 10px;
-}    
-
-.profesional-buttons{
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 40px;
-  margin-left: 90px;
-}
-
-.profesional-buttons button{
-  width: 150px;
-  height: 35px;
-}
-
-#disponible{
-  width: 150px;
-  height: 35px;
-  text-align: center;
-  line-height: 35px; /* Altura de la línea de texto */
-  border: solid black 1.5px;
+.profesional-data p {
+  margin: 4px 0;
+  color: #374151;
   font-size: 15px;
 }
 
+/* Botones y etiqueta de disponibilidad */
+.profesional-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 160px);
+  grid-auto-rows: 40px;
+  grid-gap: 12px;
+  justify-content: center;
+  margin: 15px auto;
+  grid-template-areas:
+    "verMas conectar"
+    "contratar contratar";
+}
+
+.profesional-buttons button {
+  width: 160px;
+  height: 40px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Botón Ver Más */
+.verMas {
+  grid-area: verMas;
+  background-color: white;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+}
+
+.verMas:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Botón Conectar */
+.conectar {
+  grid-area: conectar;
+  background-color: #3b82f6;
+  border: none;
+  color: white;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.conectar:hover {
+  background-color: #2563eb;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.6);
+}
+
+/* Botón Contratar */
+.contratar {
+  grid-area: contratar;
+  justify-self: center;
+  width: 330px;
+  background-color: #10b981;
+  border: none;
+  color: white;
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+}
+
+.contratar:hover {
+  background-color: #059669;
+  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.6);
+}
+
+/* Etiqueta de disponibilidad */
+#disponible {
+  width: auto;
+  padding: 4px 12px;
+  height: auto;
+  text-align: center;
+  line-height: normal;
+  border: 2px solid black;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  user-select: none;
+}
+
 #disponible.disponible {
-  color: green;
+  color: #22c55e;
+  border-color: #22c55e;
+  background-color: #dcfce7;
 }
 
 #disponible.no-disponible {
-  color: red;
+  color: #ee2525;
+  border-color: #ef4444;
+  background-color: #fee2e2;
 }
 
 /* Cuando la pantalla sea menor a 700px, cambia la dirección del flex a columna */
 @media (max-width: 700px) {
+
+  body{
+  width:100%;
+  }
+
+#header-container{ 
+  width: 100%;
+}
+
+#footer-container{
+  width:100%;
+}
 
 /*Carruseles de publicidad*/
 .carruselvertical1, .carruselvertical2 {
@@ -173,6 +292,7 @@ main{
   margin: 0;
   margin-top: 0;
   margin-bottom: 0;
+  
 }
 
 .carrusel-item img {
@@ -183,25 +303,29 @@ main{
   }
 
 .contenedormedio {
-  flex-direction: column;
-  width: 100%;       
-  }
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+margin: 0;
+margin-top: 0;
+margin-bottom: 0;
+width:100%;
 
-.carrusel-container {   
-  width: 100%;      
 }
 
- /*Carruseles de publicidad*/
+.carrusel-container {  
+
+  width:100%;      
+  
+}
+
+/*Carruseles de publicidad*/
 main{
-  flex-direction: column;
-}
-
-/*contenedor de tarjetas y carruseles*/
-.contenedormedio{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+ width: 100%;
+ margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .cartelNoHay{
@@ -213,28 +337,52 @@ main{
 .profesional-item{
   display: flex;
   flex-direction: column;
-  width: 300px;
-  height:600px ;
+  width: 97%;
+  height:710px ;
+}
+
+#listaProfesionales{
+width: 100%;
+}
+
+.infoContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  height:620px ;
+  width: 100%;
+}
+
+.profesional-data{
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+}
+
+.profesional-header{
+width: 100%;
+margin-top: 10px;
+}
+
+.datosContainer{
+justify-items: center;
+width: 100%;
+margin-top: 25px;
+}
+
+.profesional-buttons{
+display: flex;
+flex-direction: column;
+gap: 5px;
+margin-top: 50px;
 }
 
 .profesional-item img{
   width: 150px;
   height: 150px;
-}
-
-.profesional-data{
-  margin-left: 0;
-  width: 250px;
-}
-
-.profesional-buttons{
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-top: 0;
-  margin-left: 0;
 }
 
 }

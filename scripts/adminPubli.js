@@ -69,16 +69,13 @@ async function actualizarPublicidad(id, arrayName, publicidad) {
   }
 }
 
-
 let selectedArray = null;
 let respuesta = null;
 
 async function mostrarTabla() {
   if (!respuesta) {
     respuesta = await obtenerPublicidad();
-  }
-
-  
+  }  
   const tablaArrays = document.getElementById('tabla-arrays');
   tablaArrays.innerHTML = '';
   Object.keys(respuesta).forEach((key) => {
@@ -106,8 +103,6 @@ async function mostrarTabla() {
   });
 }
 
-
-
 async function mostrarDatosTabla() {
 
   if (!respuesta) {
@@ -131,7 +126,6 @@ async function mostrarDatosTabla() {
     const imagenSeleccionada = document.getElementById('imagen-seleccionada');
     imagenSeleccionada.src = objeto.imagen;
   }
-
 
     console.log('Valor de respuesta:', respuesta); // Agrega este console.log
   const tablaDatos = document.getElementById('tabla-datos');
@@ -189,6 +183,7 @@ modificar.addEventListener('click', async () => {
     }
   });
 });
+
 //Evento Borrar Dato
 const borrar = nuevaFila.querySelector('.borrar');
 borrar.addEventListener('click', () => {
@@ -216,11 +211,11 @@ borrar.addEventListener('click', () => {
     }
   });
 });
+
   nuevaFila.addEventListener('click', () => {
       const imagenSeleccionada = document.getElementById('imagen-seleccionada');
       imagenSeleccionada.src = objeto.imagen;
     });
-
 });
 }
 
@@ -228,7 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
   mostrarTabla();
   
 });
-
 
 // Evento despliega botones para agregar publicidad
 document.getElementById('agregarDato').addEventListener('click', () => {
@@ -304,7 +298,7 @@ document.getElementById('aceptar-agregar').addEventListener('click', async () =>
         });
         agregarBotones.innerHTML = '';
       });
-   document.getElementById('imagen-previa').src = '';
+  document.getElementById('imagen-previa').src = '';
   document.getElementById('imagen').value = ''; 
     }
   });
@@ -320,11 +314,10 @@ document.getElementById('imagen').addEventListener('change', (e) => {
   reader.readAsDataURL(archivo);
 });
 
-
 // Evento cancela agregar publicidad y guarda botones
   document.getElementById('cancelar-agregar').addEventListener('click', () => {
-    agregarBotones.innerHTML = '';
- document.getElementById('imagen-previa').src = '';
+  agregarBotones.innerHTML = '';
+  document.getElementById('imagen-previa').src = '';
   document.getElementById('imagen').value = ''; 
   });
 });

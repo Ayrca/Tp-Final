@@ -30,8 +30,6 @@ height: 300px;
 height: 300px;
 }
 
-
-
 /*imagenes*/
 #imagen-container {
   width: 200px;
@@ -63,16 +61,19 @@ justify-content: center;
 display: flex;
 flex-direction: column;
 justify-content: center;
+
 }
 
 #input-Nombre{
 width: 250px;
 height: 35px;
+
 }
 
 #input-Imagen{
 width: 250px;
 height: 35px;
+
 }
 
 #input-pagina{
@@ -90,65 +91,75 @@ height: 35px;
 }
 
 /*tabla */
-.tablaContainer{
+.tablaContainer {
   display: flex;
   flex-wrap: wrap;
-  width:100%;
-  
+  width: 100%;
 }
 
-#tabla-publicidades {
+#tabla-datos {
   border-collapse: collapse;
-  width:100%;
-table-layout: fixed;
-  
+  width: 100%;
+  table-layout: fixed;
 }
 
-#tabla-publicidades th, #tabla-publicidades td {
+#tabla-datos th,
+#tabla-datos td {
   border: 1px solid #dddddd;
   padding: 15px;
   text-align: left;
-    
 }
 
-#tabla-publicidades th {
+#tabla-datos th {
   background-color: #f0f0f0;
 }
 
-
-
-th, td {
-
-border: 1px solid #ddd;
-padding: 5px;
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 5px;
 }
 
 
+th:nth-child(5) {
+  width:150px;
+}
 
-th:nth-child(1) { width: 5px; } /* Array */
-th:nth-child(2) { width: 250px; } /* Nombre */
-th:nth-child(3) { width: 250px; } /* Imagen */
-th:nth-child(4) { width: 200px; } /* Pagina */
-th:nth-child(5) { width: 250px; } /* Acciones */
+
+th:nth-child(1) {
+  width: 10px; /* Ancho de la primera columna */
+}
+
+th:nth-child(2) {
+  width: 270px; /* Ancho de la segunda columna */
+}
+
+th:nth-child(3) {
+  width: 350px; /* Ancho de la tercera columna */
+}
+
+th:nth-child(4) {
+  width: 300px; /* Ancho de la cuarta columna */
+}
+
+#tabla-datos input[type="text"] {
+  width: 100%;
+  height: 30px;
+  padding: 5px;
+  font-size: 16px;
+}
+
 /*tabla */
-
-
 .modificar{
 width: 100px;
 height: 30px;
+
 } 
 
 .borrar{
 width: 100px;
 height: 30px;
 }
-
-
-
-
-
-
-
 
 @media (max-width: 700px)  {
 }

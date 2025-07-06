@@ -3,31 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profesional</title>
+    <title>Administrar Publicidades</title>
     <link rel="icon" href="../assets/images/logo-afip.jpg" type="image/jpg">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="/styles/tarjetaProfesional.css" />
+    <link rel="stylesheet" href="/styles/adminPubli.css" />
 
   </head>
   <body class="d-flex flex-column">
     <!-- Header -->
     <div id="header-container"></div>
 
-    <!-- Main -->
-<main class="containerProfesional">
-  <h1 class="titulo-profesional">Detalles del Profesional</h1>
-  <div id="contenidoProfesional"></div>
-      <!--
-    Este contenedor se llena dinámicamente con:
-    - .tarjetaProfesional
-    - .descripcionProfesional
-    - .cajaImagenes
-    - .cajaValoraciones
-    - .conectarContainer
-  -->
+<!-- Main -->
+    <main class="containerProfesional">
+        <h2>Manejo de Propagandas</h2>
+
+<div class="tablaContainer">
+  <table>
+    <thead>
+      <tr>
+        <th>Array</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-arrays"></tbody>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Nombre</th>
+        <th>URL Imagen</th>
+        <th>Pagina</th>
+        <th>Accion</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-datos"></tbody>
+  </table>
+</div>
+
+<div>
+<div class="botonera1">
+    <div>
+      <div id="imagen-container">
+      <img id="imagen-seleccionada" src="" alt="Imagen seleccionada">
+      </div>
+    <button id="agregarDato">Agregar Dato</button>
+    <div id="agregar-botones"></div>
+    <div id="imagen-container">
+    <img id="imagen-previa" src="" alt="Imagen previa">
+    </div>
+  </div>
+    </div>
+</div>
+
 </main>
 
-    <!-- footer -->
+      <!-- footer -->
     <div id="footer-container"></div>
 
   <!-- Cargo header y footer -->
@@ -47,14 +76,14 @@
       });
   </script>
 
-  <!-- Scripts -->
+    <!-- Scripts -->
     <script src="/scripts/togglePassword.js" defer></script>
     <script src="/scripts/login.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   
-    <script src="../scripts/tarjetaProfesional.js"></script>
+    <script src="../scripts/adminPubli.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-    crossorigin="anonymous"></script>
-
+    crossorigin="anonymous" ></script>
+    
   </body>
 </html>

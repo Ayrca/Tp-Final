@@ -23,6 +23,15 @@ main {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.titulo-profesional {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 30px 0 20px 0;
+  color:#4075e7;
+}
+
+
 /* Tarjeta Profesional */
 .tarjetaProfesional {
   display: flex;
@@ -32,7 +41,7 @@ main {
   background-color: #ffffff;
   width: 90%;
   max-width: 1000px;
-  height: 250px;
+  min-height: 250px; /* Altura mínima */
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -55,12 +64,12 @@ main {
 .datosProfesional {
   margin-left: 15px;
   background-color: transparent;
-  height: 100%;
-  width: 70%;
+  height: auto;
+  width: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
+
 
 .datosProfesional ul {
   list-style: none;
@@ -191,7 +200,7 @@ main {
   color: #4caf50;
 }
 
-/* Botón Conectar y Contratar */
+/* Botón Conectar, Contratar y Disponible*/
 .conectarContainer {
   display: flex;
   flex-direction: column;
@@ -315,14 +324,43 @@ main {
     margin: 15px 0;
   }
 
+
+
+.containerProfesiona{
+
+}
+
+.cajaValoraciones{
+   
+    width: 300px;
+}
   #trabajos-container {
     grid-template-columns: 1fr;
+    width: 295px;
+    
   }
+
+  .conectarContainer{
+
+width: 300px;
+  }
+
+ 
 
   #conectarProf,
   #contratarProf {
-    width: 100%;
+    width: 50%;
     max-width: 320px;
     height: 42px;
   }
+
+
+
+
+
+
+
+
+
+
 }

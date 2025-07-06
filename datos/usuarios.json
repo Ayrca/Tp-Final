@@ -15,7 +15,14 @@
     "telefono": "228450206",
     "direccion": "25 de Mayo 1755",
     "avatar": "/assets/imagenesProfesionales/b1ef4993-e20f-4386-bdfe-e37668f2ab4e.jpeg",
-    "estadoCuenta": true
+    "estadoCuenta": true,
+    "isAdmin": true,
+    "imagenes": [
+      "/assets/imagenesProfesionales/8574b494-a2bc-48ba-a9fa-828efef37aa8.jpg",
+      "/assets/imagenesProfesionales/c67c4ae5-fbf1-4be2-8b39-09a56137da37.png"
+    ],
+    "descripcion": "",
+    "estado": true
   },
   {
     "nombre": "Franker",
@@ -32,12 +39,12 @@
     "direccion": "gralpaz1238",
     "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
     "isAdmin": true,
-    "estadoCuenta": true
+    "estadoCuenta": false
   },
   {
     "nombre": "Ayelen",
-    "apellido": "Sot3",
-    "email": "ayelensoto19945561@gmail.com",
+    "apellido": "Soto123",
+    "email": "ayelensoto1994@gmail.com",
     "password": "123456",
     "tipo": "Cliente",
     "rubros": [
@@ -47,6 +54,6 @@
     "telefono": "02284502063",
     "direccion": "Leal 441",
     "avatar": "/assets/imagenesProfesionales/0ec8b3ab-4055-4d8f-a3ed-65be69faf5e6.jpg",
-    "estadoCuenta": true
+    "estadoCuenta": false
   }
 ]

@@ -8,103 +8,6 @@
   <link rel="stylesheet" href="../styles/registro.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- cargo el header -->
-<script>
-  fetch("/pages/header.html")
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("header-container").innerHTML = data;
-
-      // Script de login
-      const loginForm = document.getElementById("modalLoginForm");
-      const emailInput = document.getElementById("modalEmail");
-      const passwordInput = document.getElementById("modalPassword");
-
-      if (loginForm) {
-        loginForm.addEventListener("submit", async (event) => {
-          event.preventDefault();
-
-          const email = emailInput.value.trim();
-          const password = passwordInput.value.trim();
-
-          if (!email || !password) {
-            Swal.fire({
-              icon: "warning",
-              title: "Campos vacíos",
-              text: "Por favor, completá todos los campos.",
-            });
-            return;
-          }
-
-          try {
-            const response = await fetch('http://localhost:3000/login', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, password })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-              Swal.fire({
-                icon: "error",
-                title: "Error al iniciar sesión",
-                text: data.error || "Correo o contraseña incorrectos.",
-              });
-              return;
-            }
-
-            // Usuario correcto
-            const user = data;
-            user.isLoggedIn = true;
-            localStorage.setItem("currentUser", JSON.stringify(user));
-
-            const modalInstance = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
-            modalInstance.hide();
-
-            const loginBtn = document.querySelector("button[data-bs-target='#exampleModal']");
-            if (loginBtn) {
-              loginBtn.outerHTML = `
-                <a href="/pages/mi-cuenta.html" class="btn btn-outline-success">
-                  Mi cuenta
-                </a>
-              `;
-            }
-
-            Swal.fire({
-              icon: "success",
-              title: `¡Bienvenido, ${user.nombre}!`,
-              timer: 1500,
-              showConfirmButton: false,
-            });
-
-          } catch (error) {
-            Swal.fire({
-              icon: "error",
-              title: "Error de conexión",
-              text: "No se pudo conectar con el servidor.",
-            });
-            console.error(error);
-          }
-        });
-      }
-
-      // verificar si hay un currentUser y cambia el boton a mi cuenta
-      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-      if (currentUser?.isLoggedIn) {
-        const loginBtn = document.querySelector("button[data-bs-target='#exampleModal']");
-        if (loginBtn) {
-          loginBtn.outerHTML = `
-            <a href="/pages/mi-cuenta.html" class="btn btn-outline-success">
-              Mi cuenta
-            </a>
-          `;
-        }
-      }
-
-    });
-</script>
-
   </head>
   <body class="d-flex flex-column">
     <!-- Header -->
@@ -129,7 +32,7 @@
 
         <!-- NUEVOS CAMPOS -->
         <label for="telefono">Teléfono:</label>
-        <input type="tel" id="telefono" name="telefono" placeholder="Ej: 2284555555" required>
+        <input type="tel" id="telefono" name="telefono" placeholder="Ej: 2284555555" pattern="[0-9]+" title="Solo números" required>
       </div>
 
 
@@ -155,54 +58,54 @@
       </div>
     </div>
 
-    <!-- Campos adicionales solo para profesionales -->
-    <div class="form-tercera-columna" id="columna-profesional" style="display: none;">
-      <label>Rubro(s):</label>
-      <div id="rubro-container">
-        <div class="rubro-item">
-          <select name="rubros[]" class="rubro-select" required>
-            <option value="">Selecciona un rubro</option>
-            <option value="electricista">Electricista</option>
-            <option value="programador">Programador</option>
-            <option value="diseñador">Diseñador</option>
-            <option value="plomero">Plomero</option>
-            <option value="carpintero">Carpintero</option>
-            <option value="arquitecto">Arquitecto</option>
-            <option value="electromecanico">Electromecánico</option>
-            <option value="contador">Contador</option>
-            <option value="economista">Economista</option>
-            <option value="abogado">Abogado</option>
-          </select>
-          <button type="button" class="btn-remove-rubro" title="Eliminar rubro">×</button>
-        </div>
-      </div>
-      <button type="button" id="btn-agregar-rubro">+ Agregar otro rubro</button>
-
-      <label for="empresa">Empresa (opcional):</label>
-      <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
+<!-- Campos adicionales solo para profesionales -->
+<div class="form-tercera-columna" id="columna-profesional" style="display: none;">
+  <div id="rubro-container">
+    <div class="rubro-item">
+      <select name="rubros[]" class="rubro-select" required>
+        <option value="">Selecciona un rubro</option>
+      </select>
+      <button type="button" class="btn-remove-rubro" title="Eliminar rubro">×</button>
     </div>
+  </div>
+
+  <button type="button" id="btn-agregar-rubro">+ Agregar otro rubro</button>
+
+  <label for="empresa">Empresa (opcional):</label>
+  <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
+</div>
 
     <button type="submit">Registrarse</button>
   </form>
 </main>
 
-
-<!-- footer -->
+    <!-- footer -->
     <div id="footer-container"></div>
 
-        <!-- cargo el footer -->
-    <script>
-      fetch("/pages/footer.html")
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById("footer-container").innerHTML = data;
+  <!-- Cargo header y footer -->
+  <script>
+      fetch("/pages/header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+          // toggle password
+          initPasswordToggle();
         });
-    </script>
 
-<script src="../scripts/registro.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
-integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-crossorigin="anonymous" ></script>
+    fetch("/pages/footer.html")
+      .then((response) => response.text())
+      .then((data) => {
+        document.getElementById("footer-container").innerHTML = data;
+      });
+  </script>
+
+  <!-- Scripts -->
+    <script src="/scripts/togglePassword.js" defer></script>
+    <script src="/scripts/login.js" defer></script>
+    <script src="../scripts/registro.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+    crossorigin="anonymous" ></script>
 
 </body>
 </html>

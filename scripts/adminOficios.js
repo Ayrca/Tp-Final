@@ -7,13 +7,14 @@ const inputImagen1 = document.getElementById('imagen');
 
 const botonSubir = document.getElementById('subir-imagen');
 
+
+
 // Función para traer la lista de oficios
 document.getElementById('traeLista').addEventListener('click', async () => {
   try {
     const response = await fetch('../datos/datos.json');
     const data = await response.json();
     const oficios = data.oficios;
-
     // Llena el select con el array de oficios
     const inputListaArray = document.getElementById('input-listaArray');
     inputListaArray.innerHTML = '';
@@ -21,28 +22,30 @@ document.getElementById('traeLista').addEventListener('click', async () => {
     option.value = 'oficios';
     option.text = 'Oficios';
     inputListaArray.appendChild(option);
-
     // Evento para seleccionar el array de oficios
     inputListaArray.addEventListener('change', () => {
       const selectedArray = inputListaArray.value;
       if (selectedArray === 'oficios') {
         const inputLista = document.getElementById('input-lista');
         inputLista.innerHTML = '';
-        oficios.forEach((oficio, index) => {
+        oficios.forEach((oficio) => {
           const option = document.createElement('option');
-          option.value = index;
+          option.value = oficio.nombre; // Utiliza el nombre del oficio como valor
           option.text = oficio.nombre;
           inputLista.appendChild(option);
         });
-
-        // Evento para seleccionar un objeto del array
         inputLista.addEventListener('change', () => {
-          const selectedIndex = inputLista.value;
-          const selectedOficio = oficios[selectedIndex];
-          document.getElementById('input-Nombre').value = selectedOficio.nombre;
-          document.getElementById('input-Imagen').value = selectedOficio.imagen;
-          const imagenPropaganda = document.getElementById('imagen-propaganda');
-          imagenPropaganda.innerHTML = `<img src="${selectedOficio.imagen}" alt="Imagen de propaganda">`;
+          if (inputLista.value !== '') {
+            const selectedOficio = oficios.find((oficio) => oficio.nombre === inputLista.value);
+            if (selectedOficio) {
+              document.getElementById('input-Nombre').value = selectedOficio.nombre;
+              document.getElementById('input-Imagen').value = selectedOficio.imagen;
+              const imagenPropaganda = document.getElementById('imagen-propaganda');
+              imagenPropaganda.innerHTML = `<img src="${selectedOficio.imagen}" alt="Imagen de propaganda">`;
+            } else {
+            //  console.log('Oficio no encontrado, pero no es un error crítico');
+            }
+          }
         });
       }
     });
@@ -50,6 +53,36 @@ document.getElementById('traeLista').addEventListener('click', async () => {
     console.error('Error al obtener la publicidad:', error);
   }
 });
+
+
+
+function actualizarListaOficios() {
+  fetch('../datos/datos.json')
+    .then(response => response.json())
+    .then(data => {
+      const oficios = data.oficios;
+      const inputLista = document.getElementById('input-lista');
+      inputLista.innerHTML = '';
+      oficios.forEach((oficio) => {
+        const option = document.createElement('option');
+        option.value = oficio.nombre;
+        option.text = oficio.nombre;
+        inputLista.appendChild(option);
+      });
+      inputLista.addEventListener('change', () => {
+        const selectedOficio = oficios.find((oficio) => oficio.nombre === inputLista.value);
+        if (selectedOficio) {
+          document.getElementById('input-Nombre').value = selectedOficio.nombre;
+          document.getElementById('input-Imagen').value = selectedOficio.imagen;
+          const imagenPropaganda = document.getElementById('imagen-propaganda');
+          imagenPropaganda.innerHTML = `<img src="${selectedOficio.imagen}" alt="Imagen de propaganda">`;
+        } else {
+       //   console.error('Oficio no encontrado');
+        }
+      });
+    });
+}
+
 
 // Funcion para limpiar los imputs
 function limpiarInputs() {
@@ -64,7 +97,7 @@ function limpiarInputs() {
 }
 
 async function borrarOficio(nombreOficio) {
-   console.log('Nombre del oficio a borrar:', nombreOficio);
+  console.log('Nombre del oficio a borrar:', nombreOficio);
   try {
     const response = await fetch(`/datos/oficios/${nombreOficio}`, {
       method: 'DELETE',
@@ -82,6 +115,9 @@ async function borrarOficio(nombreOficio) {
   }
 }
 
+
+
+
 async function agregarOficio(nombreArray, objeto) {
   try {
     const options = {
@@ -95,19 +131,32 @@ async function agregarOficio(nombreArray, objeto) {
   }
 }
 
-async function modificarDato(index, nombre, imagen) {
+
+
+async function modificarDato(nombre, nuevoNombre, imagen) {
   try {
-    const objeto = { nombre, imagen };
-    const options = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(objeto),
-    };
-    await fetch(`../datos/oficios/${index}`, options);
+    const response = await fetch('../datos/datos.json');
+    const data = await response.json();
+    const oficios = data.oficios;
+    const oficioIndex = oficios.findIndex((oficio) => oficio.nombre === nombre);
+    if (oficioIndex !== -1) {
+      const objeto = { nombre: nuevoNombre, imagen };
+      const options = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(objeto),
+      };
+      await fetch(`../datos/oficios/${oficioIndex}`, options);
+    } else {
+   //   console.error('Oficio no encontrado');
+    }
   } catch (error) {
     console.error('Error al modificar el dato:', error);
   }
 }
+
+
+
 
 document.getElementById('modificarDato').addEventListener('click', async () => {
   Swal.fire({
@@ -120,21 +169,22 @@ document.getElementById('modificarDato').addEventListener('click', async () => {
     confirmButtonText: 'Sí, guardar'
   }).then((result) => {
     if (result.isConfirmed) {
-      const index = document.getElementById('input-lista').value;
+      const nombreAnterior = inputLista.options[inputLista.selectedIndex].text; // Obtén el nombre anterior del oficio
       const nombre = document.getElementById('input-Nombre').value;
       const imagen = document.getElementById('input-Imagen').value;
-      modificarDato(index, nombre, imagen).then(() => {
+      modificarDato(nombreAnterior, nombre, imagen).then(() => {
         Swal.fire({
           icon: 'success',
           title: 'Oficio modificado con éxito',
           timer: 1500,
           showConfirmButton: false
         });
-        inputListaArray.dispatchEvent(new Event('change'));
+        actualizarListaOficios();
       });
     }
   });
 });
+
 
 // Evento despliega botones para agregar publicidad
 document.getElementById('agregarDato').addEventListener('click', () => {
@@ -195,7 +245,8 @@ document.getElementById('aceptar-agregar').addEventListener('click', async () =>
           showConfirmButton: false
         });
         agregarBotones.innerHTML = '';
-        inputListaArray.dispatchEvent(new Event('change'));
+       // inputListaArray.dispatchEvent(new Event('change'));
+         actualizarListaOficios();
       });
     }
   });
@@ -226,15 +277,17 @@ document.getElementById('borrarDato').addEventListener('click', async () => {
           timer: 1500,
           showConfirmButton: false
         });
-        inputListaArray.dispatchEvent(new Event('change'));
+       // inputListaArray.dispatchEvent(new Event('change'));
+         actualizarListaOficios();
       });
     }
   });
 });
 
+
 // Evento para modificar dato
 document.getElementById('modificarDato').addEventListener('click', async () => {
- const index = document.getElementById('input-lista').value;
+  const index = document.getElementById('input-lista').value;
   const nombre = document.getElementById('input-Nombre').value;
   const imagen = document.getElementById('input-Imagen').value;
   await modificarDato(index, nombre, imagen);
