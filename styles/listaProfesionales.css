@@ -257,6 +257,18 @@ main{
 /* Cuando la pantalla sea menor a 700px, cambia la dirección del flex a columna */
 @media (max-width: 700px) {
 
+  body{
+  width:100%;
+  }
+
+#header-container{ 
+  width: 100%;
+}
+
+#footer-container{
+  width:100%;
+}
+
 /*Carruseles de publicidad*/
 .carruselvertical1, .carruselvertical2 {
   width: 100%;
@@ -280,6 +292,7 @@ main{
   margin: 0;
   margin-top: 0;
   margin-bottom: 0;
+  
 }
 
 .carrusel-item img {
@@ -290,47 +303,49 @@ main{
   }
 
 .contenedormedio {
-  flex-direction: column;
-  width: 100%;       
-  }
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+margin: 0;
+margin-top: 0;
+margin-bottom: 0;
+width:100%;
 
-.carrusel-container {   
-  width: 100%;      
+}
+
+.carrusel-container {  
+
+  width:100%;      
+  
 }
 
 /*Carruseles de publicidad*/
 main{
-  flex-direction: column;
-}
-
-/*contenedor de tarjetas y carruseles*/
-.contenedormedio{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  
+ width: 100%;
+ margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .cartelNoHay{
   height: 900px;
   font-size: 35px;
-
 }
 
 /*tarjeta profecionales*/
 .profesional-item{
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 97%;
   height:710px ;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  justify-items: center;
 }
 
-.infoContairner{
+#listaProfesionales{
+width: 100%;
+}
+
+.infoContainer{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -353,21 +368,21 @@ margin-top: 10px;
 }
 
 .datosContainer{
-    
 justify-items: center;
 width: 100%;
 margin-top: 25px;
 }
 
 .profesional-buttons{
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+display: flex;
+flex-direction: column;
+gap: 5px;
 margin-top: 50px;
 }
+
 .profesional-item img{
   width: 150px;
   height: 150px;
-  
 }
+
 }

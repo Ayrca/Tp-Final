@@ -91,7 +91,7 @@ function mostrarProfesionales(categoria) {
       const estado = profesional.estado;
       const tarjetaHTML = `
         <article class="profesional-item" data-email="${profesional.email}" data-telefono="${profesional.telefono}">
-         <div class="infoContairner">
+         <div class="infoContainer">
         <img src="${profesional.avatar}" alt="${profesional.nombre}">
           <div class="profesional-data">
             <div class="profesional-header">
