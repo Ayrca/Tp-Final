@@ -13,14 +13,11 @@
     ],
     "empresa": "Nacho Asociados",
     "telefono": "228450206",
-    "direccion": "25 de Mayo 1755",
+    "direccion": "25 de Mayo 2658",
     "avatar": "/assets/imagenesProfesionales/b1ef4993-e20f-4386-bdfe-e37668f2ab4e.jpeg",
     "estadoCuenta": true,
     "isAdmin": true,
-    "imagenes": [
-      "/assets/imagenesProfesionales/8574b494-a2bc-48ba-a9fa-828efef37aa8.jpg",
-      "/assets/imagenesProfesionales/c67c4ae5-fbf1-4be2-8b39-09a56137da37.png"
-    ],
+    "imagenes": [],
     "descripcion": "",
     "estado": true
   },
@@ -43,7 +40,7 @@
   },
   {
     "nombre": "Ayelen",
-    "apellido": "Soto123",
+    "apellido": "Soto",
     "email": "ayelensoto1994@gmail.com",
     "password": "123456",
     "tipo": "Cliente",
@@ -53,7 +50,7 @@
     "empresa": "",
     "telefono": "02284502063",
     "direccion": "Leal 441",
-    "avatar": "/assets/imagenesProfesionales/0ec8b3ab-4055-4d8f-a3ed-65be69faf5e6.jpg",
-    "estadoCuenta": false
+    "avatar": "/assets/imagenesProfesionales/9a8d072f-d23e-47e5-80b6-34d036508145.jpg",
+    "estadoCuenta": true
   }
 ]
