@@ -115,7 +115,6 @@ function inicializarLoginHeader() {
 
 // Espera a que se cargue TODO el HTML (incluido el header por fetch)
 document.addEventListener("DOMContentLoaded", () => {
-  // chequea cada medio segundo si ya se insertó el header
   const intervalo = setInterval(() => {
     if (document.getElementById("modalLoginForm")) {
       inicializarLoginHeader();

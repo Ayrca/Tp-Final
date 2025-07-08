@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  //Detecta el tipo de usuario
   const esProfesional = currentUser.tipo === 'profesional';
 
-  // Si no es profesional, oculta campos
+  // Si no es profesional se ocultan campos extras
   if (!esProfesional) {
     ['rubros-section', 'estado-section', 'descripcion-section', 'galeria-section', 'empresa-row'].forEach(id => {
       const el = document.getElementById(id);
@@ -321,16 +322,20 @@ async function cargarTrabajos() {
       return;
     }
 
+    //Borra contenido viejo antes de renderizar
     trabajosContainer.innerHTML = '';
+
+    //Recorro todos los trabajos filtrados
     trabajosFiltrados.forEach(trabajo => {
       const fecha = trabajo.fechaContratacion ? new Date(trabajo.fechaContratacion).toLocaleDateString('es-AR') : '';
       const comentario = trabajo.comentario?.trim() || 'Aún no se comentó';
       const valoracion = (trabajo.valoracion ?? '').toString().trim() || 'Aún no se valoró';
 
+      //Creo div del trabajo
       const trabajoDiv = document.createElement('div');
       trabajoDiv.className = 'trabajo-item';
 
-      // Contenido común
+      // tabla con contenido común
       let contenidoHTML = `
         <p><strong>${esProfesional ? 'Cliente' : 'Profesional'}:</strong> ${esProfesional ? (emailToNombre[trabajo.usuarioEmail] || trabajo.usuarioEmail) : (emailToNombre[trabajo.profesionalEmail] || trabajo.profesionalEmail)}</p>
         <p><strong>Rubro:</strong> ${trabajo.rubro}</p>
