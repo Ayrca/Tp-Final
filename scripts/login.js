@@ -24,9 +24,27 @@ function actualizarHeaderSegunUsuario() {
   }
 }
 
+function ocultarBtnRegistro() {
+  try {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (currentUser?.isLoggedIn) {
+      // Cambiar botón de login a "Mi cuenta"
+      const registroBtn = document.getElementById("btnRegistrar");
+      if (registroBtn) {
+        registroBtn.style.display =
+          "none";
+      }
+
+    }
+  } catch (e) {
+    console.error('Error al actualizar header:', e);
+  }
+}
+
 // Inicialización general
 function inicializarLoginHeader() {
   actualizarHeaderSegunUsuario();
+  ocultarBtnRegistro();
 
   const loginForm = document.getElementById("modalLoginForm");
   if (loginForm) {
@@ -89,7 +107,7 @@ function inicializarLoginHeader() {
         }
 
         actualizarHeaderSegunUsuario();
-
+        ocultarBtnRegistro();
         if (typeof Swal !== 'undefined') {
           Swal.fire({
             icon: "success",

@@ -52,5 +52,19 @@
     "direccion": "Leal 441",
     "avatar": "/assets/imagenesProfesionales/9a8d072f-d23e-47e5-80b6-34d036508145.jpg",
     "estadoCuenta": true
+  },
+  {
+    "nombre": "Ayrton",
+    "apellido": "Carli",
+    "email": "ayrton@gmail.com",
+    "password": "123456",
+    "tipo": "profesional",
+    "rubros": [
+      "mecánico"
+    ],
+    "empresa": "",
+    "telefono": "2284",
+    "direccion": "Bolivar 1943",
+    "estadoCuenta": true
   }
 ]
