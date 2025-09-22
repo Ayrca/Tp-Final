@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-  const tipoUsuario = localStorage.getItem('tipoUsuario') || 'comun';
+  const tipoUsuario = localStorage.getItem('tipoUsuario') || 'Cliente';
   const tituloForm = document.getElementById('form-titulo');
   const columnaProfesional = document.getElementById('columna-profesional');
   const btnAgregarRubro = document.getElementById('btn-agregar-rubro');
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }))
       .forEach(rubro => {
         const option = document.createElement('option');
-        option.value = rubro.toLowerCase().replace(/\s+/g, '-'); // valor más URL-friendly
+        option.value = rubro.toLowerCase().replace(/\s+/g, '-');
         option.textContent = rubro;
         select.appendChild(option);
       });
@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('registro-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+      // Obtiene valores de todos los campos
     const nombre = document.getElementById('nombre').value.trim();
     const apellido = document.getElementById('apellido').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -143,15 +144,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const telefono = document.getElementById('telefono').value.trim();
     const direccion = document.getElementById('direccion').value.trim();
 
+      // Validación: contraseña y confirmación iguales
     if (password !== confirmarPassword) {
       Swal.fire('Las contraseñas no coinciden');
       return;
     }
 
+      // Si es profesional, obtiene los rubros seleccionados
     const rubros = tipoUsuario === 'profesional'
       ? [...document.querySelectorAll('.rubro-select')].map(s => s.value)
       : [];
 
+        // Arma el objeto con los datos del nuevo usuario
     const nuevoUsuario = {
       nombre,
       apellido,
@@ -165,6 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       estadoCuenta: true
     };
 
+      // Enviar al backend
     try {
       const response = await fetch('http://localhost:3000/registro', {
         method: 'POST',

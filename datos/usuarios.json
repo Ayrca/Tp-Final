@@ -12,14 +12,11 @@
     ],
     "empresa": "Nacho Asociados",
     "telefono": "228450206",
-    "direccion": "25 de Mayo 1755",
+    "direccion": "25 de Mayo 2658",
     "avatar": "/assets/imagenesProfesionales/b1ef4993-e20f-4386-bdfe-e37668f2ab4e.jpeg",
     "estadoCuenta": true,
     "isAdmin": true,
-    "imagenes": [
-      "/assets/imagenesProfesionales/8574b494-a2bc-48ba-a9fa-828efef37aa8.jpg",
-      "/assets/imagenesProfesionales/c67c4ae5-fbf1-4be2-8b39-09a56137da37.png"
-    ],
+    "imagenes": [],
     "descripcion": "",
     "estado": true
   },
@@ -27,7 +24,7 @@
     "nombre": "Franker",
     "apellido": "Arcidiacono",
     "email": "rbc_ocp@hotmail.com",
-    "password": "123456",
+    "password": "1234567",
     "tipo": "profesional",
     "rubros": [
       "Abogado",
@@ -38,7 +35,7 @@
     "direccion": "gralpaz1238",
     "avatar": "/assets/imagenesProfesionales/f7a14148-51cd-42b3-8f53-bc119bfed98a.jpg",
     "isAdmin": true,
-    "estadoCuenta": false
+    "estadoCuenta": true
   },
   {
     "nombre": "Ayelen",

@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .logo {
@@ -12,27 +13,81 @@
 
 /*body y main */
 body {
-  background-color: #fdfdfd;
-  background-size: cover;
-  background-position: center;
+ background-color: #f4f6f8;
   line-height: 1.6;
-  position: relative;    
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 #listaOficios{
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* grid-template-columns: repeat(3, 1fr); / / Para tres columnas */
-  gap: 10px; /* Espacio entre elementos */
-  margin-left: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-  
- 
+
+/* Tarjeta de oficio */
+.oficio-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.oficio-card:hover {
+  background-color: #e8e8e8; /*cambia el fondo al pasar el mouse*/
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.oficio-card h3 {
+  font-size: 1.3rem;
+  color: #222;
+  margin: 0;
+}
+
+.oficio-card p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
 #listaOficios p:hover {
-  text-decoration: underline;
   cursor: pointer;
 }
 
 #footer { 
 width: 100%;
 height: 100px;
+}
+
+/* Responsive ajustes */
+@media (max-width: 600px) {
+  #listaOficios {
+    padding: 20px 10px;
+    gap: 16px;
+  }
+
+  .oficio-card {
+    padding: 20px 16px;
+  }
+
+  .oficio-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .oficio-card p {
+    font-size: 0.9rem;
+  }
 }
