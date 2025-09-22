@@ -2,21 +2,39 @@
   "publicidad": [
     {
       "id": 1,
-      "nombre": "Casa Ropa Puro Marcas",
-      "imagen": "../assets/images/patro/patroN1.png",
-      "pagina": "www.google.com"
+      "nombre": "Nvidia",
+      "imagen": "../assets/images/patro/nvidia.webp",
+      "pagina": "https://www.nvidia.com/es-la/"
     },
     {
       "id": 2,
-      "nombre": "Ferreterias Expres",
-      "imagen": "../assets/images/patro/patroN2.png",
-      "pagina": "www.google.com"
+      "nombre": "Samsung",
+      "imagen": "../assets/images/patro/samsung.webp",
+      "pagina": "https://www.samsung.com/ar/"
     },
     {
       "id": 3,
-      "nombre": "Casa Gary",
-      "imagen": "../assets/images/patro/patroN3.png",
-      "pagina": "www.google.com"
+      "nombre": "Tesla",
+      "imagen": "../assets/images/patro/tesla.jpg",
+      "pagina": "https://www.tesla.com/es_cl"
+    },
+    {
+      "nombre": "Apple",
+      "imagen": "../assets/imagenesPatrocinio/437a5656-0d6b-4aa7-af1f-42bb57feb029.webp",
+      "pagina": "https://www.apple.com/la/",
+      "id": 4
+    },
+    {
+      "nombre": "Google",
+      "imagen": "../assets/imagenesPatrocinio/d5cf67b5-a016-41c2-ad85-2dcac981072b.webp",
+      "pagina": "https://www.google.com/",
+      "id": 5
+    },
+    {
+      "nombre": "Microsoft",
+      "imagen": "../assets/imagenesPatrocinio/bd44fa3f-e309-41c2-86ee-79b54b99d3a9.jpg",
+      "pagina": "https://www.microsoft.com/es-ar/",
+      "id": 6
     }
   ],
   "publicidad1": [

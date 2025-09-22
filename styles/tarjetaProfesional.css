@@ -324,12 +324,6 @@ main {
     margin: 15px 0;
   }
 
-
-
-.containerProfesiona{
-
-}
-
 .cajaValoraciones{
    
     width: 300px;
@@ -337,15 +331,11 @@ main {
   #trabajos-container {
     grid-template-columns: 1fr;
     width: 295px;
-    
   }
 
-  .conectarContainer{
-
+.conectarContainer{
 width: 300px;
   }
-
- 
 
   #conectarProf,
   #contratarProf {
@@ -353,14 +343,4 @@ width: 300px;
     max-width: 320px;
     height: 42px;
   }
-
-
-
-
-
-
-
-
-
-
 }
