@@ -240,8 +240,7 @@ display: flex;
   gap: 20px;
   padding-bottom: 20px;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  
+  -webkit-overflow-scrolling: touch;  
   /* Oculta scrollbar en navegadores modernos */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE y Edge */
@@ -251,12 +250,9 @@ display: flex;
   display: none; /* Chrome y Safari */
 }
 
-
-.propaganda2 { 
-   width: 85vw;
-  scroll-snap-align: start;
- flex: 0 0 auto;
-  width: 320px;
+.propaganda2 {
+  flex: 0 0 85%;        /* ocupa 85% del contenedor visible */
+  max-width: 32%;
   background-color: #ffffff;
   border-radius: 12px;
   border: 1px solid #e0e0e0;
@@ -268,6 +264,7 @@ display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .propaganda2:hover {
@@ -296,7 +293,6 @@ height: 100px;
 } 
 
 @media (max-width: 600px) {
-
   .texto1 {
     margin: 0 5px;
     margin-top: 15px;
@@ -399,13 +395,12 @@ height: 100px;
   }
 
   .propaganda2 {
-       flex: 0 0 100%;
+    flex: 0 0 100%;
     max-width: 100%;
     margin: 0;
     padding: 15px;
     border-radius: 10px;
     scroll-snap-align: start;
-    display: flex;
     flex-direction: column;
     align-items: center;    
   }
