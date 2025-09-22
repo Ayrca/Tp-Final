@@ -17,12 +17,6 @@
       "nombre": "Casa Gary",
       "imagen": "../assets/images/patro/patroN3.png",
       "pagina": "www.google.com"
-    },
-    {
-      "id": 4,
-      "nombre": "La Cocina123",
-      "imagen": "../assets/images/patro/patroN4.png",
-      "pagina": "www.google.com"
     }
   ],
   "publicidad1": [

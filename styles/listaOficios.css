@@ -22,9 +22,9 @@ body {
 
 #listaOficios{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -32,23 +32,35 @@ body {
 /* Tarjeta de oficio */
 .oficio-card {
   background-color: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e0e0e0;
 }
 
 .oficio-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  background-color: #e8e8e8; /*cambia el fondo al pasar el mouse*/
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .oficio-card h3 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 1.3rem;
+  color: #222;
+  margin: 0;
+}
+
+.oficio-card p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
 }
 
 #listaOficios p:hover {
@@ -59,4 +71,24 @@ body {
 #footer { 
 width: 100%;
 height: 100px;
+}
+
+/* Responsive ajustes */
+@media (max-width: 600px) {
+  #listaOficios {
+    padding: 20px 10px;
+    gap: 16px;
+  }
+
+  .oficio-card {
+    padding: 20px 16px;
+  }
+
+  .oficio-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .oficio-card p {
+    font-size: 0.9rem;
+  }
 }
