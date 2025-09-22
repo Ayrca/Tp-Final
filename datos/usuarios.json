@@ -6,7 +6,6 @@
     "password": "123456",
     "tipo": "profesional",
     "rubros": [
-      "Abogado",
       "Plomero",
       "Electricista",
       "Arquitecto"
@@ -43,7 +42,7 @@
   },
   {
     "nombre": "Ayelen",
-    "apellido": "Soto123",
+    "apellido": "Soto",
     "email": "ayelensoto1994@gmail.com",
     "password": "123456",
     "tipo": "Cliente",
@@ -54,6 +53,18 @@
     "telefono": "02284502063",
     "direccion": "Leal 441",
     "avatar": "/assets/imagenesProfesionales/0ec8b3ab-4055-4d8f-a3ed-65be69faf5e6.jpg",
-    "estadoCuenta": false
+    "estadoCuenta": true
+  },
+  {
+    "nombre": "Bruno",
+    "apellido": "Arcidi",
+    "email": "franciscoarcidiacono55@hotmail.com",
+    "password": "1",
+    "tipo": "Cliente",
+    "rubros": [],
+    "empresa": "",
+    "telefono": "2284589286",
+    "direccion": "25 de Mayo 1755123",
+    "estadoCuenta": true
   }
 ]

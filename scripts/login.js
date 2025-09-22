@@ -97,6 +97,7 @@ function inicializarLoginHeader() {
             timer: 1500,
             showConfirmButton: false
           });
+          
         }
 
       } catch (error) {
@@ -123,3 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 500);
 });
+
+
+

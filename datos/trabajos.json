@@ -64,9 +64,21 @@
     "rubro": "Abogado",
     "telefonoProfesional": "2284589286",
     "telefonoCliente": "02284502063",
-    "estado": "pendiente",
+    "estado": "Cancelado",
     "valoracion": null,
-    "comentario": "",
+    "comentario": "nunca respondio",
     "fechaContratacion": "2025-07-01"
+  },
+  {
+    "id": "0f09b7e8-61ee-453e-b96f-b00883e42128",
+    "profesionalEmail": "ignacioamaya04@gmail.com",
+    "usuarioEmail": "ayelensoto1994@gmail.com",
+    "rubro": "Arquitecto",
+    "telefonoProfesional": "228450206",
+    "telefonoCliente": "02284502063",
+    "estado": "Finalizado",
+    "valoracion": 2,
+    "comentario": "hizo un buen trabajo",
+    "fechaContratacion": "2025-07-08"
   }
 ]

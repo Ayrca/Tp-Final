@@ -17,14 +17,22 @@ buscador.addEventListener('keydown', (e) => {
 
 /*Buscador*/
 function buscarOficios() {
+  //el trim() elimina espacios en blanco
   const textoBusqueda = buscador.value.trim().toLowerCase();
   resultados.innerHTML = '';
   
   if (!textoBusqueda) {
+    //style. display  = "none" oculta la seccion resultados por que texto busqueda esta vacio
+    //y pone en nulo la variable oficio selecionado
     resultados.style.display = 'none';
     oficioSeleccionado = null;
     return;
   }
+//el filter genera un array de objetos a partir de oficiodata que es el json
+// que filtra segun lo pasado en el buscador (textobusquedas), y dicho array generado contiene
+//los objetos que fueron filtrados en este caso si texto busqueda es ar
+// en resultadosFiltrados se genera un array de los onjetos cuyo nombre empiecen con ar
+//arquitecto,arquelogo tec
 
   const resultadosFiltrados = oficiosData.filter(oficio => 
     oficio && oficio.nombre && oficio.nombre.toLowerCase().includes(textoBusqueda)

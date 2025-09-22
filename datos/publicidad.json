@@ -23,6 +23,12 @@
       "nombre": "La Cocina123",
       "imagen": "../assets/images/patro/patroN4.png",
       "pagina": "www.google.com"
+    },
+    {
+      "nombre": "Tropi Podas",
+      "imagen": "../assets/imagenesPatrocinio/412d05f9-a845-4afd-be13-8044417dba4b.png",
+      "pagina": "www.google.com",
+      "id": 5
     }
   ],
   "publicidad1": [

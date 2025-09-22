@@ -2,6 +2,10 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const port = 3000;
+const nodemailer = require('nodemailer');
+
+const { v4: uuidv4 } = require('uuid');
+
 
 // Función para servir archivos estáticos
 const serveStaticFile = (filePath, res) => {
@@ -28,6 +32,7 @@ const serveStaticFile = (filePath, res) => {
   });
 };
 
+
 // Función para enviar JSON
 function sendJSON(res, statusCode, obj) {
   res.writeHead(statusCode, {
@@ -52,6 +57,7 @@ http.createServer((req, res) => {
     return;
   }
 
+  
 // Función para leer publicidad
 function leerPublicidad(callback) {
   const filePath = path.join(__dirname, 'datos', 'publicidad.json');
@@ -150,6 +156,192 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
   });
 }
 
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // o 465 para SSL
+  auth: {
+    user: 'afipfipa@gmail.com',
+    pass: 'nptw uomr omyj xaao'
+  }
+});
+
+// Endpoint para enviar correo electrónico de recuperación de contraseña
+if (req.method === 'POST' && req.url === '/recuperar-contrasena') {
+  let body = '';
+  req.on('data', chunk => body += chunk.toString());
+  req.on('end', () => {
+    try {
+      const { email } = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+          return;
+        }
+        const usuarios = JSON.parse(data);
+        const usuario = usuarios.find(u => u.email === email);
+        if (!usuario) {
+          sendJSON(res, 404, { error: 'Usuario no encontrado' });
+          return;
+        }
+        const token = uuidv4();
+        const expiracion = new Date(Date.now() + 3600000); // 1 hora
+        const mailOptions = {
+          from: 'afipfipa@gmail.com',
+          to: email,
+          subject: 'Recuperación de contraseña',
+          text: `Hola ${usuario.nombre},\n\nPara recuperar tu contraseña, copia este token: ${token}, haz clic en el siguiente enlace: http://localhost:3000/pages/cambioPassword.html\n\n, pega el token en cuestion y procede a cambiar la contraseña. Si no solicitaste recuperar tu contraseña, ignora este mensaje.`
+        };
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.error('Error enviando correo electrónico:', err);
+            sendJSON(res, 500, { error: 'Error enviando correo electrónico' });
+            return;
+          }
+          // Guardar el token y la fecha de expiración en el usuario
+          usuario.tokenRecuperacion = {
+            token,
+            expiracion: expiracion.toISOString()
+          };
+          fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
+            if (err) {
+              console.error('Error guardando token de recuperación:', err);
+            }
+          });
+          sendJSON(res, 200, { success: true });
+        });
+      });
+    } catch (err) {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+/*
+if (req.method === 'POST' && req.url === '/recuperar-contrasena') {
+  let body = '';
+  req.on('data', chunk => body += chunk.toString());
+  req.on('end', () => {
+    try {
+      const { email } = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+          return;
+        }
+        const usuarios = JSON.parse(data);
+        const usuario = usuarios.find(u => u.email === email);
+        if (!usuario) {
+          sendJSON(res, 404, { error: 'Usuario no encontrado' });
+          return;
+        }
+        const token = uuidv4();
+        const mailOptions = {
+          from: 'afipfipa@gmail.com',
+          to: email,
+          subject: 'Recuperación de contraseña',
+          text: `Hola ${usuario.nombre},\n\nPara recuperar tu contraseña, copia este token: ${token}, haz clic en el siguiente enlace: http://localhost:3000/pages/cambioPassword.html\n\n,
+          pega el token en cuestion y procede a cambiar la contraseña. Si no solicitaste recuperar tu contraseña, ignora este mensaje.`
+        };
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.error('Error enviando correo electrónico:', err);
+            sendJSON(res, 500, { error: 'Error enviando correo electrónico' });
+            return;
+          }
+          // Guardar el token en el usuario
+          usuario.tokenRecuperacion = token;
+          fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
+            if (err) {
+              console.error('Error guardando token de recuperación:', err);
+            }
+          });
+          sendJSON(res, 200, { success: true });
+        });
+      });
+    } catch (err) {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+
+*/
+
+// Endpoint para validar el token de recuperación
+if (req.method === 'POST' && req.url === '/validar-token') {
+  let body = '';
+  req.on('data', chunk => body += chunk.toString());
+  req.on('end', () => {
+    try {
+      const { token } = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+          return;
+        }
+        const usuarios = JSON.parse(data);
+        const usuario = usuarios.find(u => u.tokenRecuperacion && u.tokenRecuperacion.token === token);
+
+        if (!usuario) {
+          sendJSON(res, 404, { error: 'Token no encontrado' });
+          return;
+        }
+        const expiracion = new Date(usuario.tokenRecuperacion.expiracion);
+        if (new Date() > expiracion) {
+          sendJSON(res, 400, { error: 'Token expirado' });
+          return;
+        }
+       sendJSON(res, 200, { success: true, usuario: usuario.email });
+      });
+    } catch (err) {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+// Endpoint para cambiar la contraseña
+if (req.method === 'POST' && req.url === '/cambiar-contrasena') {
+  let body = '';
+  req.on('data', chunk => body += chunk.toString());
+  req.on('end', () => {
+    try {
+      const { token, newPassword } = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        if (err) {
+          sendJSON(res, 500, { error: 'Error leyendo usuarios' });
+          return;
+        }
+        const usuarios = JSON.parse(data);
+        const usuario = usuarios.find(u => u.tokenRecuperacion && u.tokenRecuperacion.token === token);
+        if (!usuario) {
+          sendJSON(res, 404, { error: 'Token no encontrado' });
+          return;
+        }
+        usuario.password = newPassword;
+        delete usuario.tokenRecuperacion;
+        fs.writeFile(usuariosPath, JSON.stringify(usuarios, null, 2), (err) => {
+          if (err) {
+            console.error('Error guardando cambios:', err);
+          }
+        });
+        sendJSON(res, 200, { success: true });
+      });
+    } catch (err) {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+  });
+  return;
+}
+
+
   // Rutas para usuarios y login
   if (req.method === 'POST' && req.url === '/registro') {
     let body = '';
@@ -233,8 +425,51 @@ function eliminarPublicidad(nombreArray, idObjeto, callback) {
     return;
   }
 
+
+//ruta para verificar al usuario desde solicitar cambio de contraseña
+
+else if (req.method === 'POST' && req.url === '/verificar-usuario') {
+  
+  let body = '';
+  req.on('data', chunk => {
+    body += chunk.toString();
+  });
+
+  req.on('end', () => {
+    try {
+      const datos = JSON.parse(body);
+      const usuariosPath = path.join(__dirname, 'datos', 'usuarios.json');
+      fs.readFile(usuariosPath, 'utf8', (err, data) => {
+        let usuarios = [];
+        if (!err) {
+          try {
+            usuarios = JSON.parse(data);
+            if (!Array.isArray(usuarios)) usuarios = [];
+          } catch {
+            usuarios = [];
+          }
+        }
+        const existe = usuarios.find(u => u.email === datos.email);
+     if (existe) {
+    console.log('El usuario existe');
+    sendJSON(res, 200, { existe: true });
+  } else {
+    console.log('El usuario no existe');
+    sendJSON(res, 200, { existe: false });
+  }
+    console.log('Respuesta enviada');
+      });
+    } catch (error) {
+      sendJSON(res, 400, { error: 'JSON inválido' });
+    }
+    
+
+  });
+  return;
+}
+
   //agregar nuevo trabajo a trabajos.json
-  else if (req.method === 'POST' && req.url === '/api/trabajos') {
+  if (req.method === 'POST' && req.url === '/api/trabajos') {
   let body = '';
   req.on('data', chunk => {
     body += chunk.toString();
