@@ -18,8 +18,10 @@ import { TrabajoContratado} from './trabajosContratados/trabajosContr.entity';
 import { TrabajoContratadoModule } from './trabajosContratados/trabajosContr.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-
-
+import { AvatarImagenModule } from './avatarImagen/avatarImagen.module';
+import { AdministradorModule } from './administrador/administrador.module';
+import { Administrador } from './administrador/administrador.entity';
+import { ImagenPropagandaModule } from './imagenPropaganda/imagenPropaganda.module';
 @Module({
   
   imports: [
@@ -37,16 +39,19 @@ import { join } from 'path';
       username: 'root',
       password: 'te5re6cabio7-',
       database: 'mydb',
-      entities: [Oficio, Publicidad, Profesional,Usuario,Imagen,TrabajoContratado], // Agrega la entidad "Oficio" al arreglo de entidades
+      entities: [Oficio, Publicidad, Profesional,Usuario,Imagen,TrabajoContratado,Administrador], // Agrega la entidad "Oficio" al arreglo de entidades
       synchronize: false,
       logging: true,
     }),
+    ImagenPropagandaModule,
+    AdministradorModule,
     TrabajoContratadoModule,
     OficiosModule,
     PublicidadModule,
     ProfesionalModule,
     UsuarioModule,
     ImagenModule,
+    AvatarImagenModule, 
     AuthModule,
     JwtModule.register({
       secret: 'mi-llave-secreta',
@@ -60,4 +65,6 @@ import { join } from 'path';
 
 
 export class AppModule {}
+
+
 

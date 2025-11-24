@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^11.1.7",
     "@nestjs/serve-static": "^5.0.4",
     "@nestjs/typeorm": "^11.0.0",
+    "@types/multer": "^2.0.0",
     "adm-zip": "^0.5.16",
     "bcrypt": "^6.0.0",
     "bootstrap": "^5.3.8",

@@ -39,14 +39,17 @@ const ImagenesProf = ({ idProfesional }) => {
     });
   };
 
+
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+  const file = event.target.files[0];
+  console.log(file); // Agrega este console.log
+  setFile(file);
+};
 
 
   return (
     <div className='cajaImagenes'>
-      <h3>Trabajos anteriores</h3>
+      <h3>Imagenes de Trabajos anteriores</h3>
       <div className="imagenes-container" id="imagenes-container">
 
 <div>

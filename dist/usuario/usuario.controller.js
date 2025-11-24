@@ -41,6 +41,16 @@ let UsuarioController = class UsuarioController {
     async registrar(datos) {
         return this.usuarioService.registrar(datos);
     }
+    async verificarEmail(email) {
+        const usuario = await this.usuarioService.findByEmail(email);
+        const profesional = await this.profesionalService.findByEmail(email);
+        if (usuario || profesional) {
+            throw new common_1.HttpException('El email ya está en uso', common_1.HttpStatus.BAD_REQUEST);
+        }
+        else {
+            return { mensaje: 'El email está disponible' };
+        }
+    }
     async getUsuario(id) {
         const idNumber = parseInt(id, 10);
         if (isNaN(idNumber)) {
@@ -104,6 +114,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsuarioController.prototype, "registrar", null);
+__decorate([
+    (0, common_1.Post)('verificar-email'),
+    __param(0, (0, common_1.Body)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsuarioController.prototype, "verificarEmail", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

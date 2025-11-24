@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/Registro.css';
-
+import Swal from 'sweetalert2';
 
 const CamposComunes = ({
   nombre,
@@ -153,6 +153,8 @@ useEffect(() => {
     setTipoUsuario(tipo);
   }, []);
 
+
+/*
 const handleSubmit = async (e) => {
   e.preventDefault();
   // Validar nombre y apellido
@@ -179,10 +181,14 @@ const handleSubmit = async (e) => {
     return;
   }
   // Validar contraseña
-  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password)) {
-    alert('La contraseña debe tener al menos 8 caracteres, una letra capital, una letra pequeña, un número y un carácter especial');
-    return;
-  }
+
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+if (!passwordRegex.test(password)) {
+  alert('La contraseña debe tener al menos 8 caracteres, una letra capital, una letra pequeña, un número');
+  return;
+}
+
+
   // Validar confirmación de contraseña
   if (password !== confirmarPassword) {
     alert('Las contraseñas no coinciden');
@@ -205,57 +211,151 @@ const handleSubmit = async (e) => {
     rubros: tipoUsuario === 'profesional' ? rubros : null,
   };
   
-try {
-      if (tipoUsuario === 'Cliente') {
-        const response = await axios.post('http://localhost:3000/usuario/registro', datos);                                         
-        console.log(response.data);
-      } else {
-        const response = await axios.post('http://localhost:3000/profesional/registro', datos);
-        console.log(response.data);
-      }
-    } catch (error) {
-      console.error(error);
+
+
+  try {
+    if (tipoUsuario === 'Cliente') {
+      const response = await axios.post('http://localhost:3000/usuario/registro', datos);
+      console.log(response.data);
+      Swal.fire({
+        title: 'Registro exitoso',
+        text: 'Tu cuenta ha sido creada con éxito',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true,
+      }).then(() => {
+        window.location.href = '/';
+      });
+    } else {
+      const response = await axios.post('http://localhost:3000/profesional/registro', datos);
+      console.log(response.data);
+      Swal.fire({
+        title: 'Registro exitoso',
+        text: 'Tu cuenta ha sido creada con éxito',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true,
+      }).then(() => {
+        window.location.href = '/';
+      });
     }
-  };
-
-
-
-/*
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (password !== confirmarPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
-    const datos = {
-      nombre,
-      apellido,
-      fechaNacimiento: new Date(fechaNacimiento),
-      telefono,
-      email,
-      direccion,
-      password,
-      estadoCuenta: true,
-      avatar: '',
-      tipo: tipoUsuario,
-      oficio: oficioSeleccionado,
-      empresa: tipoUsuario === 'profesional' ? empresa : null,
-      rubros: tipoUsuario === 'profesional' ? rubros : null,
-    };
-
-    try {
-      if (tipoUsuario === 'Cliente') {
-        const response = await axios.post('http://localhost:3000/usuario/registro', datos);                                         
-        console.log(response.data);
-      } else {
-        const response = await axios.post('http://localhost:3000/profesional/registro', datos);
-        console.log(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: 'Error',
+      text: 'Hubo un error al crear tu cuenta',
+      icon: 'error',
+    });
+  }
+};
 */
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  // Validar nombre y apellido
+  if (!/^[a-zA-Z ]+$/.test(nombre) || !/^[a-zA-Z ]+$/.test(apellido)) {
+    alert('El nombre y el apellido solo pueden contener letras y espacios');
+    return;
+  }
+  // Validar fecha de nacimiento
+  const fechaNacimientoDate = new Date(fechaNacimiento);
+  const hoy = new Date();
+  const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
+  if (edad < 18) {
+    alert('Debes tener al menos 18 años para registrarte');
+    return;
+  }
+  // Validar teléfono
+  if (!/^[0-9]+$/.test(telefono)) {
+    alert('El teléfono solo puede contener números');
+    return;
+  }
+  // Validar email
+  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+    alert('El email no es válido');
+    return;
+  }
+  // Validar contraseña
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    alert('La contraseña debe tener al menos 8 caracteres, una letra capital, una letra pequeña, un número');
+    return;
+  }
+  // Validar confirmación de contraseña
+  if (password !== confirmarPassword) {
+    alert('Las contraseñas no coinciden');
+    return;
+  }
+  // Verificar si el email ya está en uso
+  try {
+    const response = await axios.post('http://localhost:3000/usuario/verificar-email', { email });
+    if (response.data.mensaje === 'El email está disponible') {
+      // Si el email está disponible, enviar el formulario
+      const datos = {
+        nombre,
+        apellido,
+        fechaNacimiento: new Date(fechaNacimiento),
+        telefono,
+        email,
+        direccion,
+        password,
+        estadoCuenta: true,
+        avatar: '',
+        tipo: tipoUsuario,
+        oficio: oficioSeleccionado,
+        empresa: tipoUsuario === 'profesional' ? empresa : null,
+        rubros: tipoUsuario === 'profesional' ? rubros : null,
+      };
+      try {
+        if (tipoUsuario === 'Cliente') {
+          const response = await axios.post('http://localhost:3000/usuario/registro', datos);
+          console.log(response.data);
+          Swal.fire({
+            title: 'Registro exitoso',
+            text: 'Tu cuenta ha sido creada con éxito',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+          }).then(() => {
+            window.location.href = '/';
+          });
+        } else {
+          const response = await axios.post('http://localhost:3000/profesional/registro', datos);
+          console.log(response.data);
+          Swal.fire({
+            title: 'Registro exitoso',
+            text: 'Tu cuenta ha sido creada con éxito',
+            icon: 'success',
+            timer: 2000,
+            timerProgressBar: true,
+          }).then(() => {
+            window.location.href = '/';
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un error al crear tu cuenta',
+          icon: 'error',
+        });
+      }
+    }
+  } catch (error) {
+    if (error.response.status === 400) {
+      Swal.fire({
+        title: 'Error',
+        text: error.response.data.message,
+        icon: 'error',
+      });
+    } else {
+      console.error(error);
+    }
+  }
+};
+
+
 
 
   return (

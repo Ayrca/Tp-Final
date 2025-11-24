@@ -46,7 +46,6 @@ async findOneByEmail(email: string) {
 
 
 
-
   async create(usuario: Usuario): Promise<Usuario> {
     return this.usuarioRepository.save(usuario);
   }
@@ -86,4 +85,3 @@ async findOneByEmail(email: string) {
   
 }
 
-  

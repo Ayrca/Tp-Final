@@ -12,7 +12,7 @@ import PreRegistro from './components/PreRegistro';
 import Registro from './components/Registro';
 import PerfilComercial from './components/PerfilComercial';
 import PerfilUsuario from './components/PerfUsuario';
-
+import PerfilAdmin from './components/PerfilAdmin';
 
 function App() {
   return (
@@ -45,7 +45,9 @@ function App() {
       <Route path="/registro" element={<Registro />} />
       <Route path="usuario/perfil" element={<PerfilUsuario />} />
       <Route path="/profesional/perfil/:id" element={<PerfilComercial />} />
+      <Route path="/admin/perfil" component={PerfilAdmin} />
     </Routes>
+
   );
 }
 export default App;

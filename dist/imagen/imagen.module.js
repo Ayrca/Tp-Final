@@ -13,6 +13,10 @@ const imagen_service_1 = require("./imagen.service");
 const platform_express_1 = require("@nestjs/platform-express");
 const imagen_entity_1 = require("./imagen.entity");
 const typeorm_1 = require("@nestjs/typeorm");
+const usuario_entity_1 = require("../usuario/usuario.entity");
+const profesional_entity_1 = require("../profesional/profesional.entity");
+const usuario_module_1 = require("../usuario/usuario.module");
+const profesional_module_1 = require("../profesional/profesional.module");
 let ImagenModule = class ImagenModule {
 };
 exports.ImagenModule = ImagenModule;
@@ -20,9 +24,20 @@ exports.ImagenModule = ImagenModule = __decorate([
     (0, common_1.Module)({
         imports: [
             platform_express_1.MulterModule.register({
-                dest: './client/public/assets/imagenesUsuarios',
+                dest: './client/public/assets/imagenesUsuariosProfesionales',
+                fileFilter: (req, file, cb) => {
+                    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                    if (allowedMimeTypes.includes(file.mimetype)) {
+                        cb(null, true);
+                    }
+                    else {
+                        cb(new Error('Tipo de archivo no permitido'), false);
+                    }
+                },
             }),
-            typeorm_1.TypeOrmModule.forFeature([imagen_entity_1.Imagen]),
+            typeorm_1.TypeOrmModule.forFeature([imagen_entity_1.Imagen, usuario_entity_1.Usuario, profesional_entity_1.Profesional]),
+            usuario_module_1.UsuarioModule,
+            profesional_module_1.ProfesionalModule,
         ],
         controllers: [imagen_controller_1.ImagenController],
         providers: [imagen_service_1.ImagenService],

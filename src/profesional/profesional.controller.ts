@@ -39,14 +39,6 @@ async findByOficio(@Param('id') id: number): Promise<Profesional[]> {
 
 
 
-
-/*
-@Get('oficios/:idOficios')
-async findByOficio(@Param('idOficios') idOficios: number): Promise<Profesional[]> {
-  return this.profesionalService.findByOficio(idOficios);
-}
-*/
-
 @Get(':id')
 async findOne(@Param('id') id: number): Promise<any> {
   const profesional = await this.profesionalService.findOne(id);
@@ -122,5 +114,3 @@ return {
     return this.profesionalService.registrar(datos);
   }
 }
-
-

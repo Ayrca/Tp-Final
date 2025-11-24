@@ -14,19 +14,23 @@ const common_1 = require("@nestjs/common");
 const usuario_service_1 = require("../usuario/usuario.service");
 const profesional_service_1 = require("../profesional/profesional.service");
 const jwt_1 = require("@nestjs/jwt");
+const administrador_service_1 = require("../administrador/administrador.service");
 let AuthService = class AuthService {
     usuarioService;
     profesionalService;
+    administradorService;
     jwtService;
-    constructor(usuarioService, profesionalService, jwtService) {
+    constructor(usuarioService, profesionalService, administradorService, jwtService) {
         this.usuarioService = usuarioService;
         this.profesionalService = profesionalService;
+        this.administradorService = administradorService;
         this.jwtService = jwtService;
     }
     async login(email, password) {
         console.log('Iniciando sesión con email:', email);
         const usuario = await this.usuarioService.findOneByEmail(email);
         const profesional = await this.profesionalService.findOneByEmail(email);
+        const administrador = await this.administradorService.findOneByEmail(email);
         if (usuario) {
             const isValid = await usuario.comparePassword(password);
             if (isValid) {
@@ -41,8 +45,15 @@ let AuthService = class AuthService {
                 return { token, tipo: 'profesional' };
             }
         }
+        else if (administrador) {
+            const isValid = await administrador.comparePassword(password);
+            if (isValid) {
+                const token = await this.generateToken(administrador, 'administrador');
+                return { token, tipo: 'administrador' };
+            }
+        }
         else {
-            console.log('Usuario o profesional no encontrado');
+            console.log('Usuario, profesional o administrador no encontrado');
             return null;
         }
         console.log('Contraseña incorrecta');
@@ -59,14 +70,20 @@ let AuthService = class AuthService {
         else if (tipo === 'profesional') {
             payload = { sub: usuario.idusuarioProfesional, tipo };
         }
+        else if (tipo === 'administrador') {
+            payload = { sub: usuario.idusuarioAdm, tipo };
+        }
         return this.jwtService.sign(payload);
     }
     async getUsuario(id, tipo) {
         if (tipo === 'profesional') {
             return this.profesionalService.findOne(id);
         }
-        else {
+        else if (tipo === 'usuario') {
             return this.usuarioService.findOne(id);
+        }
+        else if (tipo === 'administrador') {
+            return this.administradorService.findOne(id);
         }
     }
 };
@@ -75,6 +92,7 @@ exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [usuario_service_1.UsuarioService,
         profesional_service_1.ProfesionalService,
+        administrador_service_1.AdministradorService,
         jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

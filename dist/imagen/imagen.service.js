@@ -52,17 +52,23 @@ const path = __importStar(require("path"));
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const imagen_entity_1 = require("./imagen.entity");
+const usuario_entity_1 = require("../usuario/usuario.entity");
+const profesional_entity_1 = require("../profesional/profesional.entity");
 let ImagenService = class ImagenService {
     imagenRepository;
-    constructor(imagenRepository) {
+    usuarioComunRepository;
+    usuarioProfesionalRepository;
+    constructor(imagenRepository, usuarioComunRepository, usuarioProfesionalRepository) {
         this.imagenRepository = imagenRepository;
+        this.usuarioComunRepository = usuarioComunRepository;
+        this.usuarioProfesionalRepository = usuarioProfesionalRepository;
     }
     async guardarImagen(file, idProfesional) {
         if (!idProfesional) {
             throw new common_1.BadRequestException('El idProfesional es requerido');
         }
         const filename = file.originalname;
-        const filePath = `client/public/assets/imagenesUsuarios/${filename}`;
+        const filePath = `client/public/assets/imagenesUsuariosProfesionales/${filename}`;
         fs.renameSync(file.path, filePath);
         const imagen = new imagen_entity_1.Imagen();
         imagen.url = filename;
@@ -75,7 +81,7 @@ let ImagenService = class ImagenService {
     }
     async obtenerImagen(filename) {
         try {
-            const uploadPath = path.join(__dirname, '..', 'imagenesUsuarios');
+            const uploadPath = path.join(__dirname, '..', 'imagenesUsuariosProfesionales');
             if (!fs.existsSync(uploadPath)) {
                 fs.mkdirSync(uploadPath);
             }
@@ -91,6 +97,10 @@ exports.ImagenService = ImagenService;
 exports.ImagenService = ImagenService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(imagen_entity_1.Imagen)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(usuario_entity_1.Usuario)),
+    __param(2, (0, typeorm_1.InjectRepository)(profesional_entity_1.Profesional)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
+        typeorm_2.Repository])
 ], ImagenService);
 //# sourceMappingURL=imagen.service.js.map

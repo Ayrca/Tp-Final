@@ -13,25 +13,31 @@ const fetchTrabajos = async () => {
   try {
     let response;
     if (idProfesional) {
-      response = await axios.get(`http://localhost:3000/trabajoContratado/${idProfesional}`);                                                
-
+     response = await axios.get(`http://localhost:3000/trabajoContratado/${idProfesional}`);                                                
+                                                   
     } else if (idusuarioComun) {
       response = await axios.get(`http://localhost:3000/trabajoContratado/usuario/${idusuarioComun}`);
-      
     }
     console.log(response);
- if (Array.isArray(response.data)) {
-  setTrabajos(response.data);
-} else if (response.data === null || response.data === undefined) {
-  setTrabajos([]);
-} else {
-  setError('La respuesta de la API no es un array');
-}
+    if (response && response.data !== null && response.data !== undefined) {
+      if (Array.isArray(response.data)) {
+        setTrabajos(response.data);
+      } else {
+        setError('La respuesta de la API no es un array');
+      }
+    } else {
+      setTrabajos([]); // o setError('No hay datos');
+    }
   } catch (error) {
     setError(error.message);
   }
 };
-  
+
+
+
+
+
+
 
   useEffect(() => {
     fetchTrabajos();

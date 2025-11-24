@@ -21,9 +21,12 @@ async findOne(id: number): Promise<Publicidad> {
   return publicidad;
 }
 
-  async create(publicidad: Publicidad): Promise<Publicidad> {
-    return this.publicidadRepository.save(publicidad);
-  }
+async create(publicidad: Publicidad): Promise<Publicidad> {
+  const { idpublicidad, ...data } = publicidad;
+  return this.publicidadRepository.save(data);
+}
+
+
   async update(id: number, publicidad: Publicidad): Promise<Publicidad> {
     await this.publicidadRepository.update(id, publicidad);
     return this.findOne(id);

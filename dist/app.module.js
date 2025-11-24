@@ -27,6 +27,10 @@ const trabajosContr_entity_1 = require("./trabajosContratados/trabajosContr.enti
 const trabajosContr_module_1 = require("./trabajosContratados/trabajosContr.module");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
+const avatarImagen_module_1 = require("./avatarImagen/avatarImagen.module");
+const administrador_module_1 = require("./administrador/administrador.module");
+const administrador_entity_1 = require("./administrador/administrador.entity");
+const imagenPropaganda_module_1 = require("./imagenPropaganda/imagenPropaganda.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -43,16 +47,19 @@ exports.AppModule = AppModule = __decorate([
                 username: 'root',
                 password: 'te5re6cabio7-',
                 database: 'mydb',
-                entities: [oficios_entity_1.Oficio, publicidad_entity_1.Publicidad, profesional_entity_1.Profesional, usuario_entity_1.Usuario, imagen_entity_1.Imagen, trabajosContr_entity_1.TrabajoContratado],
+                entities: [oficios_entity_1.Oficio, publicidad_entity_1.Publicidad, profesional_entity_1.Profesional, usuario_entity_1.Usuario, imagen_entity_1.Imagen, trabajosContr_entity_1.TrabajoContratado, administrador_entity_1.Administrador],
                 synchronize: false,
                 logging: true,
             }),
+            imagenPropaganda_module_1.ImagenPropagandaModule,
+            administrador_module_1.AdministradorModule,
             trabajosContr_module_1.TrabajoContratadoModule,
             oficios_module_1.OficiosModule,
             publicidad_module_1.PublicidadModule,
             profesional_module_1.ProfesionalModule,
             usuario_module_1.UsuarioModule,
             imagen_module_1.ImagenModule,
+            avatarImagen_module_1.AvatarImagenModule,
             auth_module_1.AuthModule,
             jwt_1.JwtModule.register({
                 secret: 'mi-llave-secreta',

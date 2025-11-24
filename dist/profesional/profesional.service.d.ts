@@ -11,6 +11,7 @@ export declare class ProfesionalService {
     findProfesionalCompleto(id: number): Promise<any>;
     findByOficio(id: number): Promise<Profesional[]>;
     findOneByEmail(email: string): Promise<Profesional | null>;
+    findByEmail(email: string): Promise<Profesional | null>;
     create(profesional: Profesional): Promise<Profesional>;
     update(id: number, profesional: Profesional): Promise<Profesional>;
     delete(id: number): Promise<void>;

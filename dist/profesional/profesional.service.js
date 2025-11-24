@@ -71,6 +71,13 @@ let ProfesionalService = class ProfesionalService {
     async findOneByEmail(email) {
         return this.ProfesionalRepository.findOneBy({ email });
     }
+    async findByEmail(email) {
+        const profesional = await this.ProfesionalRepository.findOneBy({ email });
+        if (!profesional) {
+            return null;
+        }
+        return profesional;
+    }
     async create(profesional) {
         return this.ProfesionalRepository.save(profesional);
     }

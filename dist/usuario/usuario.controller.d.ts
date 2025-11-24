@@ -11,6 +11,9 @@ export declare class UsuarioController {
     update(id: number, usuario: Usuario): Promise<Usuario>;
     delete(id: number): Promise<void>;
     registrar(datos: any): Promise<Usuario>;
+    verificarEmail(email: string): Promise<{
+        mensaje: string;
+    }>;
     getUsuario(id: string): Promise<Usuario>;
     getPerfil(req: any): Promise<{
         id: any;

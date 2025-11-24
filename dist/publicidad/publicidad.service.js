@@ -34,7 +34,8 @@ let PublicidadService = class PublicidadService {
         return publicidad;
     }
     async create(publicidad) {
-        return this.publicidadRepository.save(publicidad);
+        const { idpublicidad, ...data } = publicidad;
+        return this.publicidadRepository.save(data);
     }
     async update(id, publicidad) {
         await this.publicidadRepository.update(id, publicidad);

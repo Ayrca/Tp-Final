@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, HttpStatus, HttpException  } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { Usuario } from './usuario.entity';
 
@@ -40,6 +40,22 @@ async update(@Param('id') id: number, @Body() usuario: Usuario): Promise<Usuario
   async registrar(@Body() datos: any) {
     return this.usuarioService.registrar(datos);
   }
+
+
+@Post('verificar-email')
+async verificarEmail(@Body('email') email: string) {
+  const usuario = await this.usuarioService.findByEmail(email);
+  const profesional = await this.profesionalService.findByEmail(email);
+  if (usuario || profesional) {
+    throw new HttpException('El email ya está en uso', HttpStatus.BAD_REQUEST);
+  } else {
+    return { mensaje: 'El email está disponible' };
+  }
+}
+
+
+
+
 
 @Get(':id')
 async getUsuario(@Param('id') id: string) {
