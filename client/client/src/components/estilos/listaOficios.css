@@ -45,25 +45,3 @@
 .listaOficios button p:hover {
   cursor: pointer;
 }
-
-/*
-
-@media (max-width: 600px) {
-  ul {
-    padding: 20px 10px;
-    gap: 16px;
-  }
-
-  button {
-    padding: 20px 16px;
-  }
-
-  button h3 {
-    font-size: 1.1rem;
-  }
-
-  button p {
-    font-size: 0.9rem;
-  }
-}
-*/

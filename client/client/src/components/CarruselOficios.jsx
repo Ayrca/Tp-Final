@@ -3,7 +3,7 @@ import axios from "axios";
 import "./estilos/CarruselOficios.css";
 import { useNavigate } from "react-router-dom";
 
-const GAP = 24; // Debe coincidir con el CSS
+const GAP = 24;
 
 const CarruselOficios = () => {
   const [oficios, setOficios] = useState([]);
@@ -44,7 +44,7 @@ const CarruselOficios = () => {
 
     const newTranslate = newIndex * (cardWidth + GAP);
 
-    // Si nos pasamos → volver al inicio
+    // Volver al inicio
     if (newTranslate > maxTranslate) {
       setCurrentIndex(0);
     } else {
@@ -63,7 +63,7 @@ const CarruselOficios = () => {
     const maxTranslate = sliderWidth - viewportWidth;
 
     if (currentIndex === 0) {
-      // Vamos al final exacto
+      // final exacto
       const lastIndex = Math.floor(maxTranslate / (cardWidth + GAP));
       setCurrentIndex(lastIndex);
     } else {

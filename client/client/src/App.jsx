@@ -1,6 +1,6 @@
 //import logo from './logo.svg';
-import './App.css';
 //import React from 'react';
+import './App.css';
 import { Route, Routes} from 'react-router-dom';
 import Buscador from './components/Buscador';
 import Oficios from './components/Oficios';
@@ -19,22 +19,28 @@ function App() {
     <Routes>
       <Route path="/" element={
         <div className="App">
-          <main className="indexmain">
-            <div className="texto1">
-              <h2>El Oficio para vos</h2>
-              <p> La aplicación que te permitirá encontrar los mejores profesionales de manera fácil y rápida. </p>
-            </div>
-            <div>
-              <Buscador/>
-            </div>
-            <section>
-              <Carrusel/>
-            </section>
-            <section >
-              <h3>Categorías relevantes</h3>
-              <CarruselOficios/>
-            </section>
-          </main>
+
+      <main className="indexmain">
+            <div className="hero-section">
+      <div className="hero-text">
+        <h1>El Oficio para vos</h1>
+        <p>La aplicación que te permitirá encontrar los mejores profesionales de manera fácil y rápida.</p>
+      </div>
+      <div className="hero-search">
+        <Buscador />
+      </div>
+    </div>
+
+        <section className="carousel-section">
+          <Carrusel />
+        </section>
+
+        <section className="categories-section">
+          <h2>Categorías relevantes</h2>
+          <CarruselOficios />
+        </section>
+      </main>
+
         </div>
       } />
        <Route path="/oficios/:id" element={<ListaProfesional />} />
@@ -51,4 +57,3 @@ function App() {
   );
 }
 export default App;
-

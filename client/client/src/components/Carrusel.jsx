@@ -1,45 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import './estilos/CarruselPublicidad.css';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import "./estilos/CarruselPublicidad.css";
 
 const CarruselPropaganda = () => {
   const [publicidad, setPublicidad] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [itemsPerView, setItemsPerView] = useState(3);
 
+  const itemsPerView = 2; // mostramos SIEMPRE 2 publicidades
   const autoSlideRef = useRef(null);
+
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
-  const trackRef = useRef(null);
 
-  // ==============================
-  //  CARGA DE PUBLICIDAD
-  // ==============================
-  useEffect(() => {
-    axios
-      .get('http://localhost:3000/publicidad')
-      .then((response) => setPublicidad(response.data))
-      .catch((error) => console.error(error));
-  }, []);
+useEffect(() => {
+  axios
+    .get("http://localhost:3000/publicidad")
+    .then((res) => {
+      console.log("DATA QUE LLEGA:", res.data);  // ← AGREGAR ESTO
+      setPublicidad(res.data);
+    })
+    .catch((err) => console.error(err));
+}, []);
 
-  // ==============================
-  //  RESPONSIVE ITEMS PER VIEW
-  // ==============================
-  useEffect(() => {
-    const updateItemsPerView = () => {
-      if (window.innerWidth <= 600) setItemsPerView(1);
-      else if (window.innerWidth <= 900) setItemsPerView(2);
-      else setItemsPerView(3);
-    };
 
-    updateItemsPerView();
-    window.addEventListener('resize', updateItemsPerView);
-    return () => window.removeEventListener('resize', updateItemsPerView);
-  }, []);
+  const totalItems = publicidad.length;
 
-  // ==============================
-  //  AUTO-SLIDE
-  // ==============================
   const startAutoSlide = () => {
     stopAutoSlide();
     autoSlideRef.current = setInterval(() => {
@@ -56,32 +41,27 @@ const CarruselPropaganda = () => {
     return stopAutoSlide;
   }, [publicidad]);
 
-  // ==============================
-  //  CONTROLES MANUALES
-  // ==============================
-  const nextSlide = (resetAuto = true) => {
-    if (resetAuto) stopAutoSlide();
+  const nextSlide = (reset = true) => {
+    if (reset) stopAutoSlide();
 
     setCurrentSlide((prev) =>
-      (prev + 1) % publicidad.length
+    prev + 1 >= totalItems - itemsPerView + 1 ? 0 : prev + 1
     );
 
-    if (resetAuto) startAutoSlide();
+    if (reset) startAutoSlide();
   };
 
-  const prevSlide = (resetAuto = true) => {
-    if (resetAuto) stopAutoSlide();
+  const prevSlide = (reset = true) => {
+    if (reset) stopAutoSlide();
 
     setCurrentSlide((prev) =>
-      (prev - 1 + publicidad.length) % publicidad.length
+    prev === 0 ? totalItems - itemsPerView : prev - 1
     );
 
-    if (resetAuto) startAutoSlide();
+    if (reset) startAutoSlide();
   };
 
-  // ==============================
-  //  SWIPE PARA CELULAR / MOUSE
-  // ==============================
+  // TOUCH
   const onTouchStart = (e) => {
     stopAutoSlide();
     touchStartX.current = e.touches[0].clientX;
@@ -93,16 +73,13 @@ const CarruselPropaganda = () => {
 
   const onTouchEnd = () => {
     const diff = touchStartX.current - touchEndX.current;
-
     if (Math.abs(diff) > 40) {
-      if (diff > 0) nextSlide(false);   // swipe izquierda → next
-      else prevSlide(false);            // swipe derecha → prev
+      diff > 0 ? nextSlide(false) : prevSlide(false);
     }
-
     startAutoSlide();
   };
 
-  // Soporte swipe con mouse para PC
+  // MOUSE SWIPE
   const onMouseDown = (e) => {
     stopAutoSlide();
     touchStartX.current = e.clientX;
@@ -111,21 +88,20 @@ const CarruselPropaganda = () => {
   const onMouseUp = (e) => {
     touchEndX.current = e.clientX;
     const diff = touchStartX.current - touchEndX.current;
-
     if (Math.abs(diff) > 40) {
-      if (diff > 0) nextSlide(false);
-      else prevSlide(false);
+      diff > 0 ? nextSlide(false) : prevSlide(false);
     }
     startAutoSlide();
   };
 
-  const slideWidth = 100 / itemsPerView;
-
   return (
-    <div className="propaganda-wrapper">
-
-      {/* Botones de navegación */}
-      {publicidad.length > 1 && (
+    <div
+      className="propaganda-wrapper"
+      onMouseEnter={stopAutoSlide}
+      onMouseLeave={startAutoSlide}
+    >
+      {/* BOTONES */}
+      {publicidad.length > itemsPerView && (
         <>
           <button className="nav-btn prev" onClick={() => prevSlide()}>
             ‹
@@ -136,29 +112,29 @@ const CarruselPropaganda = () => {
         </>
       )}
 
-      <div className="propaganda-container">
+          <div className="propaganda-container">
+          <div
+            className="propaganda-track"
+            style={{
+              transform: `translateX(-${currentSlide * 50}%)`, // mueve 50% por item
+            }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+          >
 
-        <div
-          className="propaganda-track"
-          ref={trackRef}
-          style={{
-            transform: `translateX(-${currentSlide * slideWidth}%)`,
-            width: `${(publicidad.length * 100) / itemsPerView}%`,
-          }}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-        >
           {publicidad.map((item, index) => (
             <article
               key={index}
               className="propaganda-item"
-              style={{ width: `${slideWidth}%` }}
-              onClick={() => item.urlPagina && window.open(item.urlPagina, '_blank')}
+              onClick={() =>
+                item.urlPagina && window.open(item.urlPagina, "_blank")
+              }
             >
               <h2 className="propaganda-title">{item.titulo}</h2>
+
               <img
                 src={item.urlImagen}
                 alt={item.titulo}
@@ -167,7 +143,6 @@ const CarruselPropaganda = () => {
             </article>
           ))}
         </div>
-
       </div>
     </div>
   );

@@ -1,6 +1,4 @@
-/* ============================================================
-   WRAPPER GENERAL
-   ============================================================ */
+/* Wrapper general */
 .carrusel-wrapper {
   width: 100%;
   padding: 40px 0;
@@ -9,9 +7,7 @@
   align-items: center;
 }
 
-/* ============================================================
-   ENCABEZADO: TÍTULO + BOTONES
-   ============================================================ */
+/*Encabezado: Titulos y botones*/
 .carrusel-header {
   display: flex;
   align-items: center;
@@ -21,14 +17,14 @@
 
 .titulo-carrusel {
   font-size: 2rem;
-  color: #34495e;
+  color: #2f89c8;
   font-weight: 700;
   text-align: center;
 }
 
 /* Botones prev/next */
 .btn-carrusel {
-  background-color: #24b388;
+  background-color: #3498db;
   color: white;
   border: none;
   border-radius: 50%;
@@ -43,13 +39,11 @@
 }
 
 .btn-carrusel:hover {
-  background-color: #1b7a66;
+  background-color: #2980b9;
   transform: scale(1.07);
 }
 
-/* ============================================================
-   CARRUSEL: VIEWPORT + SLIDER
-   ============================================================ */
+/* Carrusel   */
 
 /* Contenedor que oculta overflow */
 .oficio-viewport {
@@ -62,13 +56,11 @@
 /* Slider que se mueve en X */
 .oficio-slider {
   display: flex;
-  gap: 24px;                    /* === DEBE COINCIDIR CON JS === */
+  gap: 24px;
   transition: transform 0.45s ease;
 }
 
-/* ============================================================
-   TARJETA DE OFICIO
-   ============================================================ */
+/* Tarjeta de Oficio*/
 .oficio-card {
   width: 360px;
   height: 430px;
@@ -107,14 +99,12 @@
 .oficio-nombre {
   font-size: 1.4rem;
   font-weight: 600;
-  color: #24b388;
+  color: #34495e;
   text-align: center;
   margin-top: 18px;
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
+/* Resposive*/
 
 /* Monitores medianos: 3 cards cómodas */
 @media (max-width: 1600px) {
