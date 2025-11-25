@@ -1,0 +1,148 @@
+/* ============================================================
+   WRAPPER GENERAL
+   ============================================================ */
+.carrusel-wrapper {
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ============================================================
+   ENCABEZADO: TÍTULO + BOTONES
+   ============================================================ */
+.carrusel-header {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  margin-bottom: 20px;
+}
+
+.titulo-carrusel {
+  font-size: 2rem;
+  color: #34495e;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Botones prev/next */
+.btn-carrusel {
+  background-color: #24b388;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.7rem;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-carrusel:hover {
+  background-color: #1b7a66;
+  transform: scale(1.07);
+}
+
+/* ============================================================
+   CARRUSEL: VIEWPORT + SLIDER
+   ============================================================ */
+
+/* Contenedor que oculta overflow */
+.oficio-viewport {
+  width: 100%;
+  overflow: hidden;
+  padding: 15px 0;
+  box-sizing: border-box;
+}
+
+/* Slider que se mueve en X */
+.oficio-slider {
+  display: flex;
+  gap: 24px;                    /* === DEBE COINCIDIR CON JS === */
+  transition: transform 0.45s ease;
+}
+
+/* ============================================================
+   TARJETA DE OFICIO
+   ============================================================ */
+.oficio-card {
+  width: 360px;
+  height: 430px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-bottom: 20px;
+}
+
+.oficio-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 28px rgba(0,0,0,0.12);
+}
+
+/* Imagen */
+.oficio-img-container {
+  width: 100%;
+  height: 300px;
+  border-radius: 18px 18px 0 0;
+  overflow: hidden;
+}
+
+.oficio-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Texto */
+.oficio-nombre {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #24b388;
+  text-align: center;
+  margin-top: 18px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* Monitores medianos: 3 cards cómodas */
+@media (max-width: 1600px) {
+  .oficio-card {
+    width: 330px;
+  }
+}
+
+/* Notebooks comunes: 2 cards */
+@media (max-width: 1200px) {
+  .oficio-card {
+    width: 300px;
+    height: 400px;
+  }
+}
+
+/* Tablets: 1–2 cards */
+@media (max-width: 900px) {
+  .oficio-card {
+    width: 260px;
+    height: 360px;
+  }
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+  .oficio-card {
+    width: 80%;
+    height: auto;
+  }
+}
