@@ -12,12 +12,13 @@ const typeorm_1 = require("@nestjs/typeorm");
 const oficios_controller_1 = require("./oficios.controller");
 const oficios_service_1 = require("./oficios.service");
 const oficios_entity_1 = require("./oficios.entity");
+const imagenOficios_module_1 = require("../imagenOficios/imagenOficios.module");
 let OficiosModule = class OficiosModule {
 };
 exports.OficiosModule = OficiosModule;
 exports.OficiosModule = OficiosModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([oficios_entity_1.Oficio])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([oficios_entity_1.Oficio]), imagenOficios_module_1.ImagenOficiosModule],
         controllers: [oficios_controller_1.OficiosController],
         providers: [oficios_service_1.OficiosService],
         exports: [oficios_service_1.OficiosService],

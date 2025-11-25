@@ -37,8 +37,13 @@ let OficiosService = class OficiosService {
         return this.oficioRepository.save(oficio);
     }
     async update(id, oficio) {
-        await this.oficioRepository.update(id, oficio);
-        return this.findOne(id);
+        const oficioToUpdate = await this.oficioRepository.findOneBy({ idOficios: id });
+        if (!oficioToUpdate) {
+            throw new Error(`Oficio con id ${id} no encontrado`);
+        }
+        oficioToUpdate.nombre = oficio.nombre;
+        oficioToUpdate.urlImagen = oficio.urlImagen;
+        return this.oficioRepository.save(oficioToUpdate);
     }
     async delete(id) {
         await this.oficioRepository.delete(id);

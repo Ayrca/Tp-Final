@@ -26,6 +26,9 @@ let UsuarioService = class UsuarioService {
     async findAll() {
         return this.usuarioRepository.find();
     }
+    async getUsuarios() {
+        return this.findAll();
+    }
     async findOne(usuarioId) {
         console.log('ID recibido en findOne:', usuarioId);
         if (typeof usuarioId !== 'number') {
@@ -74,6 +77,16 @@ let UsuarioService = class UsuarioService {
         usuario.estadoCuenta = datos.estadoCuenta || true;
         usuario.avatar = datos.avatar || '';
         usuario.fechaNacimiento = datos.fechaNacimiento;
+        return this.usuarioRepository.save(usuario);
+    }
+    async banearUsuario(id) {
+        const usuario = await this.findOne(id);
+        usuario.estadoCuenta = false;
+        return this.usuarioRepository.save(usuario);
+    }
+    async desbloquearUsuario(id) {
+        const usuario = await this.findOne(id);
+        usuario.estadoCuenta = true;
         return this.usuarioRepository.save(usuario);
     }
 };

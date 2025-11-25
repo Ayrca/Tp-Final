@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Oficio } from './oficios.entity';
 import { Like } from 'typeorm';
+
 @Injectable()
 export class OficiosService {
   constructor(
@@ -25,10 +26,17 @@ async findOne(id: number): Promise<Oficio> {
   async create(oficio: Oficio): Promise<Oficio> {
     return this.oficioRepository.save(oficio);
   }
-  async update(id: number, oficio: Oficio): Promise<Oficio> {
-    await this.oficioRepository.update(id, oficio);
-    return this.findOne(id);
+
+async update(id: number, oficio: Oficio): Promise<Oficio> {
+  const oficioToUpdate = await this.oficioRepository.findOneBy({ idOficios: id });
+  if (!oficioToUpdate) {
+    throw new Error(`Oficio con id ${id} no encontrado`);
   }
+  oficioToUpdate.nombre = oficio.nombre;
+  oficioToUpdate.urlImagen = oficio.urlImagen;
+  return this.oficioRepository.save(oficioToUpdate);
+}
+
   async delete(id: number): Promise<void> {
     await this.oficioRepository.delete(id);
   }

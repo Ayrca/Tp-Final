@@ -1,0 +1,74 @@
+
+.manejo-publicidad {
+  width: 80%;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.manejo-publicidad button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+}
+
+.manejo-publicidad button:hover {
+  background-color: #3e8e41;
+}
+
+.manejo-publicidad form {
+  margin-top: 20px;
+}
+
+.manejo-publicidad label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.manejo-publicidad input[type="text"] {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.manejo-publicidad input[type="file"] {
+  margin-bottom: 20px;
+}
+
+.tabla-publicidad {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla-publicidad th, .tabla-publicidad td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabla-publicidad th {
+  background-color: #f0f0f0;
+}
+
+.tabla-publicidad tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tabla-publicidad tr:hover {
+  background-color: #ddd;
+}
+
+.tabla-publicidad img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}

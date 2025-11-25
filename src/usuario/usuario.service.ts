@@ -15,7 +15,9 @@ export class UsuarioService {
     return this.usuarioRepository.find();
   }
 
-
+async getUsuarios(): Promise<Usuario[]> {
+  return this.findAll();
+}
 
 async findOne(usuarioId: number): Promise<Usuario> {
   console.log('ID recibido en findOne:', usuarioId);
@@ -81,7 +83,17 @@ async findOneByEmail(email: string) {
     return this.usuarioRepository.save(usuario);
   }
 
+async banearUsuario(id: number): Promise<Usuario> {
+  const usuario = await this.findOne(id);
+  usuario.estadoCuenta = false;
+  return this.usuarioRepository.save(usuario);
+}
 
+async desbloquearUsuario(id: number): Promise<Usuario> {
+  const usuario = await this.findOne(id);
+  usuario.estadoCuenta = true;
+  return this.usuarioRepository.save(usuario);
+}
   
 }
 

@@ -54,7 +54,10 @@ async verificarEmail(@Body('email') email: string) {
 }
 
 
-
+@Get()
+async getUsuarios() {
+  return this.usuarioService.findAll();
+}
 
 
 @Get(':id')
@@ -94,7 +97,15 @@ async getPerfil(@Request() req: any) {
 }
 
 
+@Put(':id/baneo')
+async banearUsuario(@Param('id') id: string): Promise<Usuario> {
+  return this.usuarioService.banearUsuario(parseInt(id, 10));
+}
 
+@Put(':id/desbloqueo')
+async desbloquearUsuario(@Param('id') id: string): Promise<Usuario> {
+  return this.usuarioService.desbloquearUsuario(parseInt(id, 10));
+}
 
 
 

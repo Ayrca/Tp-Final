@@ -14,6 +14,7 @@ export declare class UsuarioController {
     verificarEmail(email: string): Promise<{
         mensaje: string;
     }>;
+    getUsuarios(): Promise<Usuario[]>;
     getUsuario(id: string): Promise<Usuario>;
     getPerfil(req: any): Promise<{
         id: any;
@@ -27,4 +28,6 @@ export declare class UsuarioController {
         avatar: any;
         fechaNacimiento: any;
     }>;
+    banearUsuario(id: string): Promise<Usuario>;
+    desbloquearUsuario(id: string): Promise<Usuario>;
 }

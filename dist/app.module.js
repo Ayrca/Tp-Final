@@ -31,6 +31,7 @@ const avatarImagen_module_1 = require("./avatarImagen/avatarImagen.module");
 const administrador_module_1 = require("./administrador/administrador.module");
 const administrador_entity_1 = require("./administrador/administrador.entity");
 const imagenPropaganda_module_1 = require("./imagenPropaganda/imagenPropaganda.module");
+const imagenOficios_module_1 = require("./imagenOficios/imagenOficios.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -51,6 +52,7 @@ exports.AppModule = AppModule = __decorate([
                 synchronize: false,
                 logging: true,
             }),
+            imagenOficios_module_1.ImagenOficiosModule,
             imagenPropaganda_module_1.ImagenPropagandaModule,
             administrador_module_1.AdministradorModule,
             trabajosContr_module_1.TrabajoContratadoModule,

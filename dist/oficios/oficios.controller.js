@@ -16,10 +16,14 @@ exports.OficiosController = void 0;
 const common_1 = require("@nestjs/common");
 const oficios_service_1 = require("./oficios.service");
 const oficios_entity_1 = require("./oficios.entity");
+const platform_express_1 = require("@nestjs/platform-express");
+const imagenOficios_service_1 = require("../imagenOficios/imagenOficios.service");
 let OficiosController = class OficiosController {
     oficiosService;
-    constructor(oficiosService) {
+    imagenOficiosService;
+    constructor(oficiosService, imagenOficiosService) {
         this.oficiosService = oficiosService;
+        this.imagenOficiosService = imagenOficiosService;
     }
     async findAll(nombreLike) {
         if (nombreLike) {
@@ -32,14 +36,18 @@ let OficiosController = class OficiosController {
     async findOne(id) {
         return this.oficiosService.findOne(id);
     }
-    async create(oficio) {
-        return this.oficiosService.create(oficio);
-    }
     async update(id, oficio) {
         return this.oficiosService.update(id, oficio);
     }
     async delete(id) {
         return this.oficiosService.delete(id);
+    }
+    async create(imagen, oficio) {
+        const imagenOficio = await this.imagenOficiosService.create(imagen);
+        const nuevoOficio = new oficios_entity_1.Oficio();
+        nuevoOficio.nombre = oficio.nombre;
+        nuevoOficio.urlImagen = imagenOficio.urlImagen;
+        return this.oficiosService.create(nuevoOficio);
     }
 };
 exports.OficiosController = OficiosController;
@@ -58,13 +66,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], OficiosController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [oficios_entity_1.Oficio]),
-    __metadata("design:returntype", Promise)
-], OficiosController.prototype, "create", null);
-__decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -79,8 +80,17 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], OficiosController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('imagen')),
+    __param(0, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], OficiosController.prototype, "create", null);
 exports.OficiosController = OficiosController = __decorate([
     (0, common_1.Controller)('oficios'),
-    __metadata("design:paramtypes", [oficios_service_1.OficiosService])
+    __metadata("design:paramtypes", [oficios_service_1.OficiosService, imagenOficios_service_1.ImagenOficiosService])
 ], OficiosController);
 //# sourceMappingURL=oficios.controller.js.map
