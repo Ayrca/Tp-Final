@@ -39,7 +39,7 @@ import { ImagenPropagandaModule } from './imagenPropaganda/imagenPropaganda.modu
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'Ayn261015',
+      password: 'te5re6cabio7-',
       database: 'mydb',
       entities: [Oficio, Publicidad, Profesional,Usuario,Imagen,TrabajoContratado,Administrador], // Agrega la entidad "Oficio" al arreglo de entidades
       synchronize: false,
@@ -105,7 +105,7 @@ import { ImagenOficiosModule } from './imagenOficios/imagenOficios.module'; // I
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'te5re6cabio7-',
+      password: 'Ayn261015',
       database: 'mydb',
       entities: [Oficio, Publicidad, Profesional, Usuario, Imagen, TrabajoContratado, Administrador], // Agrega la entidad "Oficio" al arreglo de entidades
       synchronize: false,

@@ -9,6 +9,6 @@ export declare class AuthController {
     login(datos: any): Promise<{
         access_token: string;
     }>;
-    getPerfil(req: IRequest): Promise<import("../profesional/profesional.entity").Profesional | import("../usuario/usuario.entity").Usuario>;
+    getPerfil(req: IRequest): Promise<import("../profesional/profesional.entity").Profesional | import("../usuario/usuario.entity").Usuario | import("../administrador/administrador.entity").Administrador | null | undefined>;
 }
 export {};

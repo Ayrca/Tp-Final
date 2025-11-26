@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
-=======
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, HttpStatus, HttpException  } from '@nestjs/common';
->>>>>>> origin/Francisco
 import { UsuarioService } from './usuario.service';
 import { Usuario } from './usuario.entity';
 
@@ -45,8 +41,6 @@ async update(@Param('id') id: number, @Body() usuario: Usuario): Promise<Usuario
     return this.usuarioService.registrar(datos);
   }
 
-<<<<<<< HEAD
-=======
 
 @Post('verificar-email')
 async verificarEmail(@Body('email') email: string) {
@@ -66,7 +60,6 @@ async getUsuarios() {
 }
 
 
->>>>>>> origin/Francisco
 @Get(':id')
 async getUsuario(@Param('id') id: string) {
   const idNumber = parseInt(id, 10);
@@ -104,9 +97,6 @@ async getPerfil(@Request() req: any) {
 }
 
 
-<<<<<<< HEAD
-
-=======
 @Put(':id/baneo')
 async banearUsuario(@Param('id') id: string): Promise<Usuario> {
   return this.usuarioService.banearUsuario(parseInt(id, 10));
@@ -116,7 +106,6 @@ async banearUsuario(@Param('id') id: string): Promise<Usuario> {
 async desbloquearUsuario(@Param('id') id: string): Promise<Usuario> {
   return this.usuarioService.desbloquearUsuario(parseInt(id, 10));
 }
->>>>>>> origin/Francisco
 
 
 

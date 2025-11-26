@@ -41,6 +41,19 @@ let UsuarioController = class UsuarioController {
     async registrar(datos) {
         return this.usuarioService.registrar(datos);
     }
+    async verificarEmail(email) {
+        const usuario = await this.usuarioService.findByEmail(email);
+        const profesional = await this.profesionalService.findByEmail(email);
+        if (usuario || profesional) {
+            throw new common_1.HttpException('El email ya está en uso', common_1.HttpStatus.BAD_REQUEST);
+        }
+        else {
+            return { mensaje: 'El email está disponible' };
+        }
+    }
+    async getUsuarios() {
+        return this.usuarioService.findAll();
+    }
     async getUsuario(id) {
         const idNumber = parseInt(id, 10);
         if (isNaN(idNumber)) {
@@ -72,6 +85,12 @@ let UsuarioController = class UsuarioController {
             console.error('Error en getPerfil:', error);
             throw error;
         }
+    }
+    async banearUsuario(id) {
+        return this.usuarioService.banearUsuario(parseInt(id, 10));
+    }
+    async desbloquearUsuario(id) {
+        return this.usuarioService.desbloquearUsuario(parseInt(id, 10));
     }
 };
 exports.UsuarioController = UsuarioController;
@@ -105,6 +124,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsuarioController.prototype, "registrar", null);
 __decorate([
+    (0, common_1.Post)('verificar-email'),
+    __param(0, (0, common_1.Body)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsuarioController.prototype, "verificarEmail", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsuarioController.prototype, "getUsuarios", null);
+__decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -119,6 +151,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsuarioController.prototype, "getPerfil", null);
+__decorate([
+    (0, common_1.Put)(':id/baneo'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsuarioController.prototype, "banearUsuario", null);
+__decorate([
+    (0, common_1.Put)(':id/desbloqueo'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsuarioController.prototype, "desbloquearUsuario", null);
 exports.UsuarioController = UsuarioController = __decorate([
     (0, common_1.Controller)('usuario'),
     __metadata("design:paramtypes", [usuario_service_1.UsuarioService,

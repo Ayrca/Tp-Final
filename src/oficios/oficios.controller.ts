@@ -1,12 +1,4 @@
 
-<<<<<<< HEAD
-import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
-import { OficiosService } from './oficios.service';
-import { Oficio } from './oficios.entity';
-@Controller('oficios')
-export class OficiosController {
-  constructor(private readonly oficiosService: OficiosService) {}
-=======
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OficiosService } from './oficios.service';
 import { Oficio } from './oficios.entity';
@@ -24,7 +16,6 @@ export class OficiosController {
   constructor(private readonly oficiosService: OficiosService) {}
 */
 
->>>>>>> origin/Francisco
   @Get()
   async findAll(@Query('nombre_like') nombreLike: string): Promise<Oficio[]> {
     if (nombreLike) {
@@ -37,18 +28,12 @@ export class OficiosController {
   async findOne(@Param('id') id: number): Promise<Oficio> {
     return this.oficiosService.findOne(id);
   }
-<<<<<<< HEAD
-=======
   /*
->>>>>>> origin/Francisco
   @Post()
   async create(@Body() oficio: Oficio): Promise<Oficio> {
     return this.oficiosService.create(oficio);
   }
-<<<<<<< HEAD
-=======
     */
->>>>>>> origin/Francisco
   @Put(':id')
   async update(@Param('id') id: number, @Body() oficio: Oficio): Promise<Oficio> {
     return this.oficiosService.update(id, oficio);
@@ -57,9 +42,6 @@ export class OficiosController {
   async delete(@Param('id') id: number): Promise<void> {
     return this.oficiosService.delete(id);
   }
-<<<<<<< HEAD
-}
-=======
 
     @Post()
   @UseInterceptors(FileInterceptor('imagen'))
@@ -72,4 +54,3 @@ export class OficiosController {
   }
 
 }
->>>>>>> origin/Francisco

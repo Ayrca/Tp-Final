@@ -5,7 +5,7 @@ export declare class PublicidadController {
     constructor(publicidadService: PublicidadService);
     findAll(tituloLike: string): Promise<Publicidad[]>;
     findOne(id: number): Promise<Publicidad>;
-    create(oficio: Publicidad): Promise<Publicidad>;
-    update(id: number, oficio: Publicidad): Promise<Publicidad>;
     delete(id: number): Promise<void>;
+    create(publicidad: Publicidad): Promise<Publicidad>;
+    update(id: number, publicidad: Publicidad): Promise<Publicidad>;
 }

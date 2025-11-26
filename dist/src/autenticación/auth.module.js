@@ -12,6 +12,7 @@ const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
 const usuario_module_1 = require("../usuario/usuario.module");
 const profesional_module_1 = require("../profesional/profesional.module");
+const administrador_module_1 = require("../administrador/administrador.module");
 const jwt_1 = require("@nestjs/jwt");
 let AuthModule = class AuthModule {
 };
@@ -21,6 +22,7 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [
             usuario_module_1.UsuarioModule,
             profesional_module_1.ProfesionalModule,
+            administrador_module_1.AdministradorModule,
             jwt_1.JwtModule.register({
                 secret: 'mi-llave-secreta',
                 signOptions: { expiresIn: '1h' },

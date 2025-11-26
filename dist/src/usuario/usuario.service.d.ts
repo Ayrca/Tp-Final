@@ -4,6 +4,7 @@ export declare class UsuarioService {
     private readonly usuarioRepository;
     constructor(usuarioRepository: Repository<Usuario>);
     findAll(): Promise<Usuario[]>;
+    getUsuarios(): Promise<Usuario[]>;
     findOne(usuarioId: number): Promise<Usuario>;
     findByEmail(email: string): Promise<Usuario | null>;
     findOneByEmail(email: string): Promise<Usuario | null>;
@@ -12,4 +13,6 @@ export declare class UsuarioService {
     delete(id: number): Promise<void>;
     findByNombreLike(tituloLike: string): Promise<Usuario[]>;
     registrar(datos: any): Promise<Usuario>;
+    banearUsuario(id: number): Promise<Usuario>;
+    desbloquearUsuario(id: number): Promise<Usuario>;
 }

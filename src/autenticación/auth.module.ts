@@ -3,11 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsuarioModule } from '../usuario/usuario.module';
 import { ProfesionalModule } from '../profesional/profesional.module';
-<<<<<<< HEAD
-
-=======
 import { AdministradorModule } from '../administrador/administrador.module';
->>>>>>> origin/Francisco
 import { JwtModule } from '@nestjs/jwt';
 
 
@@ -16,10 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     UsuarioModule, // Importa el módulo que contiene UsuarioService
      ProfesionalModule, // Importa ProfesionalModule
-<<<<<<< HEAD
-=======
      AdministradorModule, 
->>>>>>> origin/Francisco
     JwtModule.register({
       secret: 'mi-llave-secreta',
       signOptions: { expiresIn: '1h' },

@@ -32,14 +32,14 @@ let PublicidadController = class PublicidadController {
     async findOne(id) {
         return this.publicidadService.findOne(id);
     }
-    async create(oficio) {
-        return this.publicidadService.create(oficio);
-    }
-    async update(id, oficio) {
-        return this.publicidadService.update(id, oficio);
-    }
     async delete(id) {
         return this.publicidadService.delete(id);
+    }
+    async create(publicidad) {
+        return this.publicidadService.create(publicidad);
+    }
+    async update(id, publicidad) {
+        return this.publicidadService.update(id, publicidad);
     }
 };
 exports.PublicidadController = PublicidadController;
@@ -58,6 +58,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PublicidadController.prototype, "findOne", null);
 __decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], PublicidadController.prototype, "delete", null);
+__decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -72,13 +79,6 @@ __decorate([
     __metadata("design:paramtypes", [Number, publicidad_entity_1.Publicidad]),
     __metadata("design:returntype", Promise)
 ], PublicidadController.prototype, "update", null);
-__decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], PublicidadController.prototype, "delete", null);
 exports.PublicidadController = PublicidadController = __decorate([
     (0, common_1.Controller)('publicidad'),
     __metadata("design:paramtypes", [publicidad_service_1.PublicidadService])

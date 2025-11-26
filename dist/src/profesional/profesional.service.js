@@ -71,6 +71,13 @@ let ProfesionalService = class ProfesionalService {
     async findOneByEmail(email) {
         return this.ProfesionalRepository.findOneBy({ email });
     }
+    async findByEmail(email) {
+        const profesional = await this.ProfesionalRepository.findOneBy({ email });
+        if (!profesional) {
+            return null;
+        }
+        return profesional;
+    }
     async create(profesional) {
         return this.ProfesionalRepository.save(profesional);
     }
@@ -109,6 +116,22 @@ let ProfesionalService = class ProfesionalService {
         profesional.empresa = datos.empresa;
         const oficio = await this.oficiosService.findOne(datos.oficio);
         profesional.oficio = oficio;
+        return this.ProfesionalRepository.save(profesional);
+    }
+    async banearProfesional(id) {
+        const profesional = await this.findOne(id);
+        if (!profesional) {
+            throw new Error(`Profesional con id ${id} no encontrado`);
+        }
+        profesional.estadoCuenta = false;
+        return this.ProfesionalRepository.save(profesional);
+    }
+    async desbloquearProfesional(id) {
+        const profesional = await this.findOne(id);
+        if (!profesional) {
+            throw new Error(`Profesional con id ${id} no encontrado`);
+        }
+        profesional.estadoCuenta = true;
         return this.ProfesionalRepository.save(profesional);
     }
 };
