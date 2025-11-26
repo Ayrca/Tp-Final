@@ -16,7 +16,6 @@ useEffect(() => {
   axios
     .get("http://localhost:3000/publicidad")
     .then((res) => {
-      console.log("DATA QUE LLEGA:", res.data);  // ← AGREGAR ESTO
       setPublicidad(res.data);
     })
     .catch((err) => console.error(err));
