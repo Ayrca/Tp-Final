@@ -8,7 +8,7 @@ const ManejoProfesionales = () => {
   useEffect(() => {
     axios.get('http://localhost:3000/profesional')
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
         setProfesionales(response.data);
       })
       .catch((error) => {
@@ -21,7 +21,7 @@ const ManejoProfesionales = () => {
       .then((response) => {
         console.log(response);
         setProfesionales(profesionales.map((profesional) => {
-          if (profesional.idprofesional === id) {
+          if (profesional.idusuarioProfesional === id) {
             return { ...profesional, estadoCuenta: 0 };
           }
           return profesional;
@@ -37,7 +37,7 @@ const ManejoProfesionales = () => {
       .then((response) => {
         console.log(response);
         setProfesionales(profesionales.map((profesional) => {
-          if (profesional.idprofesional === id) {
+          if (profesional.idusuarioProfesional === id) {
             return { ...profesional, estadoCuenta: 1 };
           }
           return profesional;
@@ -57,7 +57,6 @@ const ManejoProfesionales = () => {
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Email</th>
-            <th>Tipo</th>
             <th>Teléfono</th>
             <th>Dirección</th>
             <th>Fecha Nacimiento</th>
@@ -67,13 +66,12 @@ const ManejoProfesionales = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(profesionales) && profesionales.map((profesional) => (
-            <tr key={profesional.idprofesional}>
-              <td>{profesional.idprofesional}</td>
+          {Array.isArray(profesionales) && profesionales.map((profesional, index) => (
+            <tr key={profesional.idusuarioProfesional || index}>
+              <td>{profesional.idusuarioProfesional}</td>
               <td>{profesional.nombre}</td>
               <td>{profesional.apellido}</td>
               <td>{profesional.email}</td>
-              <td>{profesional.tipo}</td>
               <td>{profesional.telefono}</td>
               <td>{profesional.direccion}</td>
               <td>{profesional.fechaNacimiento}</td>
@@ -83,9 +81,9 @@ const ManejoProfesionales = () => {
               <td className={profesional.estadoCuenta ? 'activo' : 'bloqueado'}>{profesional.estadoCuenta ? 'Activo' : 'Bloqueado'}</td>
               <td>
                 {profesional.estadoCuenta ? (
-                  <button onClick={() => handleBaneo(profesional.idprofesional)}>Banear</button>
+                  <button onClick={() => handleBaneo(profesional.idusuarioProfesional)}>Banear</button>
                 ) : (
-                  <button onClick={() => handleDesbloqueo(profesional.idprofesional)}>Desbloquear</button>
+                  <button onClick={() => handleDesbloqueo(profesional.idusuarioProfesional)}>Desbloquear</button>
                 )}
               </td>
             </tr>

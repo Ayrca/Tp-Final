@@ -34,21 +34,25 @@ const PerfilAdmin = () => {
     }
   }, []);
 
-  const cargarPublicidad = () => {
+ const cargarPublicidad = () => {
     setMostrarPublicidad(!mostrarPublicidad);
     setMostrarOficios(false);
+    setMostrarUsuarios(false);
+    setMostrarProfesionales(false);
   };
 
   const cargarOficios = () => {
     setMostrarOficios(!mostrarOficios);
     setMostrarPublicidad(false);
+    setMostrarUsuarios(false);
+    setMostrarProfesionales(false);
   };
 
-
-const cargarUsuarios = () => {
+  const cargarUsuarios = () => {
     setMostrarUsuarios(!mostrarUsuarios);
     setMostrarPublicidad(false);
     setMostrarOficios(false);
+    setMostrarProfesionales(false);
   };
 
   const cargarProfesionales = () => {
@@ -57,6 +61,7 @@ const cargarUsuarios = () => {
     setMostrarOficios(false);
     setMostrarUsuarios(false);
   };
+  
 
   return (
     <div className="perfil-admin-container">
@@ -76,21 +81,21 @@ const cargarUsuarios = () => {
         <button className="boton-admin" onClick={cargarUsuarios}>
           Manejo de Usuarios
         </button>
-         <button className="boton-admin" onClick={cargarProfesionales}>
+        <button className="boton-admin" onClick={cargarProfesionales}>
           Manejo de Profesionales
         </button>
       </div>
-      {mostrarUsuarios && (
-        <ManejoProfesionales />
-      )}
-        {mostrarUsuarios && (
-        <ManejoUsuarios />
-      )}
       {mostrarPublicidad && (
         <ManejoPublicidad />
       )}
       {mostrarOficios && (
         <ManejoOficios />
+      )}
+      {mostrarUsuarios && (
+        <ManejoUsuarios />
+      )}
+      {mostrarProfesionales && (
+        <ManejoProfesionales />
       )}
     </div>
   );

@@ -131,5 +131,30 @@ export class ProfesionalService {
 
   }
 
+
+
+//Funcion para beneo de usuarios profesionales
+async banearProfesional(id: number): Promise<Profesional> {
+  const profesional = await this.findOne(id);
+  if (!profesional) {
+    throw new Error(`Profesional con id ${id} no encontrado`);
+  }
+  profesional.estadoCuenta = false;
+  return this.ProfesionalRepository.save(profesional);
+}
+
+async desbloquearProfesional(id: number): Promise<Profesional> {
+  const profesional = await this.findOne(id);
+  if (!profesional) {
+    throw new Error(`Profesional con id ${id} no encontrado`);
+  }
+  profesional.estadoCuenta = true;
+  return this.ProfesionalRepository.save(profesional);
+}
+
+
+
+
+
 }
 

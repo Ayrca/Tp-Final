@@ -113,4 +113,19 @@ return {
   async registrar(@Body() datos: any) {
     return this.profesionalService.registrar(datos);
   }
+
+
+@Put(':id/baneo')
+async banearProfesional(@Param('id') id: number): Promise<Profesional> {
+  return this.profesionalService.banearProfesional(id);
+}
+
+@Put(':id/desbloqueo')
+async desbloquearProfesional(@Param('id') id: number): Promise<Profesional> {
+  return this.profesionalService.desbloquearProfesional(id);
+}
+
+
+
+
 }

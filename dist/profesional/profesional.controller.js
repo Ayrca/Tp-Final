@@ -99,6 +99,12 @@ let ProfesionalController = class ProfesionalController {
     async registrar(datos) {
         return this.profesionalService.registrar(datos);
     }
+    async banearProfesional(id) {
+        return this.profesionalService.banearProfesional(id);
+    }
+    async desbloquearProfesional(id) {
+        return this.profesionalService.desbloquearProfesional(id);
+    }
 };
 exports.ProfesionalController = ProfesionalController;
 __decorate([
@@ -166,6 +172,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfesionalController.prototype, "registrar", null);
+__decorate([
+    (0, common_1.Put)(':id/baneo'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ProfesionalController.prototype, "banearProfesional", null);
+__decorate([
+    (0, common_1.Put)(':id/desbloqueo'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ProfesionalController.prototype, "desbloquearProfesional", null);
 exports.ProfesionalController = ProfesionalController = __decorate([
     (0, common_1.Controller)('profesional'),
     __metadata("design:paramtypes", [profesional_service_1.ProfesionalService,

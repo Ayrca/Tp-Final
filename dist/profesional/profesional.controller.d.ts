@@ -30,4 +30,6 @@ export declare class ProfesionalController {
         valoracion: Date;
     }>;
     registrar(datos: any): Promise<Profesional>;
+    banearProfesional(id: number): Promise<Profesional>;
+    desbloquearProfesional(id: number): Promise<Profesional>;
 }

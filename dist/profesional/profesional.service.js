@@ -118,6 +118,22 @@ let ProfesionalService = class ProfesionalService {
         profesional.oficio = oficio;
         return this.ProfesionalRepository.save(profesional);
     }
+    async banearProfesional(id) {
+        const profesional = await this.findOne(id);
+        if (!profesional) {
+            throw new Error(`Profesional con id ${id} no encontrado`);
+        }
+        profesional.estadoCuenta = false;
+        return this.ProfesionalRepository.save(profesional);
+    }
+    async desbloquearProfesional(id) {
+        const profesional = await this.findOne(id);
+        if (!profesional) {
+            throw new Error(`Profesional con id ${id} no encontrado`);
+        }
+        profesional.estadoCuenta = true;
+        return this.ProfesionalRepository.save(profesional);
+    }
 };
 exports.ProfesionalService = ProfesionalService;
 exports.ProfesionalService = ProfesionalService = __decorate([

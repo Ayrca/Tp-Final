@@ -17,4 +17,6 @@ export declare class ProfesionalService {
     delete(id: number): Promise<void>;
     findByNombreLike(nombreLike: string): Promise<Profesional[]>;
     registrar(datos: any): Promise<Profesional>;
+    banearProfesional(id: number): Promise<Profesional>;
+    desbloquearProfesional(id: number): Promise<Profesional>;
 }
