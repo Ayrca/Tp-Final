@@ -1,0 +1,74 @@
+/* trabajos contratados */
+
+
+.trabajos-contratados {
+  margin-bottom: 30px;
+  display: grid; /* Agregar display grid */
+  grid-template-columns: repeat(2, 1fr); /* Agregar columnas */
+  gap: 20px; /* Agregar distancia entre tarjetas */
+}
+
+.tarjeta-trabajo {
+  background-color: #fff;
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  margin-bottom: 20px; /* Agregar distancia entre tarjetas */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.1); /* Agregar contorno sombreado */
+    width: 250px;
+}
+.tarjeta-trabajo:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+.trabajos-contratados p {
+  margin: 5px 0;
+  font-size: 00.95rem;
+  line-height: 1.3;
+}
+.trabajos-contratados p span {
+  color: #2e7d32; /* Color verde para los títulos */
+  font-weight: 600;
+}
+.trabajos-contratados p strong {
+  color: #2e7d32; /* Color verde para los títulos */
+  font-weight: 600;
+}
+.trabajos-contratados .dato {
+  color: #222; /* Color negro para los datos */
+}
+.cartelNoHay, .cartelError {
+  text-align: center;
+  padding: 15px;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 8px;
+}
+.botones-trabajo {
+  margin-top: 20px; /* Agregar distancia entre los botones y el contenido */
+  display: flex;
+  gap: 20px; /* Agregar distancia entre los botones */
+}
+.botones-trabajo button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin: 5px;
+}
+.finalizar-btn {
+  background-color: #28a745;
+  color: white;
+}
+.cancelar-btn {
+  background-color: #dc3545;
+  color: white;
+}
+.finalizar-btn:disabled, .cancelar-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

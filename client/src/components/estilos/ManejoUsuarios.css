@@ -1,0 +1,98 @@
+.manejo-usuarios {
+  width: 90%;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.manejo-usuarios button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.manejo-usuarios button:hover {
+  background-color: #3e8e41;
+}
+
+.manejo-usuarios form {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.manejo-usuarios label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.manejo-usuarios input[type="text"],
+.manejo-usuarios input[type="email"],
+.manejo-usuarios input[type="password"] {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+.tabla-usuarios {
+ 
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 12px;
+  overflow-x: auto;
+}
+
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabla-usuarios th {
+  background-color: #f0f0f0;
+}
+
+.tabla-usuarios tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tabla-usuarios tr:hover {
+  background-color: #ddd;
+}
+
+.acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+
+}
+
+
+.tabla-usuarios img {
+  width: 150px;
+  height:150px;
+  border-radius: 25%;
+  object-fit: cover;
+}
+
+.activo {
+  color: green;
+}
+
+.bloqueado {
+  color: red;
+}

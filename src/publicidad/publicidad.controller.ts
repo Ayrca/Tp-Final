@@ -17,6 +17,7 @@ export class PublicidadController {
   async findOne(@Param('id') id: number): Promise<Publicidad> {
     return this.publicidadService.findOne(id);
   }
+<<<<<<< HEAD
   @Post()
   async create(@Body() oficio: Publicidad): Promise<Publicidad> {
     return this.publicidadService.create(oficio);
@@ -25,8 +26,28 @@ export class PublicidadController {
   async update(@Param('id') id: number, @Body() oficio: Publicidad): Promise<Publicidad> {
     return this.publicidadService.update(id, oficio);
   }
+=======
+ 
+>>>>>>> origin/Francisco
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {
     return this.publicidadService.delete(id);
   }
+<<<<<<< HEAD
+=======
+
+
+@Post()
+async create(@Body() publicidad: Publicidad): Promise<Publicidad> {
+  return this.publicidadService.create(publicidad);
+}
+
+
+@Put(':id')
+async update(@Param('id') id: number, @Body() publicidad: Publicidad): Promise<Publicidad> {
+  return this.publicidadService.update(id, publicidad);
+}
+
+
+>>>>>>> origin/Francisco
 }

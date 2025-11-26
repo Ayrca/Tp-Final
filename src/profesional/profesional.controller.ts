@@ -39,6 +39,7 @@ async findByOficio(@Param('id') id: number): Promise<Profesional[]> {
 
 
 
+<<<<<<< HEAD
 
 /*
 @Get('oficios/:idOficios')
@@ -47,6 +48,8 @@ async findByOficio(@Param('idOficios') idOficios: number): Promise<Profesional[]
 }
 */
 
+=======
+>>>>>>> origin/Francisco
 @Get(':id')
 async findOne(@Param('id') id: number): Promise<any> {
   const profesional = await this.profesionalService.findOne(id);
@@ -121,6 +124,25 @@ return {
   async registrar(@Body() datos: any) {
     return this.profesionalService.registrar(datos);
   }
+<<<<<<< HEAD
 }
 
 
+=======
+
+
+@Put(':id/baneo')
+async banearProfesional(@Param('id') id: number): Promise<Profesional> {
+  return this.profesionalService.banearProfesional(id);
+}
+
+@Put(':id/desbloqueo')
+async desbloquearProfesional(@Param('id') id: number): Promise<Profesional> {
+  return this.profesionalService.desbloquearProfesional(id);
+}
+
+
+
+
+}
+>>>>>>> origin/Francisco

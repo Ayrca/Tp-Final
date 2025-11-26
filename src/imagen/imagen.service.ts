@@ -5,6 +5,13 @@ import * as path from 'path';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Imagen } from './imagen.entity';
+<<<<<<< HEAD
+=======
+import { join } from 'path';
+import { Usuario } from '../usuario/usuario.entity';
+import { Profesional } from '../profesional/profesional.entity';
+
+>>>>>>> origin/Francisco
 interface File {
   fieldname: string;
   originalname: string;
@@ -17,17 +24,35 @@ interface File {
 }
 @Injectable()
 export class ImagenService {
+<<<<<<< HEAD
   constructor(
     @InjectRepository(Imagen)
     private readonly imagenRepository: Repository<Imagen>,
   ) {}
+=======
+
+ 
+constructor(
+  @InjectRepository(Imagen)
+  private readonly imagenRepository: Repository<Imagen>,
+  @InjectRepository(Usuario)
+  private readonly usuarioComunRepository: Repository<Usuario>,
+  @InjectRepository(Profesional)
+  private readonly usuarioProfesionalRepository: Repository<Profesional>,
+) {}
+
+>>>>>>> origin/Francisco
 
 async guardarImagen(file: any, idProfesional: number): Promise<any> {
   if (!idProfesional) {
     throw new BadRequestException('El idProfesional es requerido');
   }
   const filename = file.originalname;
+<<<<<<< HEAD
   const filePath = `client/public/assets/imagenesUsuarios/${filename}`;
+=======
+  const filePath = `client/public/assets/imagenesUsuariosProfesionales/${filename}`;
+>>>>>>> origin/Francisco
   fs.renameSync(file.path, filePath);
   const imagen = new Imagen();
   imagen.url = filename;
@@ -46,7 +71,11 @@ async findById(id: number): Promise<Imagen[]> {
 
 async obtenerImagen(filename: string): Promise<Buffer> {
   try {
+<<<<<<< HEAD
     const uploadPath = path.join(__dirname, '..', 'imagenesUsuarios');
+=======
+    const uploadPath = path.join(__dirname, '..', 'imagenesUsuariosProfesionales');
+>>>>>>> origin/Francisco
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath);
     }
