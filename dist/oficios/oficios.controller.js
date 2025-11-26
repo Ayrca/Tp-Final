@@ -1,0 +1,96 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OficiosController = void 0;
+const common_1 = require("@nestjs/common");
+const oficios_service_1 = require("./oficios.service");
+const oficios_entity_1 = require("./oficios.entity");
+const platform_express_1 = require("@nestjs/platform-express");
+const imagenOficios_service_1 = require("../imagenOficios/imagenOficios.service");
+let OficiosController = class OficiosController {
+    oficiosService;
+    imagenOficiosService;
+    constructor(oficiosService, imagenOficiosService) {
+        this.oficiosService = oficiosService;
+        this.imagenOficiosService = imagenOficiosService;
+    }
+    async findAll(nombreLike) {
+        if (nombreLike) {
+            return this.oficiosService.findByNombreLike(nombreLike);
+        }
+        else {
+            return this.oficiosService.findAll();
+        }
+    }
+    async findOne(id) {
+        return this.oficiosService.findOne(id);
+    }
+    async update(id, oficio) {
+        return this.oficiosService.update(id, oficio);
+    }
+    async delete(id) {
+        return this.oficiosService.delete(id);
+    }
+    async create(imagen, oficio) {
+        const imagenOficio = await this.imagenOficiosService.create(imagen);
+        const nuevoOficio = new oficios_entity_1.Oficio();
+        nuevoOficio.nombre = oficio.nombre;
+        nuevoOficio.urlImagen = imagenOficio.urlImagen;
+        return this.oficiosService.create(nuevoOficio);
+    }
+};
+exports.OficiosController = OficiosController;
+__decorate([
+    (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('nombre_like')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], OficiosController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], OficiosController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, oficios_entity_1.Oficio]),
+    __metadata("design:returntype", Promise)
+], OficiosController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], OficiosController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('imagen')),
+    __param(0, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], OficiosController.prototype, "create", null);
+exports.OficiosController = OficiosController = __decorate([
+    (0, common_1.Controller)('oficios'),
+    __metadata("design:paramtypes", [oficios_service_1.OficiosService, imagenOficios_service_1.ImagenOficiosService])
+], OficiosController);
+//# sourceMappingURL=oficios.controller.js.map
