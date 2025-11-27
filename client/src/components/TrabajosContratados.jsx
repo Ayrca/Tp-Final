@@ -4,6 +4,7 @@ import axios from 'axios';
 import './estilos/trabajosContratados.css';
 import Swal from 'sweetalert2';
 import { jwtDecode } from 'jwt-decode';
+
 const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   const [trabajos, setTrabajos] = useState([]);
   const [error, setError] = useState(null);
@@ -32,10 +33,6 @@ const fetchTrabajos = async () => {
     setError(error.message);
   }
 };
-
-
-
-
 
 
 
@@ -71,12 +68,12 @@ const handleCancelar = async (idcontratacion) => {
   }
 };
 
-const handleFinalizar = async (idcontratacion) => {
+
+const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
+  console.log("id del usuario pro" + idusuarioProfesional);
   const { value: formValues } = await Swal.fire({
     title: 'Finalizar trabajo',
-    html:
-      '<input id="comentario" class="swal2-input" placeholder="Comentario">' +
-      '<input id="valoracion" type="number" class="swal2-input" placeholder="Valoracion (1-5)">',
+    html: '<input id="comentario" class="swal2-input" placeholder="Comentario">' + '<input id="valoracion" type="number" class="swal2-input" placeholder="Valoracion (1-5)">',
     focusConfirm: false,
     showCancelButton: true,
     confirmButtonText: 'Finalizar',
@@ -88,16 +85,24 @@ const handleFinalizar = async (idcontratacion) => {
       };
     },
   });
+
   if (formValues) {
     try {
+        console.log("id del usuario pro2" + idusuarioProfesional);
+      // Actualizar el trabajo
       const response = await axios.put(`http://localhost:3000/trabajoContratado/${idcontratacion}`, {
         estado: 'terminado',
         comentario: formValues.comentario,
         valoracion: formValues.valoracion,
       });
+
       if (response.status === 200) {
-        fetchTrabajos();
-      } else {
+        console.log("id del usuario pro3" + idusuarioProfesional);
+    await actualizarValoracionProfesional(idusuarioProfesional);
+    fetchTrabajos();
+  }
+  
+      else {
         console.error('Error al finalizar el trabajo');
       }
     } catch (error) {
@@ -106,17 +111,43 @@ const handleFinalizar = async (idcontratacion) => {
   }
 };
 
+
+
+
+const actualizarValoracionProfesional = async (idusuarioProfesional) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/trabajoContratado/${idusuarioProfesional}`);
+    const contrataciones = response.data;
+
+    const valoraciones = contrataciones.filter(contratacion => contratacion.estado === 'terminado' && contratacion.valoracion !== null)
+      .map(contratacion => contratacion.valoracion);
+
+    if (valoraciones.length > 0) {
+      const sumaValoraciones = valoraciones.reduce((a, b) => a + b, 0);
+      const valoracionPromedio = sumaValoraciones / valoraciones.length;
+
+      await axios.put(`http://localhost:3000/profesional/${idusuarioProfesional}`, {
+        valoracion: valoracionPromedio,
+      });
+    } else {
+      await axios.put(`http://localhost:3000/profesional/${idusuarioProfesional}`, {
+        valoracion: 0,
+      });
+    }
+  } catch (error) {
+    console.error('Error al actualizar la valoración del profesional:', error);
+  }
+};
+
+
+
+
 const handleFinalizarProfesional = async (idcontratacion) => {
   try {
-    const response = await axios.put(`http://localhost:3000/trabajoContratado/${idcontratacion}`,{                                                        
-      estado: 'terminado',
-    });
+    const response = await axios.put(`http://localhost:3000/trabajoContratado/${idcontratacion}`,{ estado: 'terminado', });
     if (response.status === 200) {
-      Swal.fire({
-        title: 'Finalizado',
-        text: 'El trabajo ha sido finalizado correctamente',
-        icon: 'success',
-      });
+    await actualizarValoracionProfesional(idProfesional);
+      Swal.fire({ title: 'Finalizado', text: 'El trabajo ha sido finalizado correctamente', icon: 'success', });
       fetchTrabajos();
     } else {
       console.error('Error al finalizar el trabajo');
@@ -125,6 +156,9 @@ const handleFinalizarProfesional = async (idcontratacion) => {
     console.error('Error al finalizar el trabajo:', error);
   }
 };
+
+
+
 
 
 const handleCancelarProfesional = async (idcontratacion) => {
@@ -147,6 +181,8 @@ const handleCancelarProfesional = async (idcontratacion) => {
   }
 };
 
+
+
   return (
 
 <div className="trabajos-contratados">
@@ -163,7 +199,15 @@ const handleCancelarProfesional = async (idcontratacion) => {
         )}
         <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
         <p><span>Estado del Trabajo:</span> <span className="dato">{trabajo.estado}</span></p>
-        <p><span>Fecha de contratación:</span> <span className="dato">{trabajo.fechaContratacion}</span></p>
+       <p><span>Fecha de contratación:</span> <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false
+})}</span></p>
         <p><span>Valoración:</span> <span className="dato">{trabajo.valoracion}</span></p>
         <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
 <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> <span className="dato"> 
@@ -178,12 +222,14 @@ const handleCancelarProfesional = async (idcontratacion) => {
         <div className="botones-trabajo">
           {idProfesional ? (
             <div>
-              <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
+         <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
               <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
             </div>
           ) : (
             <div>
-              <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion)}>Finalizar</button>
+            
+<button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
+        
               <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
           </div>
       )}

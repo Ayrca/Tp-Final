@@ -18,7 +18,7 @@ const getIdUsuarioLogueado = () => {
 
 const ITEMS_PER_PAGE = 8;
 
-// -------------------- Componente Estrellas --------------------
+// Componente Estrellas
 const Estrellas = ({ valoracion }) => {
   const estrellasCompletas = Math.floor(valoracion);
   const tieneMediaEstrella = valoracion - estrellasCompletas >= 0.5;
@@ -41,7 +41,6 @@ const ListaProfesional = () => {
   const [publicidad, setPublicidad] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-
   const idusuarioComun = getIdUsuarioLogueado();
   const [idOficios, setIdOficios] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -121,41 +120,75 @@ const ListaProfesional = () => {
         fechaContratacion: new Date(),
       };
 
-      axios.post("http://localhost:3000/trabajoContratado", datosContratacion)
-        .then(() => Swal.fire({ title: 'Éxito', text: 'Solicitud enviada correctamente', icon: 'success' }))
-        .catch(() => Swal.fire({ title: 'Error', text: 'Error al enviar la solicitud', icon: 'error' }));
-    } catch (error) {
-      Swal.fire({ title: 'Error', text: 'Ocurrió un error al procesar la solicitud', icon: 'error' });
-    }
-  }, [idusuarioComun]);
+    axios.post("http://localhost:3000/trabajoContratado", datosContratacion)
+          .then(response => {
+            console.log(response);
+            Swal.fire({
+              title: 'Éxito',
+              text: 'La solicitud de contrato se ha enviado correctamente',
+              icon: 'success',
+            });
+          })
+          .catch(error => {
+            console.error(error);
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error al procesar la solicitud',
+              icon: 'error',
+            });
+          });
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al procesar la solicitud',
+          icon: 'error',
+        });
+      }
+    }, [idusuarioComun, idOficios]);
 
-  const handleConectar = async (profesional) => {
-    if (!idusuarioComun) {
-      Swal.fire({ title: 'Error', text: 'Debe estar logueado para contactar', icon: 'error' });
+    const handleConectar = async (profesional) => {
+      if (!idusuarioComun) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Debe estar logueado para contactar',
+          icon: 'error',
+        });
+        return;
+      }
+      const usuarioLogueado = jwtDecode(localStorage.getItem('token'));
+      if (usuarioLogueado.tipo === 'profesional') {
+        Swal.fire({
+          title: 'Error',
+          text: 'Los profesionales no pueden contactar a otros profesionales',
+          icon: 'error',
+        });
       return;
-    }
+      }
 
-    const usuarioLogueado = jwtDecode(localStorage.getItem('token'));
-    if (usuarioLogueado.tipo === 'profesional') {
-      Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contactar a otros profesionales', icon: 'error' });
-      return;
-    }
+      try {
+        const telefono = profesional.telefono;
+        const response = await axios.get("http://localhost:3000/usuario/" + idusuarioComun);
+        const usuarioLogueado = response.data;
+        const mensaje = `Hola ${profesional.nombre}, soy ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
+        const url = `https://wa.me/${telefono}?text=${mensaje}`;
+        window.open(url, '_blank');
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al procesar la solicitud',
+          icon: 'error',
+        });
+      }
+    };
 
-    try {
-      const telefono = profesional.telefono;
-      const response = await axios.get(`http://localhost:3000/usuario/${idusuarioComun}`);
-      const usuarioLogueadoDatos = response.data;
 
-      const mensaje = `Hola ${profesional.nombre}, soy ${usuarioLogueadoDatos.nombre} ${usuarioLogueadoDatos.apellido} desde la app.`;
-      const url = `https://wa.me/${telefono}?text=${mensaje}`;
-      window.open(url, '_blank');
-    } catch (error) {
-      Swal.fire({ title: 'Error', text: 'Ocurrió un error al procesar la solicitud', icon: 'error' });
-    }
-  };
-
-  if (cargando) return <p>Cargando...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+      if (cargando) {
+        return <p>Cargando...</p>;
+      }
+      if (error) {
+        return <p>Error: {error.message}</p>;
+      }
 
   return (
     <div className="layout-profesionales-wrapper">
@@ -170,7 +203,7 @@ const ListaProfesional = () => {
 
       <div className="profesionales-center" ref={centroRef}>
         {profesionales.length === 0 ? (
-          <p>No hay Profesionales disponibles</p>
+          <p>No hay profesionales disponibles</p>
         ) : (
           <div className="grid-profesionales">
             {currentProfesionales.map((profesional, index) => (
@@ -180,8 +213,8 @@ const ListaProfesional = () => {
                   <div className="profesional-data">
                     <div className="profesional-header">
                       <h2>{profesional.nombre} {profesional.apellido}</h2>
-                      <label className={profesional.estado ? 'disponible' : 'no-disponible'}>
-                        {profesional.estado ? 'Disponible' : 'No Disponible'}
+                      <label className={profesional.disponible ? 'disponible' : 'no-disponible'}>
+                        {profesional.disponible ? 'Disponible' : 'No Disponible'}
                       </label>
                     </div>
                     <div className="datosContainer">

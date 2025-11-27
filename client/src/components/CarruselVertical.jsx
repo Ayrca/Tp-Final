@@ -1,15 +1,25 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import "./estilos/CarruselVertical.css";
 
-const CarruselVertical = ({ altura, imagenes }) => {
+const CarruselVertical = ({ imagenes }) => {
   const [publicidad, setPublicidad] = useState([]);
   const wrapperRef = useRef(null);
 
-  // Usamos las imágenes que vienen por prop
+  // Altura fija de cada item
+  const ITEM_HEIGHT = 250;
+
   useEffect(() => {
     if (imagenes?.length) {
-      setPublicidad([...imagenes, ...imagenes, ...imagenes]);
+      let baseList = [...imagenes];
+
+      // Garantizar mínimo 4 imágenes
+      while (baseList.length < 4) {
+        baseList = [...baseList, ...imagenes];
+      }
+
+      // Para efecto infinito, triplicamos
+      const listaFinal = [...baseList, ...baseList, ...baseList];
+      setPublicidad(listaFinal);
     }
   }, [imagenes]);
 
@@ -37,16 +47,16 @@ const CarruselVertical = ({ altura, imagenes }) => {
   return (
     <div
       className="carrusel-vertical-container"
-      style={{ height: altura || '100vh' }}
+      style={{ height: ITEM_HEIGHT * 4 }} // siempre 4 visibles
     >
       <div className="carrusel-vertical-wrapper" ref={wrapperRef}>
         {publicidad.map((pub, index) => (
-          <div key={index} className="carrusel-vertical-item">
-            <a
-              href={pub.urlPagina}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <div
+            key={index}
+            className="carrusel-vertical-item"
+            style={{ height: ITEM_HEIGHT }}
+          >
+            <a href={pub.urlPagina} target="_blank" rel="noopener noreferrer">
               <img src={pub.urlImagen} alt={pub.titulo} />
             </a>
           </div>

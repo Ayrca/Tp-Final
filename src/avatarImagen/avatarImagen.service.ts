@@ -19,17 +19,34 @@ export class AvatarImagenService {
 //subir foto de avatar
 async subirAvatar(file: any, idUsuario: number, tipoUsuario: string) {
   try {
-    if (tipoUsuario === 'profesional') {
-      await this.profesionalRepository.update(idUsuario, { avatar: `http://localhost:3000/assets/imagenesDePerfilesUsuarios/${file.filename}` });                                                                         
-    } else {
-      await this.usuarioRepository.update(idUsuario, { avatar: `http://localhost:3000/assets/imagenesDePerfilesUsuarios/${file.filename}` });
-    }
-    return { avatar: `http://localhost:3000/assets/imagenesDePerfilesUsuarios/${file.filename}` };
+
+
+
+if (tipoUsuario === 'profesional') {
+  await this.profesionalRepository.update(idUsuario, { avatar: `/assets/imagenesDePerfilesUsuarios/${file.filename}` });
+} else {
+  await this.usuarioRepository.update(idUsuario, { avatar: `/assets/imagenesDePerfilesUsuarios/${file.filename}` });
+}
+return { avatar: `/assets/imagenesDePerfilesUsuarios/${file.filename}` };
+  
   } catch (error) {
     console.error('Error al subir la imagen:', error);
     throw new Error('Error al subir el avatar');
   }
 }
+
+
+
+
+async obtenerUsuario(idUsuario: number, tipoUsuario: string) {
+  if (tipoUsuario === 'profesional') {
+    return this.profesionalRepository.findOne({ where: { idusuarioProfesional: idUsuario } });
+  } else {
+    return this.usuarioRepository.findOne({ where: { idusuarioComun: idUsuario } });
+  }
+}
+
+
 
 
 }

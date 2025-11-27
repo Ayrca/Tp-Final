@@ -52,22 +52,42 @@ const common_2 = require("@nestjs/common");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 let AvatarImagenController = class AvatarImagenController {
     avatarImagenService;
     constructor(avatarImagenService) {
         this.avatarImagenService = avatarImagenService;
     }
     async subirAvatar(file, idUsuario, tipoUsuario) {
-        console.log('idUsuario:', idUsuario);
-        console.log('tipoUsuario:', tipoUsuario);
-        console.log('file:', file);
         try {
             if (!file) {
-                throw new common_2.HttpException('No se ha proporcionado un archivo', common_2.HttpStatus.BAD_REQUEST);
+                throw new common_2.HttpException({ message: 'No se ha proporcionado un archivo', type: 'error' }, common_2.HttpStatus.BAD_REQUEST);
             }
-            const uploadPath = path.join(__dirname, '..', 'client', 'public', 'assets', 'imagenesDePerfilesUsuarios');
-            if (!fs.existsSync(uploadPath)) {
-                fs.mkdirSync(uploadPath, { recursive: true });
+            const usuario = await this.avatarImagenService.obtenerUsuario(idUsuario, tipoUsuario);
+            if (usuario) {
+                const imagenActual = usuario.avatar;
+                if (imagenActual && typeof imagenActual === 'string') {
+                    const nombreImagen = imagenActual.split('/').pop();
+                    if (nombreImagen) {
+                        const rutaImagenActual = path.join(__dirname, '..', 'client', 'public', imagenActual.replace('/', ''));
+                        try {
+                            if (fs.existsSync(rutaImagenActual)) {
+                                fs.unlinkSync(rutaImagenActual);
+                                console.log(`La imagen ${nombreImagen} ha sido eliminada`);
+                            }
+                            else {
+                                console.log(`La imagen ${nombreImagen} no existe en la carpeta`);
+                            }
+                        }
+                        catch (error) {
+                            console.error(`Error al eliminar la imagen ${nombreImagen}:, error`);
+                        }
+                    }
+                }
+            }
+            else {
+                console.error('Usuario no encontrado');
+                throw new common_2.HttpException({ message: 'Usuario no encontrado', type: 'error' }, common_2.HttpStatus.NOT_FOUND);
             }
             return this.avatarImagenService.subirAvatar(file, idUsuario, tipoUsuario);
         }
@@ -75,9 +95,12 @@ let AvatarImagenController = class AvatarImagenController {
             if (error instanceof common_2.HttpException) {
                 throw error;
             }
+            else if (error.message === 'Tipo de archivo no permitido') {
+                throw new common_2.HttpException({ message: 'Tipo de archivo no permitido', type: 'error' }, common_2.HttpStatus.BAD_REQUEST);
+            }
             else {
                 console.error(error);
-                throw new common_2.HttpException('Error al subir el archivo', common_2.HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new common_2.HttpException({ message: 'Error al subir el archivo', type: 'error' }, common_2.HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
     }
@@ -85,7 +108,25 @@ let AvatarImagenController = class AvatarImagenController {
 exports.AvatarImagenController = AvatarImagenController;
 __decorate([
     (0, common_1.Post)('subir/:idUsuario/:tipoUsuario'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './client/public/assets/imagenesDePerfilesUsuarios/',
+            filename: (req, file, cb) => {
+                const fileExtension = path.extname(file.originalname);
+                const fileName = Date.now() + fileExtension;
+                cb(null, fileName);
+            },
+        }),
+        fileFilter: (req, file, cb) => {
+            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (allowedMimeTypes.includes(file.mimetype)) {
+                cb(null, true);
+            }
+            else {
+                cb(new Error('Tipo de archivo no permitido'), false);
+            }
+        },
+    })),
     __param(0, (0, common_1.UploadedFile)()),
     __param(1, (0, common_1.Param)('idUsuario')),
     __param(2, (0, common_1.Param)('tipoUsuario')),

@@ -62,6 +62,7 @@ let Profesional = class Profesional {
     descripcion;
     fechaNacimiento;
     valoracion;
+    disponible;
     async comparePassword(password) {
         return await bcrypt.compare(password, this.password);
     }
@@ -133,6 +134,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Date)
 ], Profesional.prototype, "valoracion", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Boolean)
+], Profesional.prototype, "disponible", void 0);
 __decorate([
     (0, typeorm_1.BeforeInsert)(),
     (0, typeorm_1.BeforeUpdate)(),

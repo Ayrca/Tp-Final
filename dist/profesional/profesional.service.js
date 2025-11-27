@@ -47,7 +47,7 @@ let ProfesionalService = class ProfesionalService {
     }
     async findOne(id) {
         console.log('Buscando profesional con id:', id);
-        const profesional = await this.ProfesionalRepository.findOne({ where: { idusuarioProfesional: id }, relations: ['oficio'], });
+        const profesional = await this.ProfesionalRepository.findOne({ where: { idusuarioProfesional: id }, relations: ['oficio'] });
         console.log('Profesional encontrado:', profesional);
         if (!profesional) {
             throw new Error(`Profesional con id ${id} no encontrado`);
@@ -55,18 +55,11 @@ let ProfesionalService = class ProfesionalService {
         return profesional;
     }
     async findProfesionalCompleto(id) {
-        const profesional = await this.ProfesionalRepository.findOne({
-            where: { idusuarioProfesional: id },
-            relations: ['oficio'],
-        });
+        const profesional = await this.ProfesionalRepository.findOne({ where: { idusuarioProfesional: id }, relations: ['oficio'] });
         return profesional;
     }
     async findByOficio(id) {
-        return this.ProfesionalRepository.find({
-            where: {
-                oficio: { idOficios: id },
-            },
-        });
+        return this.ProfesionalRepository.find({ where: { oficio: { idOficios: id } } });
     }
     async findOneByEmail(email) {
         return this.ProfesionalRepository.findOneBy({ email });
@@ -89,17 +82,10 @@ let ProfesionalService = class ProfesionalService {
         await this.ProfesionalRepository.delete(id);
     }
     async findByNombreLike(nombreLike) {
-        return this.ProfesionalRepository.find({
-            where: {
-                nombre: (0, typeorm_3.Like)(`%${nombreLike}%`),
-            },
-        });
+        return this.ProfesionalRepository.find({ where: { nombre: (0, typeorm_3.Like)(`%${nombreLike}%`) } });
     }
     async registrar(datos) {
-        const ultimoProfesional = await this.ProfesionalRepository.find({
-            order: { idusuarioProfesional: 'DESC' },
-            take: 1,
-        });
+        const ultimoProfesional = await this.ProfesionalRepository.find({ order: { idusuarioProfesional: 'DESC' }, take: 1 });
         const nuevoId = ultimoProfesional.length > 0 ? ultimoProfesional[0].idusuarioProfesional + 1 : 1;
         const profesional = new profesional_entity_1.Profesional();
         profesional.idusuarioProfesional = nuevoId;
@@ -114,6 +100,7 @@ let ProfesionalService = class ProfesionalService {
         profesional.avatar = datos.avatar || '';
         profesional.fechaNacimiento = datos.fechaNacimiento;
         profesional.empresa = datos.empresa;
+        profesional.disponible = datos.disponible || true;
         const oficio = await this.oficiosService.findOne(datos.oficio);
         profesional.oficio = oficio;
         return this.ProfesionalRepository.save(profesional);

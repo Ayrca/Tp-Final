@@ -158,7 +158,7 @@ const PerfilComercial = () => {
             </div>
           ))
         ) : (
-          <p>Este usuario no tiene trabajos realizados</p>
+          <p>Este profesional no tiene trabajos realizados</p>
         )}
       </div>
 

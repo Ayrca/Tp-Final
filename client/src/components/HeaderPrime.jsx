@@ -13,14 +13,14 @@ const HeaderPrime = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const dropdownRef = useRef(null); // <-- ref para el dropdown
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) setIsLoggedIn(true);
   }, []);
 
-  // ------------------ Cerrar dropdown al click fuera ------------------
+  // Cerrar dropdown al click fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -86,12 +86,13 @@ const HeaderPrime = () => {
 
           {isLoggedIn ? (
             <div className="dropdown" ref={dropdownRef}>
-              <button
-                className="dropdown-btn"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                Mi cuenta
-              </button>
+            <button
+              className="dropdown-btn"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              Mi cuenta
+              <span className={`arrow ${dropdownOpen ? "open" : ""}`}>▼</span>
+            </button>
               {dropdownOpen && (
                 <div className="dropdown-menu">
                   <Link

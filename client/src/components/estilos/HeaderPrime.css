@@ -21,7 +21,7 @@
 
 /* Logo */
 .navbar-logo .logo {
-  height: 80px; /* tamaño independiente del navbar */
+  height: 90px; /* tamaño independiente del navbar */
   width: auto;
   border-radius: 0;
 }
@@ -112,6 +112,19 @@
 
 .dropdown-item:hover {
   background: #f0f4ff;
+}
+
+/* Flecha del dropdown */
+.dropdown-btn .arrow {
+  margin-left: 8px;
+  transition: transform 0.25s ease;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+/* Rotación cuando está abierto */
+.dropdown-btn .arrow.open {
+  transform: rotate(180deg);
 }
 
 /* Hamburger mobile */
