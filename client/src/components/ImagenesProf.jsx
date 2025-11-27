@@ -1,12 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './estilos/imagenesProf.css';
 const ImagenesProf = ({ idProfesional }) => {
   const [imagenes, setImagenes] = useState([]);
   const [file, setFile] = useState(null);
-
-
 
   useEffect(() => {
     axios.get(`http://localhost:3000/imagen/${idProfesional}`)
@@ -16,9 +12,7 @@ const ImagenesProf = ({ idProfesional }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, [idProfesional]);
-
-  
+  }, [idProfesional]);  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -39,13 +33,11 @@ const ImagenesProf = ({ idProfesional }) => {
     });
   };
 
-
   const handleFileChange = (event) => {
   const file = event.target.files[0];
   console.log(file); // Agrega este console.log
   setFile(file);
 };
-
 
   return (
     <div className='cajaImagenes'>
@@ -57,7 +49,6 @@ const ImagenesProf = ({ idProfesional }) => {
         <img key={index} src={imagen.url} alt="Imagen" />
       ))}
     </div>
-
         
       </div>
       <form onSubmit={handleSubmit}>
@@ -67,6 +58,5 @@ const ImagenesProf = ({ idProfesional }) => {
     </div>
   );
 };
-
 
 export default ImagenesProf;

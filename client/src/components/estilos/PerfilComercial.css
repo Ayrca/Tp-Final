@@ -1,12 +1,138 @@
-.avatar-img1{
-height: 250px;
-width: 250px;
-
+/* CONTENEDOR GENERAL */
+.perfil-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  color: #333;
 }
 
+/* HEADER */
+.perfil-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 25px;
+  padding: 25px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  margin-bottom: 35px;
+}
 
-.no-imagen {
-  font-size: 16px;
-  color: #666;
-  text-align: center;
+/* AVATAR */
+.avatar-comercial,
+.avatar-placeholder-comercial {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+/* TEXTO PERFIL */
+.perfil-info h2 {
+  font-size: 28px;
+  color: #2f89c8;
+  margin-bottom: 10px;
+}
+
+.descripcion {
+  margin-top: 12px;
+  color: #555;
+}
+
+/* GRIDS */
+.imagenes-comercial-container,
+.trabajos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin: 20px 0 25px;
+}
+
+/* IMÁGENES */
+.gallery-img {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fafafa;
+  padding: 6px;
+  transition: transform .25s;
+}
+
+.gallery-img:hover {
+  transform: scale(1.03);
+}
+
+/* TARJETAS DE TRABAJO */
+.tarjeta-trabajo {
+  background: #fff;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: transform .25s ease;
+}
+
+.tarjeta-trabajo:hover {
+  transform: translateY(-5px);
+}
+
+/* TRANSICIÓN GLOBAL */
+.gallery-grid {
+  transition: opacity .35s ease-in-out;
+}
+
+.fade-out { opacity: 0; }
+.fade-in { opacity: 1; }
+
+/* PAGINACIÓN COMPARTIDA (galería + trabajos) */
+.gallery-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.pag-btn {
+  background: #3b82f6;       /* azul base */
+  border: 1px solid #dcdcdc;
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;               /* flechas blancas */
+  transition: background .25s, transform .25s;
+}
+
+.pag-btn:hover:not(:disabled) {
+  background: #2563eb;       /* azul más oscuro */
+  transform: translateY(-2px); /* efecto sutil al pasar el mouse */
+}
+
+.pag-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #93c5fd;       /* azul más claro para deshabilitado */
+}
+
+.pag-indicator {
+  font-size: 15px;
+  color: #555;
+  font-weight: 500;
+}
+
+.estrella {
+  font-size: 35px;
+  margin-right: 2px;
+}
+
+.estrella.llena {
+  color: #FFD700; /* dorado */
+}
+
+.estrella.vacia {
+  color: #ccc;   /* gris claro */
 }

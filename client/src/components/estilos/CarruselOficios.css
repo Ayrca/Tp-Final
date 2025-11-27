@@ -24,23 +24,19 @@
 
 /* Botones prev/next */
 .btn-carrusel {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  font-size: 1.7rem;
+  background: #3b82f6;       /* azul base */
+  border: 1px solid #dcdcdc;
+  padding: 6px 12px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.25s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 18px;
+  color: white;               /* flechas blancas */
+  transition: background .25s, transform .25s;
 }
 
 .btn-carrusel:hover {
-  background-color: #2980b9;
-  transform: scale(1.07);
+  background: #2563eb;       /* azul más oscuro */
+  transform: translateY(-2px); /* efecto sutil al pasar el mouse */
 }
 
 /* Carrusel   */

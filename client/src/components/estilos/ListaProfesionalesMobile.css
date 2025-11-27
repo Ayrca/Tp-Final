@@ -1,0 +1,111 @@
+/* ========================
+   Carrusel horizontal Mobile
+   Solo para ListaProfesional
+   ======================== */
+.carrusel-mobile {
+  display: none; /* Oculto por defecto */
+  width: 100%;
+  margin: 20px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Mobile (<800px) mostrar horizontal */
+@media (max-width: 800px) {
+  .carrusel-mobile {
+    display: block;
+  }
+}
+
+/* Botones prev/next (solo en este carrusel mobile) */
+.carrusel-mobile .nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #3498db;
+  border: none;
+  color: white;
+  font-size: 28px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.carrusel-mobile:hover .nav-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carrusel-mobile .nav-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+  background-color: #2980b9;
+}
+
+.carrusel-mobile .nav-btn.prev { left: 10px; }
+.carrusel-mobile .nav-btn.next { right: 10px; }
+
+/* Contenedor y track */
+.carrusel-mobile .propaganda-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carrusel-mobile .propaganda-track {
+  display: flex;
+  transition: transform 0.55s ease-in-out;
+}
+
+/* Cada item ocupa 100% del contenedor */
+.carrusel-mobile .propaganda-item {
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* Título */
+.carrusel-mobile .propaganda-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #007bff;
+}
+
+/* Imagen */
+.carrusel-mobile .propaganda-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.35s ease;
+  cursor: pointer;
+}
+
+.carrusel-mobile .propaganda-item:hover .propaganda-img {
+  transform: scale(1.04);
+}
+
+/* Más responsive <600px */
+@media (max-width: 600px) {
+  .carrusel-mobile .nav-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+  .carrusel-mobile .propaganda-img {
+    height: 150px;
+  }
+}
