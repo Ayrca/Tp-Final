@@ -1,5 +1,5 @@
 # compiled output
-
+client/node_modules/
 /node_modules
 /build
 
