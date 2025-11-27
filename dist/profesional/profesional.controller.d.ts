@@ -28,6 +28,7 @@ export declare class ProfesionalController {
         descripcion: string;
         fechaNacimiento: Date;
         valoracion: Date;
+        disponible: boolean;
     }>;
     registrar(datos: any): Promise<Profesional>;
     banearProfesional(id: number): Promise<Profesional>;

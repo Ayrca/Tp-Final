@@ -1,4 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 1;
+}
 
 /* Fuente global */
 body {
@@ -216,6 +225,9 @@ margin-top: 1.5rem;
 form#registro-form button[type="submit"]:hover {
 background-color: #4aa880;
 }
+
+
+
 
 /* Estilos responsive*/
 @media (max-width: 768px) {

@@ -8,4 +8,5 @@ export declare class AvatarImagenService {
     subirAvatar(file: any, idUsuario: number, tipoUsuario: string): Promise<{
         avatar: string;
     }>;
+    obtenerUsuario(idUsuario: number, tipoUsuario: string): Promise<Profesional | Usuario | null>;
 }

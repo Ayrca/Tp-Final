@@ -15,6 +15,7 @@ export declare class Profesional {
     descripcion: string;
     fechaNacimiento: Date;
     valoracion: Date;
+    disponible: boolean;
     comparePassword(password: string): Promise<any>;
     hashPassword(): Promise<void>;
 }

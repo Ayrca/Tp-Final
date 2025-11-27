@@ -4,6 +4,7 @@ import axios from 'axios';
 import './estilos/Registro.css';
 import Swal from 'sweetalert2';
 
+
 const CamposComunes = ({
   nombre,
   apellido,
@@ -21,6 +22,10 @@ const CamposComunes = ({
   setDireccion,
   setPassword,
   setConfirmarPassword,
+  mostrarContraseña,
+  setMostrarContraseña,
+  mostrarConfirmarContraseña,
+  setMostrarConfirmarContraseña,
 }) => (
   <div className="form-columns">
     <div className="column" id="columna-izquierda">
@@ -89,10 +94,10 @@ const CamposComunes = ({
         value={direccion}
         onChange={(e) => setDireccion(e.target.value)}
       />
-      <label htmlFor="password">Contraseña:</label>
+ <label htmlFor="password">Contraseña:</label>
       <div className="password-container">
         <input
-          type="password"
+          type={mostrarContraseña ? 'text' : 'password'}
           id="password"
           name="password"
           placeholder="Escribe una contraseña"
@@ -100,29 +105,40 @@ const CamposComunes = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <i className="fas fa-eye-slash toggle-password" data-target="password"></i>
+        <i
+          className={`fas ${mostrarContraseña ? 'fa-eye' : 'fa-eye-slash'} toggle-password`}
+          onClick={() => setMostrarContraseña(!mostrarContraseña)}
+        ></i>
       </div>
-      <label htmlFor="confirmar-password">Confirmar Contraseña:</label>
-      <div className="password-container">
-        <input
-          type="password"
-          id="confirmar-password"
-          name="confirmar-password"
-          placeholder="Confirmar contraseña"
-          required
-          value={confirmarPassword}
-          onChange={(e) => setConfirmarPassword(e.target.value)}
-        />
-        <i className="fas fa-eye-slash toggle-password" data-target="confirmar-password"></i>
-      </div>
+  
+<label htmlFor="confirmar-password">Confirmar Contraseña:</label>
+<div className="password-container">
+  <input
+    type={mostrarConfirmarContraseña ? 'text' : 'password'}
+    id="confirmar-password"
+    name="confirmar-password"
+    placeholder="Confirmar contraseña"
+    required
+    value={confirmarPassword}
+    onChange={(e) => setConfirmarPassword(e.target.value)}
+  />
+  <i
+    className={`fas ${mostrarConfirmarContraseña ? 'fa-eye' : 'fa-eye-slash'} toggle-password`}
+    onClick={() => setMostrarConfirmarContraseña(!mostrarConfirmarContraseña)}
+  ></i>
+</div>
+
     </div>
   </div>
 );
+
 const Registro = () => {
 
-
+  
 const [oficiosOptions, setOficiosOptions] = useState([]);
 const [oficioSeleccionado, setOficioSeleccionado] = useState('');
+
+
 useEffect(() => {
   const obtenerOficios = async () => {
     try {
@@ -147,108 +163,13 @@ useEffect(() => {
   const [confirmarPassword, setConfirmarPassword] = useState('');
   const [empresa, setEmpresa] = useState('');
   const [rubros, setRubros] = useState([]);
+  const [mostrarContraseña, setMostrarContraseña] = useState(false);
+  const [mostrarConfirmarContraseña, setMostrarConfirmarContraseña] = useState(false);
 
   useEffect(() => {
     const tipo = localStorage.getItem('tipoUsuario');
     setTipoUsuario(tipo);
   }, []);
-
-
-/*
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  // Validar nombre y apellido
-  if (!/^[a-zA-Z ]+$/.test(nombre) || !/^[a-zA-Z ]+$/.test(apellido)) {
-    alert('El nombre y el apellido solo pueden contener letras y espacios');
-    return;
-  }
-  // Validar fecha de nacimiento
-  const fechaNacimientoDate = new Date(fechaNacimiento);
-  const hoy = new Date();
-  const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
-  if (edad < 18) {
-    alert('Debes tener al menos 18 años para registrarte');
-    return;
-  }
-  // Validar teléfono
-  if (!/^[0-9]+$/.test(telefono)) {
-    alert('El teléfono solo puede contener números');
-    return;
-  }
-  // Validar email
-  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-    alert('El email no es válido');
-    return;
-  }
-  // Validar contraseña
-
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-if (!passwordRegex.test(password)) {
-  alert('La contraseña debe tener al menos 8 caracteres, una letra capital, una letra pequeña, un número');
-  return;
-}
-
-
-  // Validar confirmación de contraseña
-  if (password !== confirmarPassword) {
-    alert('Las contraseñas no coinciden');
-    return;
-  }
-  // Si todas las validaciones pasan, enviar el formulario
-  const datos = {
-    nombre,
-    apellido,
-    fechaNacimiento: new Date(fechaNacimiento),
-    telefono,
-    email,
-    direccion,
-    password,
-    estadoCuenta: true,
-    avatar: '',
-    tipo: tipoUsuario,
-    oficio: oficioSeleccionado,
-    empresa: tipoUsuario === 'profesional' ? empresa : null,
-    rubros: tipoUsuario === 'profesional' ? rubros : null,
-  };
-  
-
-
-  try {
-    if (tipoUsuario === 'Cliente') {
-      const response = await axios.post('http://localhost:3000/usuario/registro', datos);
-      console.log(response.data);
-      Swal.fire({
-        title: 'Registro exitoso',
-        text: 'Tu cuenta ha sido creada con éxito',
-        icon: 'success',
-        timer: 2000,
-        timerProgressBar: true,
-      }).then(() => {
-        window.location.href = '/';
-      });
-    } else {
-      const response = await axios.post('http://localhost:3000/profesional/registro', datos);
-      console.log(response.data);
-      Swal.fire({
-        title: 'Registro exitoso',
-        text: 'Tu cuenta ha sido creada con éxito',
-        icon: 'success',
-        timer: 2000,
-        timerProgressBar: true,
-      }).then(() => {
-        window.location.href = '/';
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    Swal.fire({
-      title: 'Error',
-      text: 'Hubo un error al crear tu cuenta',
-      icon: 'error',
-    });
-  }
-};
-*/
 
 
 const handleSubmit = async (e) => {
@@ -306,7 +227,9 @@ const handleSubmit = async (e) => {
         oficio: oficioSeleccionado,
         empresa: tipoUsuario === 'profesional' ? empresa : null,
         rubros: tipoUsuario === 'profesional' ? rubros : null,
+         disponible: true, // Agregar esta línea
       };
+
       try {
         if (tipoUsuario === 'Cliente') {
           const response = await axios.post('http://localhost:3000/usuario/registro', datos);
@@ -379,6 +302,10 @@ const handleSubmit = async (e) => {
           setDireccion={setDireccion}
           setPassword={setPassword}
           setConfirmarPassword={setConfirmarPassword}
+          setMostrarContraseña={setMostrarContraseña}
+          mostrarContraseña={mostrarContraseña}
+          mostrarConfirmarContraseña={mostrarConfirmarContraseña}
+          setMostrarConfirmarContraseña={setMostrarConfirmarContraseña}
         />
         {tipoUsuario === 'profesional' && (
 <div className="form-tercera-columna" id="columna-profesional">

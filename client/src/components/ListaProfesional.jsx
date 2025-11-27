@@ -15,21 +15,6 @@ const getIdUsuarioLogueado = () => {
   return decodedToken.sub;
 };
 
-/*
-const useOficio = (idOficios) => {
-  const [oficio, setOficio] = useState(null);
-  useEffect(() => {
-    axios.get(`http://localhost:3000/oficio/${idOficios}`)
-      .then(response => {
-        setOficio(response.data.nombre); // Devuelve solo el nombre del oficio
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, [idOficios]);
-  return oficio;
-};
-*/
 
 const ListaProfesional = () => {
   const { id } = useParams();
@@ -198,7 +183,7 @@ const handleConectar = async (profesional) => {
                 <div className="profesional-header">
                   <h2>{profesional.nombre} {profesional.apellido}.</h2>
                   <label className={profesional.estado ? 'disponible' : 'no-disponible'}>
-                    {profesional.estado ? 'Disponible' : 'No Disponible'}
+                    {profesional.disponible ? 'Disponible' : 'No Disponible'}
                   </label>
                 </div>
                 <div className="datosContainer">
@@ -207,7 +192,11 @@ const handleConectar = async (profesional) => {
                   <p>Tel: {profesional.telefono}</p>
                   <p>Dirección: {profesional.direccion}</p>
                   <p>Valoración promedio: {profesional.valoracion}</p>
-                  <p>Fecha Nacimiento: {profesional.fechaNacimiento}</p>
+                  <p>Fecha Nacimiento: {new Date(profesional.fechaNacimiento).toLocaleDateString('es-AR', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric'
+})}</p>
                   <p>Descripcion: {profesional.descripcion}</p>
                 </div>
                 <div className="profesional-buttons">

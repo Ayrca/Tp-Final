@@ -49,11 +49,16 @@ let ProfesionalController = class ProfesionalController {
         return {
             ...profesional,
             oficio: profesional.oficio,
+            disponible: profesional.disponible,
         };
     }
     async findProfesionalCompleto(id) {
         const profesional = await this.profesionalService.findProfesionalCompleto(id);
-        return profesional;
+        return {
+            ...profesional,
+            oficio: profesional.oficio,
+            disponible: profesional.disponible,
+        };
     }
     async findAll() {
         return this.profesionalService.findAll();
@@ -74,21 +79,22 @@ let ProfesionalController = class ProfesionalController {
             if (!profesional) {
                 throw new Error('Profesional no encontrado');
             }
-            const { idusuarioProfesional, nombre, apellido, email, tipo, oficio, empresa, telefono, direccion, avatar, estadoCuenta, descripcion, fechaNacimiento, valoracion } = profesional;
+            const { idusuarioProfesional, nombre, apellido, email, tipo, oficio, empresa, telefono, direccion, avatar, estadoCuenta, descripcion, fechaNacimiento, valoracion, disponible, } = profesional;
             return {
                 id: idusuarioProfesional,
                 nombre,
                 apellido,
                 email,
                 tipo,
-                oficio: { nombre: oficio.nombre, },
+                oficio: { nombre: oficio.nombre },
                 telefono,
                 direccion,
                 avatar,
                 estadoCuenta,
                 descripcion,
                 fechaNacimiento,
-                valoracion
+                valoracion,
+                disponible,
             };
         }
         catch (error) {
@@ -188,7 +194,6 @@ __decorate([
 ], ProfesionalController.prototype, "desbloquearProfesional", null);
 exports.ProfesionalController = ProfesionalController = __decorate([
     (0, common_1.Controller)('profesional'),
-    __metadata("design:paramtypes", [profesional_service_1.ProfesionalService,
-        jwt_1.JwtService])
+    __metadata("design:paramtypes", [profesional_service_1.ProfesionalService, jwt_1.JwtService])
 ], ProfesionalController);
 //# sourceMappingURL=profesional.controller.js.map

@@ -19,12 +19,13 @@ const ImagenesProf = ({ idProfesional }) => {
   }, [idProfesional]);
 
   
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const token = localStorage.getItem('token');
     const formData = new FormData();
     formData.append('file', file);
+
+
     axios.post(`http://localhost:3000/imagen/upload/${idProfesional}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -70,3 +71,6 @@ const ImagenesProf = ({ idProfesional }) => {
 
 
 export default ImagenesProf;
+
+
+

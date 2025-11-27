@@ -1,12 +1,11 @@
 import './estilos/PerUsuario.css';
-import DatosPersonales from './DatosUsuario';
+import DatosPersonales from './DatosPersonales';
 import ImagenesProf from './ImagenesProf';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TrabajosContratados from './TrabajosContratados';
 import PerfilAdmin from './PerfilAdmin'; // Importa el perfil de administrador
-
-
+import Swal from 'sweetalert2';
 
 const PerfilUsuario = () => {
   const [usuario, setUsuario] = useState({});
@@ -77,29 +76,30 @@ const PerfilUsuario = () => {
  if (usuario.tipo === 'admin') {
     return <PerfilAdmin />;
     }
-    /*
-    if (usuario.tipo === 'admin') {
-  return <Redirect to="/admin/perfil" />;
-}
-*/
+
+
 const handleAvatarChange = async (event) => {
   try {
     const file = event.target.files[0];
     console.log("dato de file" + file);
     if (!file) {
       console.error('No se ha seleccionado un archivo');
+      Swal.fire({
+        title: 'Error',
+        text: 'No se ha seleccionado un archivo',
+        icon: 'error',
+        timer: 2000,
+      });
       return;
     }
-    
     const formData = new FormData();
     formData.append('avatar', file);
-    
     const token = localStorage.getItem('token');
     let tipoUsuario;
-   
     if (usuario.tipo === 'profesional') {
       tipoUsuario = 'profesional';
-    } else {
+    }
+    else {
       tipoUsuario = 'Cliente';
     }
     const idUsuario = usuario.tipo === 'profesional' ? usuario.idusuarioProfesional : usuario.idusuarioComun;
@@ -115,16 +115,34 @@ const handleAvatarChange = async (event) => {
     setUsuario({ ...usuario, avatar: response.data.avatar });
   } catch (error) {
     console.error(error);
+    if (error.response && error.response.data && error.response.data.message) {
+    Swal.fire({
+  title: 'Error',
+  text: 'Error al subir el archivo: ' + error.response.data.message,
+  icon: 'error',
+  timer: 2000,
+});
+    } else {
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al subir el archivo',
+        icon: 'error',
+        timer: 2000,
+      });
+    }
   }
 };
-
 
 
 return (
   <main className="cuenta-container">
     <section className="perfil-usuario">
     <div className="avatar-container">
-  <img src={usuario.avatar} alt="Avatar" className="avatar-img" />
+      <img
+  src={usuario.avatar ? usuario.avatar : '/assets/images/avatar-de-usuario.png'}
+  alt="Avatar"
+  className="avatar-img"
+/>
   <input type="file" id="avatar-input" accept="image/*" onChange={handleAvatarChange} hidden />
   <label htmlFor="avatar-input" className="cambiar-avatar">+</label>
 </div>

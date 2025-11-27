@@ -39,7 +39,8 @@ export class Profesional {
   fechaNacimiento: Date;
   @Column()
   valoracion: Date;
-  
+  @Column()
+  disponible: boolean;
 
   async comparePassword(password: string) {
     return await bcrypt.compare(password, this.password);
