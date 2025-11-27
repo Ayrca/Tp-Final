@@ -182,7 +182,7 @@ const handleConectar = async (profesional) => {
               <div className="profesional-data">
                 <div className="profesional-header">
                   <h2>{profesional.nombre} {profesional.apellido}.</h2>
-                  <label className={profesional.estado ? 'disponible' : 'no-disponible'}>
+                  <label className={profesional.disponible  ? 'disponible' : 'no-disponible'}>
                     {profesional.disponible ? 'Disponible' : 'No Disponible'}
                   </label>
                 </div>
