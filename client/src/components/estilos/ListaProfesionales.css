@@ -1,89 +1,94 @@
-
-/* Contenedor general de cada tarjeta */
-.profesional-header {
+/* Dos carruseles a los costados */
+.layout-profesionales-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.profesional-header h2 {
-  margin: 0;
-  font-size: 20px;
-  color: #111827;
-}
-
-.profesional-item {
+  align-items: flex-start;
   width: 100%;
-  max-width: 450px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Espacio reservado para cada carrusel */
+.carrusel-vertical-wrapper {
+  width: 440px;
+  flex-shrink: 0;
+}
+
+/* Grid de profesionales */
+.grid-profesionales {
+  width: 100%;
+  max-width: 1150px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 26px;
+}
+
+/* Cards de profesionales */
+.profesional-item {
   background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  padding: 16px;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  padding: 20px;
-  margin: 20px auto;
+  gap: 16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
- 
+  min-height: 200px;
 }
 
 .profesional-item:hover {
   transform: scale(1.01);
 }
 
-/* Imagen del profesional */
 .profesional-item img {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 50%;
   border: 3px solid #3b82f6;
-  margin: 15px;
 }
 
-/* Datos del profesional */
 .profesional-data {
-  flex: 1 1 250px;
-  padding: 10px 20px;
+  flex: 1;
+  padding: 0 10px;
 }
 
 .profesional-data h2 {
-  margin: 5px 0;
-  font-size: 20px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
   color: #111827;
 }
 
 .profesional-data p {
-  margin: 4px 0;
+  margin: 3px 0;
   color: #374151;
-  font-size: 15px;
+  font-size: 14px;
 }
 
-/* Botones y etiqueta de disponibilidad */
+/* Botones */
 .profesional-buttons {
   display: grid;
-  grid-template-columns: repeat(2, 160px);
-  grid-auto-rows: 40px;
-  grid-gap: 12px;
-  justify-content: center;
-  margin: 15px auto;
+  grid-template-columns: repeat(2, 130px);
+  grid-auto-rows: 38px;
+  grid-gap: 10px;
+  margin-top: 12px;
   grid-template-areas:
     "verMas conectar"
     "contratar contratar";
 }
 
 .profesional-buttons button {
-  width: 160px;
-  height: 40px;
+  width: 130px;
+  height: 38px;
   font-weight: 600;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+  font-size: 14px;
 }
 
-/* Botón Ver Más */
+/* Ver Más */
 .verMas {
   grid-area: verMas;
   background-color: white;
@@ -96,7 +101,7 @@
   color: white;
 }
 
-/* Botón Conectar */
+/* Conectar */
 .conectar {
   grid-area: conectar;
   background-color: #3b82f6;
@@ -110,34 +115,28 @@
   box-shadow: 0 6px 14px rgba(37, 99, 235, 0.6);
 }
 
-/* Botón Contratar */
+/* Contratar */
 .contratar {
   grid-area: contratar;
   justify-self: center;
-  width: 330px;
+  width: 270px;
   background-color: #10b981;
   border: none;
   color: white;
-  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
 }
 
 .contratar:hover {
   background-color: #059669;
-  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.6);
 }
 
-/* Etiqueta de disponibilidad */
+/* Disponibilidad */
 #disponible {
   width: auto;
   padding: 4px 12px;
-  height: auto;
-  text-align: center;
-  line-height: normal;
   border: 2px solid black;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   border-radius: 8px;
-  user-select: none;
 }
 
 #disponible.disponible {
@@ -152,4 +151,49 @@
   background-color: #fee2e2;
 }
 
+/* Paginador */
+.paginador {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
 
+.paginador button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.paginador button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.paginador span {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .layout-profesionales-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .carrusel-vertical-wrapper {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .grid-profesionales {
+    grid-template-columns: 1fr;
+  }
+}

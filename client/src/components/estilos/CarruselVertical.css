@@ -1,0 +1,40 @@
+/* Carrusel más grande */
+.carrusel-vertical-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+/* Wrapper que se desplaza */
+.carrusel-vertical-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tamaño de cada imagen */
+.carrusel-vertical-item {
+  padding: 12px 0;   /* separación arriba/abajo */
+  height: 250px;   /* más alto = banners más grandes */
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* hace que el link ocupe todo el espacio del item */
+.carrusel-vertical-item a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Imagen grande y visible */
+.carrusel-vertical-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;  
+}
