@@ -53,7 +53,7 @@ const path_1 = require("path");
 const fs = __importStar(require("fs"));
 const usuario_service_1 = require("../usuario/usuario.service");
 const profesional_service_1 = require("../profesional/profesional.service");
-const BASE_URL = "https://tp-final-production.up.railway.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 let ImagenController = class ImagenController {
     imagenService;
     usuarioService;

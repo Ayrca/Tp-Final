@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import { UsuarioService } from '../usuario/usuario.service';
 import { ProfesionalService } from '../profesional/profesional.service';
 
-const BASE_URL = "https://tp-final-production.up.railway.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 @Controller('imagen')
 export class ImagenController {

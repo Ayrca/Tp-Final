@@ -60,7 +60,7 @@ exports.AppModule = AppModule = __decorate([
                     administrador_entity_1.Administrador,
                 ],
                 synchronize: false,
-                logging: true,
+                logging: ['query', 'error', 'schema'],
             }),
             imagenOficios_module_1.ImagenOficiosModule,
             imagenPropaganda_module_1.ImagenPropagandaModule,

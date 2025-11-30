@@ -58,9 +58,10 @@ import { JwtModule } from '@nestjs/jwt';
         TrabajoContratado,
         Administrador,
       ],
-      synchronize: false,
-      logging: true,
+    synchronize: false,
+    logging: ['query', 'error', 'schema'],
     }),
+    
 
     // Módulos de la aplicación
     ImagenOficiosModule,
@@ -84,4 +85,5 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}
