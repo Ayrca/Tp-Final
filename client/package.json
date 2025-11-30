@@ -16,6 +16,7 @@
     "react-scripts": "^5.0.1",
     "sweetalert2": "^11.26.3",
     "typeorm": "^0.3.27",
+    "react-icons": "^4.10.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
