@@ -1,4 +1,3 @@
-
 import { Controller, Post, UploadedFile, UseInterceptors, Body, Get,Param ,BadRequestException, Res} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagenService } from './imagen.service';
@@ -7,6 +6,8 @@ import { createReadStream } from 'fs';
 import * as fs from 'fs';
 import { UsuarioService } from '../usuario/usuario.service';
 import { ProfesionalService } from '../profesional/profesional.service';
+
+const BASE_URL = "https://tp-final-production.up.railway.app";
 
 @Controller('imagen')
 export class ImagenController {
@@ -17,16 +18,11 @@ export class ImagenController {
    
   ) {}
 
-
-
-
 @Post('upload/:idProfesional')
 @UseInterceptors(FileInterceptor('file'))
 async uploadImage(@UploadedFile() file: any, @Param('idProfesional') idProfesional: number) {
   return await this.imagenService.guardarImagen(file, idProfesional);
 }
-
-
 
 @Get(':id')
 async getImage(@Param('id') id: number) {
@@ -35,13 +31,9 @@ async getImage(@Param('id') id: number) {
     return [];
   }
   return imagenes.map((imagen) => ({
-    url: `http://localhost:3000/assets/imagenesUsuariosProfesionales/${imagen.url}`,
+    url: `${BASE_URL}/assets/imagenesUsuariosProfesionales/${imagen.url}`,
   }));
 }
-
-
-
-
 
 @Post('cambiar-avatar/:idUsuario/:tipoUsuario')
 @UseInterceptors(FileInterceptor('avatar'))
@@ -61,24 +53,20 @@ async cambiarAvatar(@UploadedFile() file: any, @Param('idUsuario') idUsuario: nu
       if (!usuario) {
         throw new BadRequestException('Usuario comun no encontrado');
       }
-      usuario.avatar = `http://localhost:3000/imagenesDePerfilesUsuarios/${filename}`;                                                         
+      usuario.avatar = `${BASE_URL}/imagenesDePerfilesUsuarios/${filename}`;                                                         
       await this.usuarioService.update(idUsuario, usuario);
     } else if (tipoUsuario === 'profesional') {
       const usuario = await this.profesionalService.findOne(idUsuario);
       if (!usuario) {
         throw new BadRequestException('Usuario profesional no encontrado');
       }
-      usuario.avatar = `http://localhost:3000/imagenesDePerfilesUsuarios/${filename}`;
+      usuario.avatar = `${BASE_URL}/imagenesDePerfilesUsuarios/${filename}`;
       await this.profesionalService.update(idUsuario, usuario);
     }
-    return { avatar: `http://localhost:3000/imagenesDePerfilesUsuarios/${filename}` };
+    return { avatar: `${BASE_URL}/imagenesDePerfilesUsuarios/${filename}` };
   } catch (error) {
     console.error('Error al subir la imagen:', error);
     throw new BadRequestException('Error al subir la imagen');
   }
 }
-
-
-
-
 }

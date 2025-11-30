@@ -49,6 +49,4 @@ async findByNombreLike(nombreLike: string): Promise<Oficio[]> {
     });
   }
 
-
-
 }

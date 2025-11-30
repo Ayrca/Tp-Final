@@ -1,4 +1,3 @@
-
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { AdministradorService } from './administrador.service';
 import { Administrador } from './administrador.entity';

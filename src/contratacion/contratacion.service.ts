@@ -20,33 +20,8 @@ async findOne(id: number): Promise<Contratacion> {
   }
   return contratacion;
 }
-/*
-  async create(TrabSolicitados: Contratacion): Promise<Contratacion> {
-    return this.contratacionRepository.save(Contratacion);
-  }
-*/
 
-/*
-  async update(id: number, TrabSolicitados: Contratacion): Promise<Contratacion> {
-    await this.contratacionRepository.update(id, contratacion);
-    return this.findOne(id);
-  }
-  */
-
-  async delete(id: number): Promise<void> {
+async delete(id: number): Promise<void> {
     await this.contratacionRepository.delete(id);
   }
-
-/*
-async findByNombreLike(nombreLike: string): Promise<Contratacion[]> {
-    return this.contratacionRepository.find({
-      where: {
-       nombre: Like(`%${nombreLike}%`),
-      },
-    });
-  }
-*/
-
-
-
 }
