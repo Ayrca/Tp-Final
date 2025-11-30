@@ -11,35 +11,6 @@ export class TrabajoContratadoService {
     private readonly trabajoContratadoRepository: Repository<TrabajoContratado>,
   ) {}
 
-/*
-async findByProfesionalId(idProfesional: number): Promise<TrabajoContratado[]> {
-  return this.trabajoContratadoRepository.find({
-    where: {
-      profesional: {
-        idusuarioProfesional: idProfesional
-      }
-    },
-    relations: ['profesional', 'usuarioComun'],
-    select: {
-      idcontratacion: true,
-      rubro: true,
-      estado: true,
-      fechaContratacion: true,
-      valoracion: true,
-      comentario: true,
-      profesional: {
-        idusuarioProfesional: true
-      },
-      usuarioComun: {
-        idusuarioComun: true,
-        nombre: true
-      }
-    }
-  });
-}*/
-
-
-
 async actualizarEstado(idcontratacion: number, estado: string, comentario: string, valoracion: number) {
   const trabajoContratado = await this.trabajoContratadoRepository.findOne({
     where: { idcontratacion },
@@ -52,27 +23,6 @@ async actualizarEstado(idcontratacion: number, estado: string, comentario: strin
   trabajoContratado.valoracion = valoracion;
   return this.trabajoContratadoRepository.save(trabajoContratado);
 }
-
-/*
-async findByUsuarioComunId(idUsuarioComun: number): Promise<TrabajoContratado[]> {
-  return this.trabajoContratadoRepository.find({
-    where: { usuarioComun: { idusuarioComun: idUsuarioComun } },
-    relations: ['profesional', 'usuarioComun'],
-    select: {
-      idcontratacion: true,
-      rubro: true,
-      estado: true,
-      fechaContratacion: true,
-      valoracion: true,
-      comentario: true,
-      telefonoProfesional: true,
-      telefonoCliente: true,
-      profesional: { nombre: true },
-      usuarioComun: { idusuarioComun: true, nombre: true, telefono: true }
-    }
-  });
-}
-*/
 
 async findByUsuarioComunId(idUsuarioComun: number): Promise<TrabajoContratado[]> {
   return this.trabajoContratadoRepository.find({
@@ -98,8 +48,6 @@ async findByUsuarioComunId(idUsuarioComun: number): Promise<TrabajoContratado[]>
   });
 }
 
-
-
 async findByProfesionalId(idProfesional: number): Promise<TrabajoContratado[]> {
   return this.trabajoContratadoRepository.find({
     where: { profesional: { idusuarioProfesional: idProfesional } },
@@ -118,29 +66,6 @@ async findByProfesionalId(idProfesional: number): Promise<TrabajoContratado[]> {
     }
   });
 }
-/*
-async findByProfesionalId(idProfesional: number): Promise<TrabajoContratado[]> {
-  return this.trabajoContratadoRepository.find({
-    where: { profesional: { idusuarioProfesional: idProfesional } },
-    relations: ['profesional', 'usuarioComun'],
-    select: {
-      idcontratacion: true,
-      rubro: true,
-      estado: true,
-      fechaContratacion: true,
-      valoracion: true,
-      comentario: true,
-      telefonoProfesional: true,
-      telefonoCliente: true,
-      profesional: { idusuarioProfesional: true },
-      usuarioComun: { idusuarioComun: true, nombre: true, telefono: true }
-    }
-  });
-}
-*/
-
-
-
   async create(trabajoContratado: TrabajoContratado): Promise<TrabajoContratado> {
     return this.trabajoContratadoRepository.save(trabajoContratado);
   }
@@ -148,6 +73,5 @@ async findByProfesionalId(idProfesional: number): Promise<TrabajoContratado[]> {
   async delete(idTrabajoContratado: number): Promise<void> {
     await this.trabajoContratadoRepository.delete(idTrabajoContratado);
   }
-
 
 }
