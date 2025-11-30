@@ -53,6 +53,7 @@ const path_1 = require("path");
 const fs = __importStar(require("fs"));
 const usuario_service_1 = require("../usuario/usuario.service");
 const profesional_service_1 = require("../profesional/profesional.service");
+const BASE_URL = "https://tp-final-production.up.railway.app";
 let ImagenController = class ImagenController {
     imagenService;
     usuarioService;
@@ -71,7 +72,7 @@ let ImagenController = class ImagenController {
             return [];
         }
         return imagenes.map((imagen) => ({
-            url: `http://localhost:3000/assets/imagenesUsuariosProfesionales/${imagen.url}`,
+            url: `${BASE_URL}/assets/imagenesUsuariosProfesionales/${imagen.url}`,
         }));
     }
     async cambiarAvatar(file, idUsuario, tipoUsuario) {
@@ -90,7 +91,7 @@ let ImagenController = class ImagenController {
                 if (!usuario) {
                     throw new common_1.BadRequestException('Usuario comun no encontrado');
                 }
-                usuario.avatar = `http://localhost:3000/imagenesDePerfilesUsuarios/${filename}`;
+                usuario.avatar = `${BASE_URL}/imagenesDePerfilesUsuarios/${filename}`;
                 await this.usuarioService.update(idUsuario, usuario);
             }
             else if (tipoUsuario === 'profesional') {
@@ -98,10 +99,10 @@ let ImagenController = class ImagenController {
                 if (!usuario) {
                     throw new common_1.BadRequestException('Usuario profesional no encontrado');
                 }
-                usuario.avatar = `http://localhost:3000/imagenesDePerfilesUsuarios/${filename}`;
+                usuario.avatar = `${BASE_URL}/imagenesDePerfilesUsuarios/${filename}`;
                 await this.profesionalService.update(idUsuario, usuario);
             }
-            return { avatar: `http://localhost:3000/imagenesDePerfilesUsuarios/${filename}` };
+            return { avatar: `${BASE_URL}/imagenesDePerfilesUsuarios/${filename}` };
         }
         catch (error) {
             console.error('Error al subir la imagen:', error);
