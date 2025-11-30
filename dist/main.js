@@ -4,8 +4,9 @@ const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    console.log("🔵 FRONTEND_URL:", process.env.FRONTEND_URL);
     app.enableCors({
-        origin: [process.env.FRONTEND_URL],
+        origin: true,
         methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
         allowedHeaders: 'Content-Type, Authorization',
         credentials: true,
