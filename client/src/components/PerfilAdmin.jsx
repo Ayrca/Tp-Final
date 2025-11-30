@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import './estilos/PerfilAdmin.css';
 import axios from 'axios';
@@ -7,7 +6,7 @@ import ManejoOficios from './ManejoOficios';
 import ManejoUsuarios from './ManejoUsuarios';
 import ManejoProfesionales from './ManejoProfesionales';
 
-const BASE_URL = "https://tp-final-production.up.railway.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const PerfilAdmin = () => {
   const [admin, setAdmin] = useState({});

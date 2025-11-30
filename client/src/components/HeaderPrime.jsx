@@ -4,7 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import './estilos/HeaderPrime.css';
 
-const BASE_URL = "https://tp-final-production.up.railway.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const HeaderPrime = () => {
   const [showModal, setShowModal] = useState(false);

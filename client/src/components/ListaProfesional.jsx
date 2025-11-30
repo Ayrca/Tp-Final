@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import './estilos/ListaProfesionales.css';
 import './estilos/ListaProfesionalesMobile.css';
 
-const BASE_URL = "https://tp-final-production.up.railway.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const getIdUsuarioLogueado = () => {
   const token = localStorage.getItem('token');

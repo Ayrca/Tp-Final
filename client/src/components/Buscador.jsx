@@ -3,7 +3,7 @@ import axios from 'axios';
 import './estilos/Buscador.css';
 import { Link, useNavigate } from 'react-router-dom';
 
-const BASE_URL = "https://tp-final-production.up.railway.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const Buscador = () => {
   const [textoBusqueda, setTextoBusqueda] = useState('');

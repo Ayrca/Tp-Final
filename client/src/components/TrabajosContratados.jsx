@@ -4,7 +4,7 @@ import './estilos/trabajosContratados.css';
 import Swal from 'sweetalert2';
 import * as jwtDecode from 'jwt-decode';
 
-const BASE_URL = 'https://tp-final-production.up.railway.app';
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   const [trabajos, setTrabajos] = useState([]);

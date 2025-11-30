@@ -7,7 +7,7 @@ import TrabajosContratados from './TrabajosContratados';
 import PerfilAdmin from './PerfilAdmin';
 import Swal from 'sweetalert2';
 
-const BASE_URL = "https://tp-final-production.up.railway.app";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const PerfilUsuario = () => {
   const [usuario, setUsuario] = useState({});
