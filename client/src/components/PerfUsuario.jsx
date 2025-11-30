@@ -14,20 +14,14 @@ const PerfilUsuario = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get("http://localhost:3000/auth/perfil", {                                 
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log('Datos del usuario:', response.data);
-        setUsuario(response.data);
-      })
-      .catch((error) => {
-        console.error('Error al cargar datos del usuario:', error);
-      });
-    } else {
-      console.log('No hay token');
+      axios
+        .get("http://localhost:3000/auth/perfil", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => setUsuario(response.data))
+        .catch((error) =>
+          console.error('Error al cargar datos del usuario:', error)
+        );
     }
   }, []);
 
@@ -35,124 +29,104 @@ const PerfilUsuario = () => {
     try {
       const token = localStorage.getItem('token');
       let response;
+
       if (usuario.tipo === 'profesional') {
         response = await axios.put(
           "http://localhost:3000/profesional",
           datosActualizados,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
-        // Eliminar campos que no existen en la entidad Usuario
         const datosActualizadosUsuario = { ...datosActualizados };
         delete datosActualizadosUsuario.oficio;
         delete datosActualizadosUsuario.empresa;
         delete datosActualizadosUsuario.descripcion;
-         response = await axios.put(`http://localhost:3000/usuario/${usuario.idusuarioComun}`,   
-           datosActualizadosUsuario,   
-        {                                                                        
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+
+        response = await axios.put(
+          `http://localhost:3000/usuario/${usuario.idusuarioComun}`,
+          datosActualizadosUsuario,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       }
-      console.log('Datos guardados con éxito:', response.data);
+
       setUsuario(response.data);
       setEditando(false);
     } catch (error) {
-      console.error('Error al guardar datos:', error.response);
+      console.error('Error al guardar datos:', error);
     }
   };
-  const handleCancelar = () => {
-    setEditando(false);
-  };
 
- if (usuario.tipo === 'admin') {
-    return <PerfilAdmin />;
-    }
-
-const handleAvatarChange = async (event) => {
-  try {
-    const file = event.target.files[0];
-    console.log("dato de file" + file);
-    if (!file) {
-      console.error('No se ha seleccionado un archivo');
-      Swal.fire({
-        title: 'Error',
-        text: 'No se ha seleccionado un archivo',
-        icon: 'error',
-        timer: 2000,
-      });
-      return;
-    }
-    const formData = new FormData();
-    formData.append('avatar', file);
-    const token = localStorage.getItem('token');
-    let tipoUsuario;
-    if (usuario.tipo === 'profesional') {
-      tipoUsuario = 'profesional';
-    }
-    else {
-      tipoUsuario = 'Cliente';
-    }
-    const idUsuario = usuario.tipo === 'profesional' ? usuario.idusuarioProfesional : usuario.idusuarioComun;
-    console.log('tipoUsuario:', tipoUsuario);
-    console.log("dato de file" + file);
-    const response = await axios.post(`http://localhost:3000/avatar/subir/${idUsuario}/${tipoUsuario}`, formData, {
-      headers: {
-        Authorization: 'Bearer ' + token,
-        'Content-Type': 'multipart/form-data'
+  const handleAvatarChange = async (event) => {
+    try {
+      const file = event.target.files[0];
+      if (!file) {
+        Swal.fire({
+          title: 'Error',
+          text: 'No seleccionaste un archivo',
+          icon: 'error',
+        });
+        return;
       }
-    });
-    console.log(response.data);
-    setUsuario({ ...usuario, avatar: response.data.avatar });
-  } catch (error) {
-    console.error(error);
-    if (error.response && error.response.data && error.response.data.message) {
-    Swal.fire({
-  title: 'Error',
-  text: 'Error al subir el archivo: ' + error.response.data.message,
-  icon: 'error',
-  timer: 2000,
-});
-    } else {
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const token = localStorage.getItem('token');
+      const tipoUsuario =
+        usuario.tipo === 'profesional' ? 'profesional' : 'Cliente';
+
+      const idUsuario =
+        usuario.tipo === 'profesional'
+          ? usuario.idusuarioProfesional
+          : usuario.idusuarioComun;
+
+      const response = await axios.post(
+        `http://localhost:3000/avatar/subir/${idUsuario}/${tipoUsuario}`,
+        formData,
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      setUsuario({ ...usuario, avatar: response.data.avatar });
+    } catch (error) {
       Swal.fire({
         title: 'Error',
-        text: 'Error al subir el archivo',
+        text: 'No se pudo subir el avatar',
         icon: 'error',
-        timer: 2000,
       });
     }
-  }
-};
+  };
 
   if (usuario.tipo === 'admin') return <PerfilAdmin />;
 
   return (
-    <main className="perfil-wrapper">
-      <section className="perfil-card">
+    <main className="pu-wrapper">
+      <section className="pu-card">
 
-        {/* Avatar + Nombre */}
-        <div className="perfil-header">
-          <div className="avatar-container">
-            <img src={usuario.avatar} alt="Avatar" className="avatar-img" />
+        {/* ==== Avatar + nombre ==== */}
+        <div className="pu-header">
+          <div className="pu-avatar-box">
+            <img src={usuario.avatar} alt="Avatar" className="pu-avatar-img" />
+
             <input
               type="file"
-              id="avatar-input"
+              id="pu-avatar-input"
               accept="image/*"
               onChange={handleAvatarChange}
               hidden
             />
-            <label htmlFor="avatar-input" className="cambiar-avatar">+</label>
+            <label htmlFor="pu-avatar-input" className="pu-avatar-btn">
+              +
+            </label>
           </div>
 
-          <div className="perfil-title">
+          <div className="pu-title-box">
             <h2>Mi Perfil</h2>
-            <p className="perfil-tipo">
+            <p className="pu-type">
               {usuario.tipo === 'profesional'
                 ? 'Profesional'
                 : 'Usuario Cliente'}
@@ -160,8 +134,8 @@ const handleAvatarChange = async (event) => {
           </div>
         </div>
 
-        {/* Datos personales */}
-        <div className="perfil-section">
+        {/* ==== Datos personales ==== */}
+        <div className="pu-section">
           <DatosPersonales
             usuario={usuario}
             editando={editando}
@@ -171,20 +145,28 @@ const handleAvatarChange = async (event) => {
           />
         </div>
 
-        {/* Galería profesional */}
+        {/* ==== Galería profesional ==== */}
         {usuario.tipo === 'profesional' && usuario.idusuarioProfesional && (
-          <div className="perfil-section">
-            <h3 className="section-title">Galería de trabajos</h3>
-            <ImagenesProf idProfesional={usuario.idusuarioProfesional} />
+          <div className="pu-section">
+            <h3 className="pu-section-title">Galería de trabajos</h3>
+
+            <ImagenesProf
+              idProfesional={usuario.idusuarioProfesional}
+              filas={3}
+              columnas={3}
+            />
           </div>
         )}
 
-        {/* Trabajos realizados */}
-        <div className="perfil-section">
-          <h3 className="section-title">Trabajos contratados</h3>
+        {/* ==== Trabajos contratados ==== */}
+        <div className="pu-section">
+          <h3 className="pu-section-title">Trabajos contratados</h3>
+
           <TrabajosContratados
             idProfesional={usuario.idusuarioProfesional}
             idusuarioComun={usuario.idusuarioComun}
+            filas={3}
+            columnas={3}
           />
         </div>
       </section>
