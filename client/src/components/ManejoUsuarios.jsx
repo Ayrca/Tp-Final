@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/ManejoUsuarios.css';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const ManejoUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/usuario')
+    axios.get('${BASE_URL}/usuario')
       .then((response) => {
         console.log(response);
         setUsuarios(response.data);
@@ -18,7 +20,7 @@ const ManejoUsuarios = () => {
   }, []);
 
   const handleBaneo = (id) => {
-    axios.put(`http://localhost:3000/usuario/${id}/baneo`)
+    axios.put(`${BASE_URL}/usuario/${id}/baneo`)
       .then((response) => {
         console.log(response);
         setUsuarios(usuarios.map((usuario) => {
@@ -34,7 +36,7 @@ const ManejoUsuarios = () => {
   };
 
   const handleDesbloqueo = (id) => {
-    axios.put(`http://localhost:3000/usuario/${id}/desbloqueo`)
+    axios.put(`${BASE_URL}/usuario/${id}/desbloqueo`)
       .then((response) => {
         console.log(response);
         setUsuarios(usuarios.map((usuario) => {

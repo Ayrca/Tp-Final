@@ -3,6 +3,8 @@ import axios from 'axios';
 import './estilos/Buscador.css';
 import { Link, useNavigate } from 'react-router-dom';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const Buscador = () => {
   const [textoBusqueda, setTextoBusqueda] = useState('');
   const [resultados, setResultados] = useState([]);
@@ -10,18 +12,16 @@ const Buscador = () => {
   const navigate = useNavigate();
   const contenedorRef = useRef(null);
 
-  // Normalizador para ignorar acentos, mayus, minus
   const normalizar = (texto) =>
     texto
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
-  // Cerrar dropdown al hacer click fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (contenedorRef.current && !contenedorRef.current.contains(e.target)) {
-        setResultados([]); // cierra el dropdown
+        setResultados([]);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -36,16 +36,14 @@ const Buscador = () => {
     if (valor.length > 0) {
       try {
         const response = await axios.get(
-          `http://localhost:3000/oficios?nombre_like=${valor}`
+          `${BASE_URL}/oficios?nombre_like=${valor}`
         );
 
         if (Array.isArray(response.data)) {
           const textoNormalizado = normalizar(valor);
-
           const resultadosFiltrados = response.data.filter((resultado) =>
             normalizar(resultado.nombre).includes(textoNormalizado)
           );
-
           setResultados(resultadosFiltrados);
         } else {
           setError('La respuesta del servidor no es válida');
@@ -60,27 +58,16 @@ const Buscador = () => {
   };
 
   const handleKeyDown = (e) => {
-    // ENTER → navegación al 1er resultado
     if (e.key === 'Enter' && resultados.length > 0) {
-      if (resultados[0].idOficios) {
-        navigate(`/oficios/${resultados[0].idOficios}`);
-      } else {
-        setError('No se pudo determinar el ID del oficio');
-      }
+      if (resultados[0].idOficios) navigate(`/oficios/${resultados[0].idOficios}`);
+      else setError('No se pudo determinar el ID del oficio');
     }
-
-    // ESC → cerrar dropdown
-    if (e.key === 'Escape') {
-      setResultados([]);
-    }
+    if (e.key === 'Escape') setResultados([]);
   };
 
   const handleResultadoClick = (idOficios) => {
-    if (idOficios) {
-      navigate(`/oficios/${idOficios}`);
-    } else {
-      setError('No se pudo determinar el ID del oficio');
-    }
+    if (idOficios) navigate(`/oficios/${idOficios}`);
+    else setError('No se pudo determinar el ID del oficio');
   };
 
   return (
@@ -99,14 +86,8 @@ const Buscador = () => {
         {resultados.length > 0 && (
           <ul className="resultados" style={{ zIndex: 1 }}>
             {resultados.map((resultado, index) => (
-              <li
-                key={index}
-                onClick={() => handleResultadoClick(resultado.idOficios)}
-              >
-                <Link
-                  to={`/oficios/${resultado.idOficios}`}
-                  onClick={(e) => e.preventDefault()} // evita doble navegación
-                >
+              <li key={index} onClick={() => handleResultadoClick(resultado.idOficios)}>
+                <Link to={`/oficios/${resultado.idOficios}`} onClick={(e) => e.preventDefault()}>
                   {resultado.nombre}
                 </Link>
               </li>

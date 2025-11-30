@@ -4,6 +4,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import './estilos/ManejoPublicidad.css';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const ManejoPublicidad = () => {
   const [publicidad, setPublicidad] = useState([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
@@ -13,7 +15,7 @@ const ManejoPublicidad = () => {
   const [editarPublicidad, setEditarPublicidad] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/publicidad')
+    axios.get(`${BASE_URL}/publicidad`)
       .then((response) => {
         setPublicidad(response.data);
       })
@@ -28,7 +30,7 @@ const handleSubmit = (e) => {
   const formData = new FormData();
   formData.append('imagen', imagen);
 
-  axios.post('http://localhost:3000/imagenPropaganda', formData)
+  axios.post(`${BASE_URL}/imagenPropaganda`, formData)
     .then((response) => {
       const urlImagen = `/assets/images/patro/${response.data}`;
       const nuevaPublicidad = {
@@ -37,7 +39,7 @@ const handleSubmit = (e) => {
         urlImagen,
       };
 
-      axios.post('http://localhost:3000/publicidad', nuevaPublicidad)
+      axios.post(`${BASE_URL}/publicidad`, nuevaPublicidad)
         .then((response) => {
           setPublicidad([...(publicidad || []), response.data]);
       
@@ -95,9 +97,9 @@ const handleSubmit = (e) => {
     confirmButtonText: 'Sí, borrar'
   }).then((result) => {
     if (result.isConfirmed) {
-      axios.delete(`http://localhost:3000/publicidad/${item.idpublicidad}`)
+      axios.delete(`${BASE_URL}/publicidad/${item.idpublicidad}`)
         .then(() => {
-          axios.delete(`http://localhost:3000/imagenPropaganda/${nombreImagen}`)
+          axios.delete(`${BASE_URL}/imagenPropaganda/${nombreImagen}`)
             .then(() => {
               const nuevaPublicidad = publicidad.filter((p) => p.idpublicidad !== item.idpublicidad);
               setPublicidad(nuevaPublicidad);
@@ -133,11 +135,11 @@ const handleGuardar = (item) => {
     const formData = new FormData();
     formData.append('imagen', imagen);
 
-axios.post(`http://localhost:3000/imagenPropaganda`, formData)
+axios.post(`${BASE_URL}/imagenPropaganda`, formData)
       .then((response) => {
         console.log('Imagen subida:', response.data);
         item.urlImagen = `/assets/images/patro/${response.data}`;
-        axios.put(`http://localhost:3000/publicidad/${item.idpublicidad}`, item)
+        axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, item)
           .then((response) => {
             console.log('Publicidad actualizada:', response.data);
             const nuevaPublicidad = publicidad.map((p) => p.idpublicidad === item.idpublicidad ? item : p);
@@ -153,7 +155,7 @@ axios.post(`http://localhost:3000/imagenPropaganda`, formData)
         console.error('Error al subir imagen:', error);
       });
   } else {
-    axios.put(`http://localhost:3000/publicidad/${item.idpublicidad}`, item)
+    axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, item)
       .then((response) => {
         console.log('Publicidad actualizada:', response.data);
         const nuevaPublicidad = publicidad.map((p) => p.idpublicidad === item.idpublicidad ? item : p);

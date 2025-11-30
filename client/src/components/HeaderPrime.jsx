@@ -4,6 +4,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import './estilos/HeaderPrime.css';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const HeaderPrime = () => {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState('');
@@ -52,7 +54,7 @@ const HeaderPrime = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+      const response = await axios.post(`${BASE_URL}/auth/login`, { email, password });
       const token = response.data.access_token;
       localStorage.setItem('token', token);
       setIsLoggedIn(true);

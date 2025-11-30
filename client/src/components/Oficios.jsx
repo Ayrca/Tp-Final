@@ -3,13 +3,15 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './estilos/listaOficios.css';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 function Oficios() {
   const [oficios, setOficios] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:3000/oficios')
+    axios.get(`${BASE_URL}/oficios`)
       .then(response => {
         const datosOrdenados = response.data.sort((a, b) =>
           (a.nombre || a.titulo).localeCompare(b.nombre || b.titulo)
