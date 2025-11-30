@@ -4,11 +4,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Habilitar CORS correctamente
   app.enableCors({
-    origin: ['https://tp-final-neon.vercel.app'], // debe ser un array o string exacto
-    credentials: true, // si envías cookies o auth headers
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // opcional, pero útil
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
 
