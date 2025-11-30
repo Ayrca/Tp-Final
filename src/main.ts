@@ -4,6 +4,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // 🔍 MOSTRAR qué valor está recibiendo Railway
+  console.log("FRONTEND_URL desde Railway:", process.env.FRONTEND_URL);
+
   app.enableCors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
