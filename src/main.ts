@@ -7,7 +7,20 @@ async function bootstrap() {
   console.log("🔵 FRONTEND_URL:", process.env.FRONTEND_URL);
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL, // 🔥 ESTA ES LA CLAVE
+    origin: (origin, callback) => {
+      console.log("🔵 Origin recibido:", origin);
+
+      const permitido = [process.env.FRONTEND_URL];
+
+      if (!origin) return callback(null, true);
+
+      if (permitido.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ CORS bloqueado:", origin);
+        callback(new Error("No permitido por CORS"), false);
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
