@@ -21,7 +21,7 @@
 
 /* Logo */
 .navbar-logo .logo {
-  height: 90px;
+  height: 130px;
   width: auto;
   border-radius: 0;
 }
@@ -206,6 +206,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
+  color: #34495e;
 }
 
 .btn-close {
@@ -247,7 +248,7 @@
 
 .form-floating label {
   font-size: 0.9rem;
-  color: #555;
+  color: #34495e;
   margin-bottom: 4px;
 }
 
@@ -281,7 +282,7 @@
 }
 
 .btn-primary:hover {
-  background: #1f5d8a;
+  background: #2980b9;
 }
 
 .btn-dark {

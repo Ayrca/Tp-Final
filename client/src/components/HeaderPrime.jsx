@@ -171,8 +171,17 @@ const HeaderPrime = () => {
 
                   <div className="login-actions">
                     <button type="submit" className="btn btn-primary">Ingresar</button>
-                    <Link to="/pre-registro" className="btn btn-dark">Registrarse</Link>
-                  </div>
+                    <button
+                      type="button"
+                      className="btn btn-dark"
+                      onClick={() => {
+                        setShowModal(false);
+                        navigate("/pre-registro");
+                      }}
+                    >
+                      Registrarse
+                    </button>                  
+                    </div>
                 </form>
               </div>
             </div>

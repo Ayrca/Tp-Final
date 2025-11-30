@@ -1,26 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-/* Reset básico y configuración global */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Inter', sans-serif;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-}
-
-.logo {
-  transform: scale(1.7); /* aumenta el tamaño en un 20% */
-  display: inline-block;
-  margin-left: 15px;
-}
-
 /* El main ocupa todo el alto disponible para empujar el footer */
-main {
+.pre-registro main {
   flex: 1;
-  padding: 20px;
+  padding: 170px;
 }
 
 /* centrado vertical y horizontal */
@@ -50,7 +33,7 @@ main.centrado {
 h2 {
   margin-bottom: 30px;
   font-size: 1.8rem;
-  color: #2c3e50;
+  color: #2f89c8;
 }
 
 /* Botones de selección de tipo de cuenta */
@@ -67,7 +50,7 @@ h2 {
   cursor: pointer;
   border: none;
   border-radius: 12px;
-  background-color: #27ae60;
+  background-color: #2f89c8;
   color: #fff;
   font-weight: 600;
   box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);
@@ -78,6 +61,6 @@ h2 {
 }
 
 .btn-opcion:hover {
-  background-color: #219150;
+  background-color: #2980b9;
   transform: scale(1.03);
 }
