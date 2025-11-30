@@ -6,9 +6,9 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     console.log("🔵 FRONTEND_URL:", process.env.FRONTEND_URL);
     app.enableCors({
-        origin: true,
-        methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-        allowedHeaders: 'Content-Type, Authorization',
+        origin: process.env.FRONTEND_URL,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
     });
     const port = process.env.PORT || 3000;
