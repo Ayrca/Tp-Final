@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/trabajosContratados.css';
 import Swal from 'sweetalert2';
-import jwtDecode from 'jwt-decode';
+import { default as jwtDecode } from 'jwt-decode';
 
 const BASE_URL = 'https://tp-final-production.up.railway.app';
 
