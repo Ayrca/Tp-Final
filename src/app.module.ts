@@ -33,15 +33,14 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    // Configuración global de variables de entorno
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // Servir el front
+    // Servir Frontend
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client', 'public'),
     }),
 
-    // Configuración de TypeORM para MySQL en Railway
+    // TypeORM con Railway EXTERNO (correcto)
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST!,
@@ -58,12 +57,10 @@ import { JwtModule } from '@nestjs/jwt';
         TrabajoContratado,
         Administrador,
       ],
-    synchronize: false,
-    logging: ['query', 'error', 'schema'],
+      synchronize: true,   // ACTIVA creación automática de tablas
+      logging: true,       // Activa logs
     }),
-    
 
-    // Módulos de la aplicación
     ImagenOficiosModule,
     ImagenPropagandaModule,
     AdministradorModule,
@@ -76,14 +73,12 @@ import { JwtModule } from '@nestjs/jwt';
     AvatarImagenModule,
     AuthModule,
 
-    // JWT
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'mi-llave-secreta',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
 export class AppModule {}
