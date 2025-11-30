@@ -7,7 +7,7 @@ import ManejoOficios from './ManejoOficios';
 import ManejoUsuarios from './ManejoUsuarios';
 import ManejoProfesionales from './ManejoProfesionales';
 
-
+const BASE_URL = "https://tp-final-production.up.railway.app";
 
 const PerfilAdmin = () => {
   const [admin, setAdmin] = useState({});
@@ -20,7 +20,7 @@ const PerfilAdmin = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get("http://localhost:3000/auth/perfil", {
+      axios.get(`${BASE_URL}/auth/perfil`, {
         headers: {
           Authorization: `Bearer ${token}`,
         }
@@ -60,8 +60,7 @@ const PerfilAdmin = () => {
     setMostrarPublicidad(false);
     setMostrarOficios(false);
     setMostrarUsuarios(false);
-  };
-  
+  };  
 
   return (
     <div className="perfil-admin-container">

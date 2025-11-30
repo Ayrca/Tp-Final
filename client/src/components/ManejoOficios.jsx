@@ -4,6 +4,8 @@ import axios from 'axios';
 import './estilos/ManejoOficios.css';
 import Swal from 'sweetalert2';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const ManejoOficios = () => {
   const [oficios, setOficios] = useState([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
@@ -12,7 +14,7 @@ const ManejoOficios = () => {
   const [editarOficio, setEditarOficio] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/oficios')
+      axios.get(`${BASE_URL}/oficios`)
       .then((response) => {
         setOficios(response.data);
       })
@@ -28,7 +30,7 @@ const ManejoOficios = () => {
   formData.append('imagen', imagen);
 
   if (editarOficio) {
-    axios.put(`http://localhost:3000/oficios/${editarOficio.idOficios}`, formData)
+      axios.put(`${BASE_URL}/oficios/${editarOficio.idOficios}`, formData)
       .then((response) => {
         const nuevosOficios = oficios.map((oficio) => {
           if (oficio.idOficios === editarOficio.idOficios) {
@@ -56,7 +58,7 @@ const ManejoOficios = () => {
         );
       });
   } else {
-    axios.post('http://localhost:3000/oficios', formData)
+      axios.post(`${BASE_URL}/oficios`, formData)
       .then((response) => {
         setOficios([...oficios, response.data]);
         setNombre('');
@@ -79,12 +81,9 @@ const ManejoOficios = () => {
   }
 };
 
-
-
-  const handleEditar = (oficio) => {
+const handleEditar = (oficio) => {
     setEditarOficio(oficio);
   };
-
 
 const handleBorrar = (oficio) => {
   Swal.fire({
@@ -97,7 +96,7 @@ const handleBorrar = (oficio) => {
     confirmButtonText: 'Sí, borrar'
   }).then((result) => {
     if (result.isConfirmed) {
-      axios.delete(`http://localhost:3000/oficios/${oficio.idOficios}`)
+        axios.delete(`${BASE_URL}/oficios/${oficio.idOficios}`)
         .then(() => {
           const nuevosOficios = oficios.filter((o) => o.idOficios !== oficio.idOficios);
           setOficios(nuevosOficios);
@@ -125,7 +124,7 @@ const handleGuardar = (oficio) => {
     urlImagen: imagen ? `/assets/images/oficios/${imagen.name}`  : oficio.urlImagen,
   };
 
-  axios.put(`http://localhost:3000/oficios/${oficio.idOficios}`, updatedOficio)
+    axios.put(`${BASE_URL}/oficios/${oficio.idOficios}`, updatedOficio)
     .then((response) => {
       const nuevosOficios = oficios.map((o) => {
         if (o.idOficios === oficio.idOficios) {

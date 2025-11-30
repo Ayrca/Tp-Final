@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './estilos/PerfilComercial.css';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const PerfilComercial = () => {
   const location = useLocation();
   const profesional = location.state?.profesional;
@@ -24,14 +26,14 @@ const PerfilComercial = () => {
   useEffect(() => {
     if (profesional) {
       axios
-        .get(`http://localhost:3000/imagen/${profesional.idusuarioProfesional}`)
+        .get(`${BASE_URL}/imagen/${profesional.idusuarioProfesional}`)
         .then((response) => {
           if (Array.isArray(response.data)) setImagenes(response.data);
         })
         .catch(() => {});
 
       axios
-        .get(`http://localhost:3000/trabajoContratado/${profesional.idusuarioProfesional}`)
+        .get(`${BASE_URL}/trabajoContratado/${profesional.idusuarioProfesional}`)
         .then((response) => {
           if (Array.isArray(response.data)) setTrabajos(response.data);
           else setError("La respuesta de la API no es un array");

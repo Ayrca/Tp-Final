@@ -1,7 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/DatosPersonales.css';
+
+const BASE_URL = "https://tp-final-production.up.railway.app";
 
 const DatosPersonales = ({
   usuario,
@@ -35,17 +36,17 @@ const DatosPersonales = ({
         setDisponible(usuario.disponible);
     }
   }, [usuario]);
-  useEffect(() => {
-    const cargarOficios = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/oficios');                        
-        setOficios(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    cargarOficios();
-  }, []);
+    useEffect(() => {
+      const cargarOficios = async () => {
+        try {
+          const response = await axios.get(`${BASE_URL}/oficios`);                        
+          setOficios(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      cargarOficios();
+    }, []);
   const handleGuardar = () => {
     const datosActualizados = {
       nombre,

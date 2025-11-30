@@ -3,6 +3,7 @@ import axios from "axios";
 import "./estilos/CarruselOficios.css";
 import { useNavigate } from "react-router-dom";
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
 const GAP = 24;
 
 const CarruselOficios = () => {
@@ -16,7 +17,7 @@ const CarruselOficios = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/oficios")
+      .get(`${BASE_URL}/oficios`)
       .then((response) => setOficios(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -25,26 +26,19 @@ const CarruselOficios = () => {
     navigate(`/oficios/${idOficios}`);
   };
 
-  // 🔥 Función que calcula px por card
   const getCardWidth = () => {
     const el = document.querySelector(".oficio-card");
     return el ? el.offsetWidth : 0;
   };
 
-  // 🔥 Botón Siguiente
   const handleSiguienteClick = () => {
     const cardWidth = getCardWidth();
-    const sliderWidth =
-      oficios.length * (cardWidth + GAP) - GAP;
-
+    const sliderWidth = oficios.length * (cardWidth + GAP) - GAP;
     const viewportWidth = viewportRef.current?.offsetWidth || 0;
-
     const maxTranslate = sliderWidth - viewportWidth;
     const newIndex = currentIndex + 1;
-
     const newTranslate = newIndex * (cardWidth + GAP);
 
-    // Volver al inicio
     if (newTranslate > maxTranslate) {
       setCurrentIndex(0);
     } else {
@@ -52,18 +46,13 @@ const CarruselOficios = () => {
     }
   };
 
-  // 🔥 Botón Anterior
   const handleAnteriorClick = () => {
     const cardWidth = getCardWidth();
     const viewportWidth = viewportRef.current?.offsetWidth || 0;
-
-    const sliderWidth =
-      oficios.length * (cardWidth + GAP) - GAP;
-
+    const sliderWidth = oficios.length * (cardWidth + GAP) - GAP;
     const maxTranslate = sliderWidth - viewportWidth;
 
     if (currentIndex === 0) {
-      // final exacto
       const lastIndex = Math.floor(maxTranslate / (cardWidth + GAP));
       setCurrentIndex(lastIndex);
     } else {

@@ -5,9 +5,10 @@ import { jwtDecode } from 'jwt-decode';
 import CarruselVertical from '../components/CarruselVertical';
 import Carrusel from '../components/Carrusel';
 import Swal from 'sweetalert2';
-
 import './estilos/ListaProfesionales.css';
 import './estilos/ListaProfesionalesMobile.css';
+
+const BASE_URL = "https://tp-final-production.up.railway.app";
 
 const getIdUsuarioLogueado = () => {
   const token = localStorage.getItem('token');
@@ -47,141 +48,130 @@ const ListaProfesional = () => {
   const centroRef = useRef(null);
   const [alturaCarrusel, setAlturaCarrusel] = useState(0);
 
-  const obtenerOficio = async (idProfesional) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/profesional/${idProfesional}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error al obtener oficio:', error);
-      return null;
-    }
-  };
+// Obtener oficio de un profesional
+const obtenerOficio = async (idProfesional) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/profesional/${idProfesional}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener oficio:', error);
+    return null;
+  }
+};
 
-  useEffect(() => {
-    let url = 'http://localhost:3000/profesional';
-    if (id) {
-      url += `/oficio/${id}`;
-      setIdOficios(id);
-    }
-    axios.get(url)
-      .then((response) => {
-        setProfesionales(response.data);
-        setCargando(false);
+// Lista de profesionales (o por oficio)
+useEffect(() => {
+  let url = `${BASE_URL}/profesional`;
+  if (id) {
+    url += `/oficio/${id}`;
+    setIdOficios(id);
+  }
+  axios.get(url)
+    .then((response) => {
+      setProfesionales(response.data);
+      setCargando(false);
+    })
+    .catch((error) => {
+      setError(error);
+      setCargando(false);
+    });
+}, [id]);
+
+// Publicidad
+useEffect(() => {
+  axios.get(`${BASE_URL}/publicidad`)
+    .then((res) => setPublicidad(res.data))
+    .catch((err) => console.error(err));
+}, []);
+
+// Contratar profesional
+const handleContratar = useCallback(async (profesional) => {
+  if (!idusuarioComun) {
+    Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
+    return;
+  }
+  if (idusuarioComun === profesional.idusuarioProfesional) {
+    Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
+    return;
+  }
+  try {
+    const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
+    const usuarioLogueado = response.data;
+    const oficio = await obtenerOficio(profesional.idusuarioProfesional);
+
+    const datosContratacion = {
+      usuarioComun: { idusuarioComun },
+      profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
+      rubro: oficio.oficio.nombre,
+      telefonoProfesional: profesional.telefono,
+      telefonoCliente: usuarioLogueado.telefono,
+      estado: "pendiente",
+      valoracion: 0,
+      comentario: '',
+      fechaContratacion: new Date(),
+    };
+
+    axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion)
+      .then(response => {
+        Swal.fire({
+          title: 'Éxito',
+          text: 'La solicitud de contrato se ha enviado correctamente',
+          icon: 'success',
+        });
       })
-      .catch((error) => {
-        setError(error);
-        setCargando(false);
-      });
-  }, [id]);
-
-  useEffect(() => {
-    axios.get("http://localhost:3000/publicidad")
-      .then((res) => setPublicidad(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  useEffect(() => {
-    if (centroRef.current) {
-      setAlturaCarrusel(centroRef.current.offsetHeight);
-    }
-  }, [profesionales, currentPage]);
-
-  const totalPages = Math.ceil(profesionales.length / ITEMS_PER_PAGE);
-  const currentProfesionales = profesionales.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-  const nextPage = () => setCurrentPage((p) => (p < totalPages ? p + 1 : p));
-  const prevPage = () => setCurrentPage((p) => (p > 1 ? p - 1 : p));
-
-  const handleContratar = useCallback(async (profesional) => {
-    if (!idusuarioComun) {
-      Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
-      return;
-    }
-    if (idusuarioComun === profesional.idusuarioProfesional) {
-      Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
-      return;
-    }
-    try {
-      const response = await axios.get(`http://localhost:3000/usuario/${idusuarioComun}`);
-      const usuarioLogueado = response.data;
-      const oficio = await obtenerOficio(profesional.idusuarioProfesional);
-
-      const datosContratacion = {
-        usuarioComun: { idusuarioComun },
-        profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
-        rubro: oficio.oficio.nombre,
-        telefonoProfesional: profesional.telefono,
-        telefonoCliente: usuarioLogueado.telefono,
-        estado: "pendiente",
-        valoracion: 0,
-        comentario: '',
-        fechaContratacion: new Date(),
-      };
-
-    axios.post("http://localhost:3000/trabajoContratado", datosContratacion)
-          .then(response => {
-            console.log(response);
-            Swal.fire({
-              title: 'Éxito',
-              text: 'La solicitud de contrato se ha enviado correctamente',
-              icon: 'success',
-            });
-          })
-          .catch(error => {
-            console.error(error);
-            Swal.fire({
-              title: 'Error',
-              text: 'Ocurrió un error al procesar la solicitud',
-              icon: 'error',
-            });
-          });
-      } catch (error) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error al procesar la solicitud',
-          icon: 'error',
-        });
-      }
-    }, [idusuarioComun, idOficios]);
-
-    const handleConectar = async (profesional) => {
-      if (!idusuarioComun) {
-        Swal.fire({
-          title: 'Error',
-          text: 'Debe estar logueado para contactar',
-          icon: 'error',
-        });
-        return;
-      }
-      const usuarioLogueado = jwtDecode(localStorage.getItem('token'));
-      if (usuarioLogueado.tipo === 'profesional') {
-        Swal.fire({
-          title: 'Error',
-          text: 'Los profesionales no pueden contactar a otros profesionales',
-          icon: 'error',
-        });
-      return;
-      }
-
-      try {
-        const telefono = profesional.telefono;
-        const response = await axios.get("http://localhost:3000/usuario/" + idusuarioComun);
-        const usuarioLogueado = response.data;
-        const mensaje = `Hola ${profesional.nombre}, soy ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
-        const url = `https://wa.me/${telefono}?text=${mensaje}`;
-        window.open(url, '_blank');
-      } catch (error) {
+      .catch(error => {
         console.error(error);
         Swal.fire({
           title: 'Error',
           text: 'Ocurrió un error al procesar la solicitud',
           icon: 'error',
         });
-      }
-    };
+      });
+  } catch (error) {
+    Swal.fire({
+      title: 'Error',
+      text: 'Ocurrió un error al procesar la solicitud',
+      icon: 'error',
+    });
+  }
+}, [idusuarioComun, idOficios]);
 
+// Conectar profesional (WhatsApp)
+const handleConectar = async (profesional) => {
+  if (!idusuarioComun) {
+    Swal.fire({
+      title: 'Error',
+      text: 'Debe estar logueado para contactar',
+      icon: 'error',
+    });
+    return;
+  }
+  const usuarioLogueado = jwtDecode(localStorage.getItem('token'));
+  if (usuarioLogueado.tipo === 'profesional') {
+    Swal.fire({
+      title: 'Error',
+      text: 'Los profesionales no pueden contactar a otros profesionales',
+      icon: 'error',
+    });
+    return;
+  }
+
+  try {
+    const telefono = profesional.telefono;
+    const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
+    const usuarioLogueado = response.data;
+    const mensaje = `Hola ${profesional.nombre}, soy ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
+    const url = `https://wa.me/${telefono}?text=${mensaje}`;
+    window.open(url, '_blank');
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: 'Error',
+      text: 'Ocurrió un error al procesar la solicitud',
+      icon: 'error',
+    });
+  }
+};
 
       if (cargando) {
         return <p>Cargando...</p>;

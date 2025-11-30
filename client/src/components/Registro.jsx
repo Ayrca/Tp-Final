@@ -3,6 +3,8 @@ import axios from 'axios';
 import './estilos/Registro.css';
 import Swal from 'sweetalert2';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const CamposComunes = ({
   nombre,
   apellido,
@@ -167,7 +169,7 @@ const Registro = () => {
   useEffect(() => {
     const obtenerOficios = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/oficios');                        
+        const response = await axios.get(`${BASE_URL}/oficios`);                        
         setOficiosOptions(response.data);
       } catch (error) {
         console.error(error);
@@ -199,7 +201,7 @@ const Registro = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3000/usuario/verificar-email', { email });
+      const response = await axios.post(`${BASE_URL}/usuario/verificar-email`, { email });
 
       if (response.data.mensaje === 'El email está disponible') {
 
@@ -221,8 +223,8 @@ const Registro = () => {
 
         const endpoint =
           tipoUsuario === 'Cliente'
-            ? 'http://localhost:3000/usuario/registro'
-            : 'http://localhost:3000/profesional/registro';
+            ? `${BASE_URL}/usuario/registro`
+            : `${BASE_URL}/profesional/registro`;
 
         await axios.post(endpoint, datos);
 

@@ -7,6 +7,8 @@ import TrabajosContratados from './TrabajosContratados';
 import PerfilAdmin from './PerfilAdmin';
 import Swal from 'sweetalert2';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const PerfilUsuario = () => {
   const [usuario, setUsuario] = useState({});
   const [editando, setEditando] = useState(false);
@@ -15,7 +17,7 @@ const PerfilUsuario = () => {
     const token = localStorage.getItem('token');
     if (token) {
       axios
-        .get("http://localhost:3000/auth/perfil", {
+        .get(`${BASE_URL}/auth/perfil`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => setUsuario(response.data))
@@ -32,7 +34,7 @@ const PerfilUsuario = () => {
 
       if (usuario.tipo === 'profesional') {
         response = await axios.put(
-          "http://localhost:3000/profesional",
+          `${BASE_URL}/profesional`,
           datosActualizados,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -43,7 +45,7 @@ const PerfilUsuario = () => {
         delete datosActualizadosUsuario.descripcion;
 
         response = await axios.put(
-          `http://localhost:3000/usuario/${usuario.idusuarioComun}`,
+          `${BASE_URL}/usuario/${usuario.idusuarioComun}`,
           datosActualizadosUsuario,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -81,7 +83,7 @@ const PerfilUsuario = () => {
           : usuario.idusuarioComun;
 
       const response = await axios.post(
-        `http://localhost:3000/avatar/subir/${idUsuario}/${tipoUsuario}`,
+        `${BASE_URL}/avatar/subir/${idUsuario}/${tipoUsuario}`,
         formData,
         {
           headers: {

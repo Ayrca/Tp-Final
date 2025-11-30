@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/ManejoProfesionales.css';
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const ManejoProfesionales = () => {
   const [profesionales, setProfesionales] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/profesional')
+    axios.get(`${BASE_URL}/profesional`)
       .then((response) => {
         console.log(response.data);
         setProfesionales(response.data);
@@ -17,7 +19,7 @@ const ManejoProfesionales = () => {
   }, []);
 
   const handleBaneo = (id) => {
-    axios.put(`http://localhost:3000/profesional/${id}/baneo`)
+    axios.put(`${BASE_URL}//profesional/${id}/baneo`)
       .then((response) => {
         console.log(response);
         setProfesionales(profesionales.map((profesional) => {
@@ -33,7 +35,7 @@ const ManejoProfesionales = () => {
   };
 
   const handleDesbloqueo = (id) => {
-    axios.put(`http://localhost:3000/profesional/${id}/desbloqueo`)
+    axios.put(`${BASE_URL}//profesional/${id}/desbloqueo`)
       .then((response) => {
         console.log(response);
         setProfesionales(profesionales.map((profesional) => {

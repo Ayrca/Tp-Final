@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./estilos/CarruselPublicidad.css";
 
+const BASE_URL = "https://tp-final-production.up.railway.app";
+
 const CarruselPropaganda = () => {
   const [publicidad, setPublicidad] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -12,15 +14,12 @@ const CarruselPropaganda = () => {
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
-useEffect(() => {
-  axios
-    .get("http://localhost:3000/publicidad")
-    .then((res) => {
-      setPublicidad(res.data);
-    })
-    .catch((err) => console.error(err));
-}, []);
-
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/publicidad`)
+      .then((res) => setPublicidad(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const totalItems = publicidad.length;
 
@@ -42,21 +41,17 @@ useEffect(() => {
 
   const nextSlide = (reset = true) => {
     if (reset) stopAutoSlide();
-
     setCurrentSlide((prev) =>
-    prev + 1 >= totalItems - itemsPerView + 1 ? 0 : prev + 1
+      prev + 1 >= totalItems - itemsPerView + 1 ? 0 : prev + 1
     );
-
     if (reset) startAutoSlide();
   };
 
   const prevSlide = (reset = true) => {
     if (reset) stopAutoSlide();
-
     setCurrentSlide((prev) =>
-    prev === 0 ? totalItems - itemsPerView : prev - 1
+      prev === 0 ? totalItems - itemsPerView : prev - 1
     );
-
     if (reset) startAutoSlide();
   };
 
@@ -72,9 +67,7 @@ useEffect(() => {
 
   const onTouchEnd = () => {
     const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 40) {
-      diff > 0 ? nextSlide(false) : prevSlide(false);
-    }
+    if (Math.abs(diff) > 40) diff > 0 ? nextSlide(false) : prevSlide(false);
     startAutoSlide();
   };
 
@@ -87,9 +80,7 @@ useEffect(() => {
   const onMouseUp = (e) => {
     touchEndX.current = e.clientX;
     const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 40) {
-      diff > 0 ? nextSlide(false) : prevSlide(false);
-    }
+    if (Math.abs(diff) > 40) diff > 0 ? nextSlide(false) : prevSlide(false);
     startAutoSlide();
   };
 
@@ -111,19 +102,16 @@ useEffect(() => {
         </>
       )}
 
-          <div className="propaganda-container">
-          <div
-            className="propaganda-track"
-            style={{
-              transform: `translateX(-${currentSlide * 50}%)`, // mueve 50% por item
-            }}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-          >
-
+      <div className="propaganda-container">
+        <div
+          className="propaganda-track"
+          style={{ transform: `translateX(-${currentSlide * 50}%)` }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+        >
           {publicidad.map((item, index) => (
             <article
               key={index}
@@ -133,12 +121,7 @@ useEffect(() => {
               }
             >
               <h2 className="propaganda-title">{item.titulo}</h2>
-
-              <img
-                src={item.urlImagen}
-                alt={item.titulo}
-                className="propaganda-img"
-              />
+              <img src={item.urlImagen} alt={item.titulo} className="propaganda-img" />
             </article>
           ))}
         </div>
