@@ -35,11 +35,6 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // Servir Frontend
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client', 'public'),
-    }),
-
         // TypeORM
       TypeOrmModule.forRoot({
         type: 'mysql',
