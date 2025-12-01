@@ -57,12 +57,6 @@ exports.AppModule = AppModule = __decorate([
                 synchronize: false,
                 autoLoadEntities: false,
                 logging: false,
-                ssl: true,
-                extra: {
-                    ssl: {
-                        rejectUnauthorized: false,
-                    },
-                },
             }),
             imagenOficios_module_1.ImagenOficiosModule,
             imagenPropaganda_module_1.ImagenPropagandaModule,
