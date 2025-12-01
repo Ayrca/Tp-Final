@@ -120,4 +120,26 @@ export class ProfesionalService {
     profesional.estadoCuenta = true;
     return this.ProfesionalRepository.save(profesional);
   }
+
+async updatePassword(id: number, password: string): Promise<Profesional> {
+  const profesional = await this.findOne(id);
+  if (!profesional) {
+    throw new Error(`Profesional con id ${id} no encontrado`);
+  }
+  profesional.password = password;
+  return this.ProfesionalRepository.save(profesional);
+}
+
+async actualizarValoracion(id: number, valoracion: number): Promise<Profesional> {
+  const profesional = await this.ProfesionalRepository.findOne({
+    where: { idusuarioProfesional: id },
+  });
+
+  if (!profesional) {
+    throw new Error('Profesional no encontrado');
+  }
+
+  profesional.valoracion = valoracion;
+  return this.ProfesionalRepository.save(profesional);
+}
 }

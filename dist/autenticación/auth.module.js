@@ -14,6 +14,7 @@ const usuario_module_1 = require("../usuario/usuario.module");
 const profesional_module_1 = require("../profesional/profesional.module");
 const administrador_module_1 = require("../administrador/administrador.module");
 const jwt_1 = require("@nestjs/jwt");
+const mailer_1 = require("@nestjs-modules/mailer");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -27,6 +28,17 @@ exports.AuthModule = AuthModule = __decorate([
                 secret: 'mi-llave-secreta',
                 signOptions: { expiresIn: '1h' },
             }),
+            mailer_1.MailerModule.forRoot({
+                transport: {
+                    host: 'smtp.gmail.com',
+                    port: 587,
+                    secure: false,
+                    auth: {
+                        user: 'afipfipa@gmail.com',
+                        pass: 'nptw uomr omyj xaao',
+                    },
+                },
+            })
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService],

@@ -1,3 +1,4 @@
+
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, Req } from '@nestjs/common';
 import { ProfesionalService } from './profesional.service';
 import { Profesional } from './profesional.entity';
@@ -132,4 +133,30 @@ export class ProfesionalController {
   async desbloquearProfesional(@Param('id') id: number): Promise<Profesional> {
     return this.profesionalService.desbloquearProfesional(id);
   }
+
+
+@Put('cambiar-password')
+@UseGuards(AuthGuard)
+async cambiarPassword(@Req() req: any, @Body() { password }: { password: string }) {
+  try {
+    const id = req.user?.sub;
+    if (!id) {
+      throw new Error('Usuario no autenticado');
+    }
+    const profesionalActualizado = await this.profesionalService.updatePassword(id, password);
+    return profesionalActualizado;
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error;
+  }
+}
+
+
+
+@Put(':id/valoracion')
+async actualizarValoracion(@Param('id') id: number, @Body() valoracion: { valoracion: number }): Promise<Profesional> {
+  return this.profesionalService.actualizarValoracion(id, valoracion.valoracion);
+}
+
+
 }

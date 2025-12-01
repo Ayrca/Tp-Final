@@ -15,4 +15,5 @@ export declare class UsuarioService {
     registrar(datos: any): Promise<Usuario>;
     banearUsuario(id: number): Promise<Usuario>;
     desbloquearUsuario(id: number): Promise<Usuario>;
+    updatePassword(id: number, password: string): Promise<Usuario>;
 }

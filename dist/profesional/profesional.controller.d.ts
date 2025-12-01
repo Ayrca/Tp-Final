@@ -27,10 +27,16 @@ export declare class ProfesionalController {
         estadoCuenta: boolean;
         descripcion: string;
         fechaNacimiento: Date;
-        valoracion: Date;
+        valoracion: number;
         disponible: boolean;
     }>;
     registrar(datos: any): Promise<Profesional>;
     banearProfesional(id: number): Promise<Profesional>;
     desbloquearProfesional(id: number): Promise<Profesional>;
+    cambiarPassword(req: any, { password }: {
+        password: string;
+    }): Promise<Profesional>;
+    actualizarValoracion(id: number, valoracion: {
+        valoracion: number;
+    }): Promise<Profesional>;
 }

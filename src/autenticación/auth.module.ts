@@ -5,22 +5,31 @@ import { UsuarioModule } from '../usuario/usuario.module';
 import { ProfesionalModule } from '../profesional/profesional.module';
 import { AdministradorModule } from '../administrador/administrador.module';
 import { JwtModule } from '@nestjs/jwt';
-
-
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
-    UsuarioModule, // Importa el módulo que contiene UsuarioService
-     ProfesionalModule, // Importa ProfesionalModule
-     AdministradorModule, 
+    UsuarioModule,
+    ProfesionalModule,
+    AdministradorModule,
     JwtModule.register({
       secret: 'mi-llave-secreta',
       signOptions: { expiresIn: '1h' },
     }),
+MailerModule.forRoot({
+  transport: {
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'afipfipa@gmail.com',
+      pass: 'nptw uomr omyj xaao',
+    },
+  },
+})
   ],
   controllers: [AuthController],
-  providers: [AuthService], // No es necesario agregar UsuarioService aquí
+  providers: [AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}
-

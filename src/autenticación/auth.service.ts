@@ -4,8 +4,9 @@ import { UsuarioService } from '../usuario/usuario.service';
 import { ProfesionalService } from '../profesional/profesional.service';
 import { JwtService } from '@nestjs/jwt';
 import { AdministradorService } from '../administrador/administrador.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     private readonly profesionalService: ProfesionalService,
     private readonly administradorService: AdministradorService,
     private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async login(email: string, password: string) {
@@ -49,13 +51,9 @@ export class AuthService {
     return null;
   }
 
-
-
-
 async validarPassword(usuario: any, password: string) {
   return await usuario.comparePassword(password);
 }
-
 
  async generateToken(usuario: any, tipo: string) {
     let payload;
@@ -69,8 +67,6 @@ async validarPassword(usuario: any, password: string) {
     return this.jwtService.sign(payload);
   }
 
-
-
   async getUsuario(id: number, tipo: string) {
     if (tipo === 'profesional') {
       return this.profesionalService.findOne(id);
@@ -81,5 +77,57 @@ async validarPassword(usuario: any, password: string) {
     }
   }
 
+async forgotPassword(email: string) {
+  try {
+    const usuario = await this.usuarioService.findOneByEmail(email);
+    const profesional = await this.profesionalService.findOneByEmail(email);
+    const administrador = await this.administradorService.findOneByEmail(email);
+    let user;
+    if (usuario) {
+      user = usuario;
+    } else if (profesional) {
+      user = profesional;
+    } else if (administrador) {
+      user = administrador;
+    }
+    if (!user) {
+      throw new Error('Usuario no encontrado');
+    }
+    const token = this.jwtService.sign({ userId: user.idusuarioProfesional || user.idusuarioComun || user.idusuarioAdm, tipo: user.tipo }, { expiresIn: '1h' });
+    const url = `${BASE_URL}/reset-password/${token}`;
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Cambio de contraseña',
+      text: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
+    });
+    return { message: 'Email enviado', token }; // Devuelve el token generado
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error al enviar el correo electrónico');
+  }
 }
 
+async resetPassword(token: string, password: string) {
+  const decoded = this.jwtService.verify(token);
+  let user;
+  if (decoded.tipo === 'profesional') {
+    user = await this.profesionalService.findOne(decoded.userId);
+  } else if (decoded.tipo === 'usuario') {
+    user = await this.usuarioService.findOne(decoded.userId);
+  } else if (decoded.tipo === 'administrador') {
+    user = await this.administradorService.findOne(decoded.userId);
+  }
+  if (!user) {
+    throw new Error('Usuario no encontrado');
+  }
+  // Actualiza la contraseña del usuario
+  if (decoded.tipo === 'profesional') {
+    await this.profesionalService.updatePassword(decoded.userId, password);
+  } else if (decoded.tipo === 'usuario') {
+    await this.usuarioService.updatePassword(decoded.userId, password);
+  } else if (decoded.tipo === 'administrador') {
+    await this.administradorService.updatePassword(decoded.userId, password);
+  }
+  return { message: 'Contraseña cambiada' };
+}
+}

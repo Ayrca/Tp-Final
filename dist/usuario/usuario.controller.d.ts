@@ -30,4 +30,7 @@ export declare class UsuarioController {
     }>;
     banearUsuario(id: string): Promise<Usuario>;
     desbloquearUsuario(id: string): Promise<Usuario>;
+    cambiarPassword(req: any, { password }: {
+        password: string;
+    }): Promise<Usuario>;
 }

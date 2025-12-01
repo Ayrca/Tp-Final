@@ -5,7 +5,6 @@ import { Usuario } from './usuario.entity';
 import { Like } from 'typeorm';
 @Injectable()
 
-
 export class UsuarioService {
   constructor(
     @InjectRepository(Usuario)
@@ -39,14 +38,9 @@ async findByEmail(email: string): Promise<Usuario | null> {
   return usuario;
 }
 
-
-
 async findOneByEmail(email: string) {
     return this.usuarioRepository.findOneBy({ email });
   }
-
-
-
 
   async create(usuario: Usuario): Promise<Usuario> {
     return this.usuarioRepository.save(usuario);
@@ -58,8 +52,6 @@ async findOneByEmail(email: string) {
   async delete(id: number): Promise<void> {
     await this.usuarioRepository.delete(id);
   }
-
-
 
   async findByNombreLike(tituloLike: string): Promise<Usuario[]> {
     return this.usuarioRepository.find({
@@ -93,7 +85,14 @@ async desbloquearUsuario(id: number): Promise<Usuario> {
   const usuario = await this.findOne(id);
   usuario.estadoCuenta = true;
   return this.usuarioRepository.save(usuario);
-}
-  
-}
+}  
 
+async updatePassword(id: number, password: string): Promise<Usuario> {
+  const usuario = await this.findOne(id);
+  if (!usuario) {
+    throw new Error(`Usuario con id ${id} no encontrado`);
+  }
+  usuario.password = password;
+  return this.usuarioRepository.save(usuario);
+}
+}

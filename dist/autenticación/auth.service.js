@@ -15,16 +15,20 @@ const usuario_service_1 = require("../usuario/usuario.service");
 const profesional_service_1 = require("../profesional/profesional.service");
 const jwt_1 = require("@nestjs/jwt");
 const administrador_service_1 = require("../administrador/administrador.service");
+const mailer_1 = require("@nestjs-modules/mailer");
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 let AuthService = class AuthService {
     usuarioService;
     profesionalService;
     administradorService;
     jwtService;
-    constructor(usuarioService, profesionalService, administradorService, jwtService) {
+    mailerService;
+    constructor(usuarioService, profesionalService, administradorService, jwtService, mailerService) {
         this.usuarioService = usuarioService;
         this.profesionalService = profesionalService;
         this.administradorService = administradorService;
         this.jwtService = jwtService;
+        this.mailerService = mailerService;
     }
     async login(email, password) {
         console.log('Iniciando sesión con email:', email);
@@ -86,6 +90,64 @@ let AuthService = class AuthService {
             return this.administradorService.findOne(id);
         }
     }
+    async forgotPassword(email) {
+        try {
+            const usuario = await this.usuarioService.findOneByEmail(email);
+            const profesional = await this.profesionalService.findOneByEmail(email);
+            const administrador = await this.administradorService.findOneByEmail(email);
+            let user;
+            if (usuario) {
+                user = usuario;
+            }
+            else if (profesional) {
+                user = profesional;
+            }
+            else if (administrador) {
+                user = administrador;
+            }
+            if (!user) {
+                throw new Error('Usuario no encontrado');
+            }
+            const token = this.jwtService.sign({ userId: user.idusuarioProfesional || user.idusuarioComun || user.idusuarioAdm, tipo: user.tipo }, { expiresIn: '1h' });
+            const url = `${BASE_URL}/reset-password/${token}`;
+            await this.mailerService.sendMail({
+                to: email,
+                subject: 'Cambio de contraseña',
+                text: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
+            });
+            return { message: 'Email enviado', token };
+        }
+        catch (error) {
+            console.log(error);
+            throw new Error('Error al enviar el correo electrónico');
+        }
+    }
+    async resetPassword(token, password) {
+        const decoded = this.jwtService.verify(token);
+        let user;
+        if (decoded.tipo === 'profesional') {
+            user = await this.profesionalService.findOne(decoded.userId);
+        }
+        else if (decoded.tipo === 'usuario') {
+            user = await this.usuarioService.findOne(decoded.userId);
+        }
+        else if (decoded.tipo === 'administrador') {
+            user = await this.administradorService.findOne(decoded.userId);
+        }
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+        if (decoded.tipo === 'profesional') {
+            await this.profesionalService.updatePassword(decoded.userId, password);
+        }
+        else if (decoded.tipo === 'usuario') {
+            await this.usuarioService.updatePassword(decoded.userId, password);
+        }
+        else if (decoded.tipo === 'administrador') {
+            await this.administradorService.updatePassword(decoded.userId, password);
+        }
+        return { message: 'Contraseña cambiada' };
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
@@ -93,6 +155,7 @@ exports.AuthService = AuthService = __decorate([
     __metadata("design:paramtypes", [usuario_service_1.UsuarioService,
         profesional_service_1.ProfesionalService,
         administrador_service_1.AdministradorService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        mailer_1.MailerService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

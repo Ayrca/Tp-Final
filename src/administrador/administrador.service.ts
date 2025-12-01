@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Administrador } from './administrador.entity';
 
-
 @Injectable()
 export class AdministradorService {
   constructor(
@@ -15,7 +14,6 @@ export class AdministradorService {
   async findAll(): Promise<Administrador[]> {
     return this.administradorRepository.find();
   }
-
   
 async findOneByEmail(email: string): Promise<Administrador | null> {
   return this.administradorRepository.findOne({ where: { email } });
@@ -34,11 +32,16 @@ async update(id: number, administrador: Administrador): Promise<Administrador | 
   return this.administradorRepository.findOne({ where: { idusuarioAdm: id } });
 }
 
-
-
   async delete(id: number): Promise<void> {
     await this.administradorRepository.delete(id);
   }
+
+  async updatePassword(id: number, password: string): Promise<Administrador> {
+  const administrador = await this.findOne(id);
+  if (!administrador) {
+    throw new Error(`Administrador con id ${id} no encontrado`);
+  }
+  administrador.password = password;
+  return this.administradorRepository.save(administrador);
 }
-
-
+}

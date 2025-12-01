@@ -8,4 +8,6 @@ export declare class TrabajoContratadoService {
     findByProfesionalId(idProfesional: number): Promise<TrabajoContratado[]>;
     create(trabajoContratado: TrabajoContratado): Promise<TrabajoContratado>;
     delete(idTrabajoContratado: number): Promise<void>;
+    findById(idcontratacion: number): Promise<TrabajoContratado>;
+    getPromedioValoracion(idusuarioProfesional: number): Promise<number>;
 }

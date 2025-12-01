@@ -19,4 +19,6 @@ export declare class ProfesionalService {
     registrar(datos: any): Promise<Profesional>;
     banearProfesional(id: number): Promise<Profesional>;
     desbloquearProfesional(id: number): Promise<Profesional>;
+    updatePassword(id: number, password: string): Promise<Profesional>;
+    actualizarValoracion(id: number, valoracion: number): Promise<Profesional>;
 }

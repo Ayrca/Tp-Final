@@ -1,3 +1,4 @@
+
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { AdministradorService } from './administrador.service';
 import { Administrador } from './administrador.entity';
@@ -10,24 +11,26 @@ export class AdministradorController {
   async findAll(): Promise<Administrador[]> {
     return this.administradorService.findAll();
   }
-/*
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Administrador> {
-    return this.administradorService.findOne(id);
-  }
-*/
+
   @Post()
   async create(@Body() administrador: Administrador): Promise<Administrador> {
     return this.administradorService.create(administrador);
   }
-/*
-  @Put(':id')
-  async update(@Param('id') id: number, @Body() administrador: Administrador): Promise<Administrador> {
-    return this.administradorService.update(id, administrador);
-  }
-*/
+
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {
     return this.administradorService.delete(id);
   }
+
+@Put('cambiar-password')
+async cambiarPassword(@Body() { id, password }: { id: number, password: string }) {
+  try {
+    const administradorActualizado = await this.administradorService.updatePassword(id, password);
+    return administradorActualizado;
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error;
+  }
+}
+
 }

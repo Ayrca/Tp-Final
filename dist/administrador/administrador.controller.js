@@ -30,6 +30,16 @@ let AdministradorController = class AdministradorController {
     async delete(id) {
         return this.administradorService.delete(id);
     }
+    async cambiarPassword({ id, password }) {
+        try {
+            const administradorActualizado = await this.administradorService.updatePassword(id, password);
+            return administradorActualizado;
+        }
+        catch (error) {
+            console.error('Error al cambiar la contraseña:', error);
+            throw error;
+        }
+    }
 };
 exports.AdministradorController = AdministradorController;
 __decorate([
@@ -52,6 +62,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], AdministradorController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Put)('cambiar-password'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AdministradorController.prototype, "cambiarPassword", null);
 exports.AdministradorController = AdministradorController = __decorate([
     (0, common_1.Controller)('administradores'),
     __metadata("design:paramtypes", [administrador_service_1.AdministradorService])

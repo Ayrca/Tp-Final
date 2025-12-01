@@ -35,10 +35,10 @@ export class Profesional {
   estadoCuenta: boolean;
   @Column()
   descripcion: string;
-   @Column()
+  @Column()
   fechaNacimiento: Date;
   @Column()
-  valoracion: Date;
+  valoracion: number;
   @Column()
   disponible: boolean;
 

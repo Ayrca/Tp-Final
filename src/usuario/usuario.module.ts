@@ -22,4 +22,3 @@ import { ProfesionalModule } from 'src/profesional/profesional.module';
 
 })
 export class UsuarioModule {}
-

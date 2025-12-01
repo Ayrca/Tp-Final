@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, HttpStatus, HttpException  } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { Usuario } from './usuario.entity';
-
+import { Req } from '@nestjs/common';
 import { AuthGuard } from '../autenticación/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { ProfesionalService } from '../profesional/profesional.service';
-
 
 @Controller('usuario')
 export class UsuarioController {
@@ -19,16 +18,11 @@ export class UsuarioController {
     return this.usuarioService.create(usuario);
   }
 
-
-
 @Put(':id')
 async update(@Param('id') id: number, @Body() usuario: Usuario): Promise<Usuario> {
   id = Number(id); // Convierte el ID a un número
   return this.usuarioService.update(id, usuario);
 }
-
-
-
 
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {
@@ -41,7 +35,6 @@ async update(@Param('id') id: number, @Body() usuario: Usuario): Promise<Usuario
     return this.usuarioService.registrar(datos);
   }
 
-
 @Post('verificar-email')
 async verificarEmail(@Body('email') email: string) {
   const usuario = await this.usuarioService.findByEmail(email);
@@ -53,12 +46,10 @@ async verificarEmail(@Body('email') email: string) {
   }
 }
 
-
 @Get()
 async getUsuarios() {
   return this.usuarioService.findAll();
 }
-
 
 @Get(':id')
 async getUsuario(@Param('id') id: string) {
@@ -68,7 +59,6 @@ async getUsuario(@Param('id') id: string) {
   }
   return this.usuarioService.findOne(idNumber);
 }
-
 
 @Get('perfil')
 @UseGuards(AuthGuard)
@@ -96,7 +86,6 @@ async getPerfil(@Request() req: any) {
   }
 }
 
-
 @Put(':id/baneo')
 async banearUsuario(@Param('id') id: string): Promise<Usuario> {
   return this.usuarioService.banearUsuario(parseInt(id, 10));
@@ -107,8 +96,19 @@ async desbloquearUsuario(@Param('id') id: string): Promise<Usuario> {
   return this.usuarioService.desbloquearUsuario(parseInt(id, 10));
 }
 
-
-
+@Put('cambiar-password')
+@UseGuards(AuthGuard)
+async cambiarPassword(@Req() req: any, @Body() { password }: { password: string }) {
+  try {
+    const id = req.user?.sub;
+    if (!id) {
+      throw new Error('Usuario no autenticado');
+    }
+    const usuarioActualizado = await this.usuarioService.updatePassword(id, password);
+    return usuarioActualizado;
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error;
+  }
 }
-
-
+}

@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const trabajosContr_entity_1 = require("./trabajosContr.entity");
+const typeorm_3 = require("typeorm");
 let TrabajoContratadoService = class TrabajoContratadoService {
     trabajoContratadoRepository;
     constructor(trabajoContratadoRepository) {
@@ -38,6 +39,26 @@ let TrabajoContratadoService = class TrabajoContratadoService {
         return this.trabajoContratadoRepository.find({
             where: { usuarioComun: { idusuarioComun: idUsuarioComun } },
             relations: ['profesional', 'usuarioComun'],
+            select: {
+                idcontratacion: true,
+                rubro: true,
+                estado: true,
+                fechaContratacion: true,
+                valoracion: true,
+                comentario: true,
+                telefonoProfesional: true,
+                telefonoCliente: true,
+                profesional: {
+                    idusuarioProfesional: true,
+                    nombre: true,
+                },
+                usuarioComun: {
+                    idusuarioComun: true,
+                    nombre: true,
+                    apellido: true,
+                    telefono: true
+                }
+            }
         });
     }
     async findByProfesionalId(idProfesional) {
@@ -63,6 +84,51 @@ let TrabajoContratadoService = class TrabajoContratadoService {
     }
     async delete(idTrabajoContratado) {
         await this.trabajoContratadoRepository.delete(idTrabajoContratado);
+    }
+    async findById(idcontratacion) {
+        const trabajoContratado = await this.trabajoContratadoRepository.findOne({
+            where: { idcontratacion },
+            relations: ['profesional', 'usuarioComun'],
+            select: {
+                idcontratacion: true,
+                rubro: true,
+                estado: true,
+                fechaContratacion: true,
+                valoracion: true,
+                comentario: true,
+                telefonoProfesional: true,
+                telefonoCliente: true,
+                profesional: {
+                    idusuarioProfesional: true,
+                    nombre: true
+                },
+                usuarioComun: {
+                    idusuarioComun: true,
+                    nombre: true,
+                    apellido: true,
+                    telefono: true
+                }
+            }
+        });
+        if (!trabajoContratado) {
+            throw new Error(`TrabajoContratado con id ${idcontratacion} no encontrado`);
+        }
+        return trabajoContratado;
+    }
+    async getPromedioValoracion(idusuarioProfesional) {
+        const trabajosContratados = await this.trabajoContratadoRepository.find({
+            where: {
+                profesional: { idusuarioProfesional },
+                estado: 'terminado',
+                valoracion: (0, typeorm_3.MoreThan)(0),
+            },
+        });
+        if (trabajosContratados.length === 0) {
+            return 0;
+        }
+        const sumaValoraciones = trabajosContratados.reduce((sum, trabajo) => sum + trabajo.valoracion, 0);
+        const promedioValoracion = sumaValoraciones / trabajosContratados.length;
+        return promedioValoracion;
     }
 };
 exports.TrabajoContratadoService = TrabajoContratadoService;

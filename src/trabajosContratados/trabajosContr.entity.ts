@@ -6,7 +6,6 @@ import { Usuario } from '../usuario/usuario.entity';
 export class TrabajoContratado {
   @PrimaryGeneratedColumn()
   idcontratacion: number;
-  
 
   @ManyToOne(() => Usuario)
   @JoinColumn({ name: 'usuarioComun_idusuarioComun' })
@@ -14,7 +13,6 @@ export class TrabajoContratado {
   @ManyToOne(() => Profesional)
   @JoinColumn({ name: 'usuarioProfesional_idusuarioProfesional' })
   profesional: Profesional;
-
   @Column()
   rubro: string;
   @Column()
