@@ -1,35 +1,39 @@
 # ======= Stage 1: Build =======
 FROM node:20-alpine AS builder
 
-# Instalamos dependencias necesarias para build
+# Carpeta de trabajo
 WORKDIR /app
+
+# Copiamos package.json y package-lock.json
 COPY package*.json ./
+
+# Instalamos todas las dependencias (dev + prod) para poder compilar
 RUN npm install
 
 # Copiamos todo el proyecto
 COPY . .
 
-# Construimos la app
+# Compilamos la app NestJS
 RUN npm run build
 
 # ======= Stage 2: Production =======
 FROM node:20-alpine
 
-# Carpeta de trabajo
 WORKDIR /app
 
-# Copiamos solo las dependencias de producción
+# Copiamos solo dependencias de producción
 COPY package*.json ./
 RUN npm install --production
 
-# Copiamos la carpeta 'dist' desde el build
+# Copiamos la carpeta dist generada en el build
 COPY --from=builder /app/dist ./dist
 
-# Copiamos archivos necesarios para ejecución (si tienes env, etc.)
-COPY --from=builder /app/package*.json ./
+# Copiamos archivos necesarios para runtime
+COPY --from=builder /app/.env ./   
+COPY --from=builder /app/prisma ./     
 
-# Exponemos el puerto (Railway asigna process.env.PORT)
+# Exponemos el puerto
 EXPOSE 8080
 
-# Comando para iniciar la app
+# Comando para ejecutar la app con tu main.ts
 CMD ["node", "dist/main.js"]

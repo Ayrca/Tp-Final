@@ -1,29 +1,40 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
-const app_module_1 = require("./app.module");
+const common_1 = require("@nestjs/common");
+let AppController = class AppController {
+    ping() {
+        return { status: 'ok' };
+    }
+};
+__decorate([
+    (0, common_1.Get)('ping'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "ping", null);
+AppController = __decorate([
+    (0, common_1.Controller)()
+], AppController);
+let AppModule = class AppModule {
+};
+AppModule = __decorate([
+    (0, common_1.Module)({
+        controllers: [AppController],
+    })
+], AppModule);
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    const frontend = process.env.FRONTEND_URL || '*';
-    console.log("🔵 FRONTEND_URL:", frontend);
-    app.enableCors({
-        origin: frontend,
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true,
-    });
-    const port = process.env.PORT || 3000;
-    console.log('🔵 PORT env:', process.env.PORT);
-    await app.listen(port, '0.0.0.0');
-    console.log(`🚀 Server running on port ${port}`);
-    process.on('SIGTERM', () => {
-        console.log('⚠️ SIGTERM recibido. Cerrando aplicación...');
-        process.exit(0);
-    });
-    process.on('SIGINT', () => {
-        console.log('⚠️ SIGINT recibido. Cerrando aplicación...');
-        process.exit(0);
-    });
+    const app = await core_1.NestFactory.create(AppModule);
+    await app.listen(process.env.PORT || 3000, '0.0.0.0');
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
