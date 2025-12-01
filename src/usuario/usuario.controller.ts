@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, HttpStatus, HttpException  } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { Usuario } from './usuario.entity';
-
+import { Req } from '@nestjs/common';
 import { AuthGuard } from '../autenticación/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { ProfesionalService } from '../profesional/profesional.service';
@@ -107,6 +107,22 @@ async desbloquearUsuario(@Param('id') id: string): Promise<Usuario> {
   return this.usuarioService.desbloquearUsuario(parseInt(id, 10));
 }
 
+
+@Put('cambiar-password')
+@UseGuards(AuthGuard)
+async cambiarPassword(@Req() req: any, @Body() { password }: { password: string }) {
+  try {
+    const id = req.user?.sub;
+    if (!id) {
+      throw new Error('Usuario no autenticado');
+    }
+    const usuarioActualizado = await this.usuarioService.updatePassword(id, password);
+    return usuarioActualizado;
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error;
+  }
+}
 
 
 }

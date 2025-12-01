@@ -41,6 +41,14 @@ let AdministradorService = class AdministradorService {
     async delete(id) {
         await this.administradorRepository.delete(id);
     }
+    async updatePassword(id, password) {
+        const administrador = await this.findOne(id);
+        if (!administrador) {
+            throw new Error(`Administrador con id ${id} no encontrado`);
+        }
+        administrador.password = password;
+        return this.administradorRepository.save(administrador);
+    }
 };
 exports.AdministradorService = AdministradorService;
 exports.AdministradorService = AdministradorService = __decorate([

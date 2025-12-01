@@ -42,4 +42,16 @@ async findByUsuarioComunId(@Param('idusuarioComun') idUsuarioComun: number): Pro
   async delete(@Param('idTrabajoContratado') idTrabajoContratado: number): Promise<void> {
     return this.trabajoContratadoService.delete(idTrabajoContratado);
   }
+
+
+
+  @Get('promedio-valoracion/:idusuarioProfesional')
+  async getPromedioValoracion(@Param('idusuarioProfesional') idusuarioProfesional: number) {
+    return this.trabajoContratadoService.getPromedioValoracion(idusuarioProfesional);
+  }
+
+
+
+
 }
+

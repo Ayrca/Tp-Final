@@ -36,6 +36,9 @@ let TrabajoContratadoController = class TrabajoContratadoController {
     async delete(idTrabajoContratado) {
         return this.trabajoContratadoService.delete(idTrabajoContratado);
     }
+    async getPromedioValoracion(idusuarioProfesional) {
+        return this.trabajoContratadoService.getPromedioValoracion(idusuarioProfesional);
+    }
 };
 exports.TrabajoContratadoController = TrabajoContratadoController;
 __decorate([
@@ -74,6 +77,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TrabajoContratadoController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Get)('promedio-valoracion/:idusuarioProfesional'),
+    __param(0, (0, common_1.Param)('idusuarioProfesional')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], TrabajoContratadoController.prototype, "getPromedioValoracion", null);
 exports.TrabajoContratadoController = TrabajoContratadoController = __decorate([
     (0, common_1.Controller)('trabajoContratado'),
     __metadata("design:paramtypes", [trabajosContr_service_1.TrabajoContratadoService])

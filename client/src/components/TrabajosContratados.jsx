@@ -69,8 +69,10 @@ const handleCancelar = async (idcontratacion) => {
 };
 
 
+/*
 const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
-  console.log("id del usuario pro" + idusuarioProfesional);
+  console.log('idcontratacion:', idcontratacion);
+  console.log('idProfesional2:', idusuarioProfesional);
   const { value: formValues } = await Swal.fire({
     title: 'Finalizar trabajo',
     html: '<input id="comentario" class="swal2-input" placeholder="Comentario">' + '<input id="valoracion" type="number" class="swal2-input" placeholder="Valoracion (1-5)">',
@@ -88,8 +90,6 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
 
   if (formValues) {
     try {
-        console.log("id del usuario pro2" + idusuarioProfesional);
-      // Actualizar el trabajo
       const response = await axios.put(`http://localhost:3000/trabajoContratado/${idcontratacion}`, {
         estado: 'terminado',
         comentario: formValues.comentario,
@@ -97,57 +97,99 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
       });
 
       if (response.status === 200) {
-        console.log("id del usuario pro3" + idusuarioProfesional);
-    await actualizarValoracionProfesional(idusuarioProfesional);
-    fetchTrabajos();
-  }
-  
-      else {
+        const responsePromedio = await axios.get(`http://localhost:3000/trabajoContratado/promedio-valoracion/${idusuarioProfesional}`);
+        const promedioValoracion = responsePromedio.data;
+
+        const responseProfesionalUpdate = await axios.put(`http://localhost:3000/profesional/${idusuarioProfesional}/valoracion`, {
+         valoracion: promedioValoracion,
+        });
+
+        if (responseProfesionalUpdate.status === 200) {
+          Swal.fire({
+            title: 'Finalizado',
+            text: 'El trabajo ha sido finalizado correctamente',
+            icon: 'success',
+          });
+          fetchTrabajos();
+        } else {
+          console.error('Error al actualizar el perfil del profesional');
+        }
+      } else {
         console.error('Error al finalizar el trabajo');
       }
     } catch (error) {
       console.error('Error al finalizar el trabajo:', error);
     }
   }
-};
+}
+*/
+const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
+  console.log('idcontratacion:', idcontratacion);
+  console.log('idProfesional2:', idusuarioProfesional);
+  const { value: formValues } = await Swal.fire({
+    title: 'Finalizar trabajo',
+    html: '<input id="comentario" class="swal2-input" placeholder="Comentario">' + '<input id="valoracion" type="number" class="swal2-input" placeholder="Valoracion (1-5)">',
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Finalizar',
+    cancelButtonText: 'Volver',
+    preConfirm: () => {
+      const valoracion = parseInt(document.getElementById('valoracion').value);
+      if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
+        Swal.showValidationMessage('La valoración debe ser un número entre 1 y 5');
+        return false;
+      }
+      return {
+        comentario: document.getElementById('comentario').value,
+        valoracion: valoracion,
+      };
+    },
+  });
 
-
-
-
-const actualizarValoracionProfesional = async (idusuarioProfesional) => {
-  try {
-    const response = await axios.get(`http://localhost:3000/trabajoContratado/${idusuarioProfesional}`);
-    const contrataciones = response.data;
-
-    const valoraciones = contrataciones.filter(contratacion => contratacion.estado === 'terminado' && contratacion.valoracion !== null)
-      .map(contratacion => contratacion.valoracion);
-
-    if (valoraciones.length > 0) {
-      const sumaValoraciones = valoraciones.reduce((a, b) => a + b, 0);
-      const valoracionPromedio = sumaValoraciones / valoraciones.length;
-
-      await axios.put(`http://localhost:3000/profesional/${idusuarioProfesional}`, {
-        valoracion: valoracionPromedio,
+  if (formValues) {
+    try {
+      const response = await axios.put(`http://localhost:3000/trabajoContratado/${idcontratacion}`, {
+        estado: 'terminado',
+        comentario: formValues.comentario,
+        valoracion: formValues.valoracion,
       });
-    } else {
-      await axios.put(`http://localhost:3000/profesional/${idusuarioProfesional}`, {
-        valoracion: 0,
-      });
+
+      if (response.status === 200) {
+        const responsePromedio = await axios.get(`http://localhost:3000/trabajoContratado/promedio-valoracion/${idusuarioProfesional}`);
+        const promedioValoracion = responsePromedio.data;
+        const responseProfesionalUpdate = await axios.put(`http://localhost:3000/profesional/${idusuarioProfesional}/valoracion`, {
+          valoracion: promedioValoracion,
+        });
+
+        if (responseProfesionalUpdate.status === 200) {
+          Swal.fire({
+            title: 'Finalizado',
+            text: 'El trabajo ha sido finalizado correctamente',
+            icon: 'success',
+          });
+          fetchTrabajos();
+        } else {
+          console.error('Error al actualizar el perfil del profesional');
+        }
+      } else {
+        console.error('Error al finalizar el trabajo');
+      }
+    } catch (error) {
+      console.error('Error al finalizar el trabajo:', error);
     }
-  } catch (error) {
-    console.error('Error al actualizar la valoración del profesional:', error);
   }
-};
-
+}
 
 
 
 const handleFinalizarProfesional = async (idcontratacion) => {
   try {
-    const response = await axios.put(`http://localhost:3000/trabajoContratado/${idcontratacion}`,{ estado: 'terminado', });
+    const response = await axios.get(`http://localhost:3000/trabajoContratado/${idcontratacion}`);
     if (response.status === 200) {
-    await actualizarValoracionProfesional(idProfesional);
-      Swal.fire({ title: 'Finalizado', text: 'El trabajo ha sido finalizado correctamente', icon: 'success', });
+      const idusuarioProfesional = response.data.usuarioProfesional_idusuarioProfesional;
+      await axios.put(`http://localhost:3000/trabajoContratado/${idcontratacion}`, { estado: 'terminado' });
+      
+      Swal.fire({ title: 'Finalizado', text: 'El trabajo ha sido finalizado correctamente', icon: 'success' });
       fetchTrabajos();
     } else {
       console.error('Error al finalizar el trabajo');
@@ -156,6 +198,7 @@ const handleFinalizarProfesional = async (idcontratacion) => {
     console.error('Error al finalizar el trabajo:', error);
   }
 };
+
 
 
 
@@ -189,7 +232,7 @@ const handleCancelarProfesional = async (idcontratacion) => {
   {Array.isArray(trabajos) && trabajos.length > 0 ? (
   
     trabajos.map((trabajo) => (
-   
+  
       <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
        
         {idProfesional ? (
@@ -227,9 +270,11 @@ const handleCancelarProfesional = async (idcontratacion) => {
             </div>
           ) : (
             <div>
-            
 <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
-        
+
+
+
+     
               <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
           </div>
       )}

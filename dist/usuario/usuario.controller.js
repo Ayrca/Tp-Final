@@ -16,6 +16,7 @@ exports.UsuarioController = void 0;
 const common_1 = require("@nestjs/common");
 const usuario_service_1 = require("./usuario.service");
 const usuario_entity_1 = require("./usuario.entity");
+const common_2 = require("@nestjs/common");
 const auth_guard_1 = require("../autenticaci\u00F3n/auth.guard");
 const jwt_1 = require("@nestjs/jwt");
 const profesional_service_1 = require("../profesional/profesional.service");
@@ -92,6 +93,20 @@ let UsuarioController = class UsuarioController {
     async desbloquearUsuario(id) {
         return this.usuarioService.desbloquearUsuario(parseInt(id, 10));
     }
+    async cambiarPassword(req, { password }) {
+        try {
+            const id = req.user?.sub;
+            if (!id) {
+                throw new Error('Usuario no autenticado');
+            }
+            const usuarioActualizado = await this.usuarioService.updatePassword(id, password);
+            return usuarioActualizado;
+        }
+        catch (error) {
+            console.error('Error al cambiar la contraseña:', error);
+            throw error;
+        }
+    }
 };
 exports.UsuarioController = UsuarioController;
 __decorate([
@@ -165,6 +180,15 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsuarioController.prototype, "desbloquearUsuario", null);
+__decorate([
+    (0, common_1.Put)('cambiar-password'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, common_2.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UsuarioController.prototype, "cambiarPassword", null);
 exports.UsuarioController = UsuarioController = __decorate([
     (0, common_1.Controller)('usuario'),
     __metadata("design:paramtypes", [usuario_service_1.UsuarioService,

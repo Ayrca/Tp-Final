@@ -1,0 +1,37 @@
+/* Contenedor general */
+.carrusel-vertical-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+/* Wrapper que se desplaza */
+.carrusel-vertical-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cada item del carrusel */
+.carrusel-vertical-item {
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Link ocupa todo el espacio */
+.carrusel-vertical-item a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Imagen */
+.carrusel-vertical-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+}

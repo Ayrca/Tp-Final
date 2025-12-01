@@ -193,7 +193,5 @@ return (
   </div>
 );
 
-
 };
 export default DatosPersonales;
-

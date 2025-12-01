@@ -9,4 +9,5 @@ export declare class AdministradorService {
     create(administrador: Administrador): Promise<Administrador>;
     update(id: number, administrador: Administrador): Promise<Administrador | null>;
     delete(id: number): Promise<void>;
+    updatePassword(id: number, password: string): Promise<Administrador>;
 }

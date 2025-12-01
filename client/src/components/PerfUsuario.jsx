@@ -4,13 +4,12 @@ import ImagenesProf from './ImagenesProf';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TrabajosContratados from './TrabajosContratados';
-import PerfilAdmin from './PerfilAdmin'; // Importa el perfil de administrador
+import PerfilAdmin from './PerfilAdmin';
 import Swal from 'sweetalert2';
 
 const PerfilUsuario = () => {
   const [usuario, setUsuario] = useState({});
   const [editando, setEditando] = useState(false);
-  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -31,7 +30,6 @@ const PerfilUsuario = () => {
       console.log('No hay token');
     }
   }, []);
-  
 
   const handleGuardarCambios = async (datosActualizados) => {
     try {
@@ -76,7 +74,6 @@ const PerfilUsuario = () => {
  if (usuario.tipo === 'admin') {
     return <PerfilAdmin />;
     }
-
 
 const handleAvatarChange = async (event) => {
   try {
@@ -133,48 +130,66 @@ const handleAvatarChange = async (event) => {
   }
 };
 
+  if (usuario.tipo === 'admin') return <PerfilAdmin />;
 
-return (
-  <main className="cuenta-container">
-    <section className="perfil-usuario">
-    <div className="avatar-container">
-      <img
-  src={usuario.avatar ? usuario.avatar : '/assets/images/avatar-de-usuario.png'}
-  alt="Avatar"
-  className="avatar-img"
-/>
-  <input type="file" id="avatar-input" accept="image/*" onChange={handleAvatarChange} hidden />
-  <label htmlFor="avatar-input" className="cambiar-avatar">+</label>
-</div>
-      <div className="info">
-        <h2>Mi perfil</h2>
-        <DatosPersonales usuario={usuario} editando={editando} handleGuardarCambios={handleGuardarCambios} handleCancelar={handleCancelar} setEditando={setEditando} />
-        {usuario.tipo === 'profesional' && usuario.idusuarioProfesional ? (
-          <div>
-            <section className="galeria" id="galeria-section">
-              <ImagenesProf idProfesional={usuario.idusuarioProfesional} />
-            </section>
+  return (
+    <main className="perfil-wrapper">
+      <section className="perfil-card">
+
+        {/* Avatar + Nombre */}
+        <div className="perfil-header">
+          <div className="avatar-container">
+            <img src={usuario.avatar} alt="Avatar" className="avatar-img" />
+            <input
+              type="file"
+              id="avatar-input"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              hidden
+            />
+            <label htmlFor="avatar-input" className="cambiar-avatar">+</label>
           </div>
-        ) : null}
-        {usuario.tipo === 'profesional' ? (
-          <div>
-            <h3>Trabajos contratados</h3>
-            <div id="trabajos-container">
-              <TrabajosContratados idProfesional={usuario.idusuarioProfesional} />
-            </div>
+
+          <div className="perfil-title">
+            <h2>Mi Perfil</h2>
+            <p className="perfil-tipo">
+              {usuario.tipo === 'profesional'
+                ? 'Profesional'
+                : 'Usuario Cliente'}
+            </p>
           </div>
-        ) : (
-          <div>
-            <h3>Trabajos contratados</h3>
-            <div id="trabajos-container">
-              <TrabajosContratados idusuarioComun={usuario.idusuarioComun} />
-            </div>
+        </div>
+
+        {/* Datos personales */}
+        <div className="perfil-section">
+          <DatosPersonales
+            usuario={usuario}
+            editando={editando}
+            handleGuardarCambios={handleGuardarCambios}
+            handleCancelar={() => setEditando(false)}
+            setEditando={setEditando}
+          />
+        </div>
+
+        {/* Galería profesional */}
+        {usuario.tipo === 'profesional' && usuario.idusuarioProfesional && (
+          <div className="perfil-section">
+            <h3 className="section-title">Galería de trabajos</h3>
+            <ImagenesProf idProfesional={usuario.idusuarioProfesional} />
           </div>
         )}
-      </div>
-    </section>
-  </main>
-);
 
+        {/* Trabajos realizados */}
+        <div className="perfil-section">
+          <h3 className="section-title">Trabajos contratados</h3>
+          <TrabajosContratados
+            idProfesional={usuario.idusuarioProfesional}
+            idusuarioComun={usuario.idusuarioComun}
+          />
+        </div>
+      </section>
+    </main>
+  );
 };
+
 export default PerfilUsuario;

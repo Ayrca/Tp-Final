@@ -6,4 +6,8 @@ export declare class AdministradorController {
     findAll(): Promise<Administrador[]>;
     create(administrador: Administrador): Promise<Administrador>;
     delete(id: number): Promise<void>;
+    cambiarPassword({ id, password }: {
+        id: number;
+        password: string;
+    }): Promise<Administrador>;
 }

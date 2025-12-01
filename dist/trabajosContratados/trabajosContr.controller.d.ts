@@ -12,4 +12,5 @@ export declare class TrabajoContratadoController {
     findByUsuarioComunId(idUsuarioComun: number): Promise<TrabajoContratado[]>;
     create(trabajoContratado: TrabajoContratado): Promise<TrabajoContratado>;
     delete(idTrabajoContratado: number): Promise<void>;
+    getPromedioValoracion(idusuarioProfesional: number): Promise<number>;
 }

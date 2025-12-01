@@ -89,6 +89,14 @@ let UsuarioService = class UsuarioService {
         usuario.estadoCuenta = true;
         return this.usuarioRepository.save(usuario);
     }
+    async updatePassword(id, password) {
+        const usuario = await this.findOne(id);
+        if (!usuario) {
+            throw new Error(`Usuario con id ${id} no encontrado`);
+        }
+        usuario.password = password;
+        return this.usuarioRepository.save(usuario);
+    }
 };
 exports.UsuarioService = UsuarioService;
 exports.UsuarioService = UsuarioService = __decorate([

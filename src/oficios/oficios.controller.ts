@@ -6,15 +6,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImagenOficiosService } from '../imagenOficios/imagenOficios.service';
 
 
-
-
 @Controller('oficios')
 export class OficiosController {
   constructor(private readonly oficiosService: OficiosService, private readonly imagenOficiosService: ImagenOficiosService) {}
-/*
-export class OficiosController {
-  constructor(private readonly oficiosService: OficiosService) {}
-*/
+
 
   @Get()
   async findAll(@Query('nombre_like') nombreLike: string): Promise<Oficio[]> {
@@ -28,12 +23,7 @@ export class OficiosController {
   async findOne(@Param('id') id: number): Promise<Oficio> {
     return this.oficiosService.findOne(id);
   }
-  /*
-  @Post()
-  async create(@Body() oficio: Oficio): Promise<Oficio> {
-    return this.oficiosService.create(oficio);
-  }
-    */
+  
   @Put(':id')
   async update(@Param('id') id: number, @Body() oficio: Oficio): Promise<Oficio> {
     return this.oficiosService.update(id, oficio);

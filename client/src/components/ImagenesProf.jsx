@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './estilos/imagenesProf.css';
 const ImagenesProf = ({ idProfesional }) => {
   const [imagenes, setImagenes] = useState([]);
   const [file, setFile] = useState(null);
@@ -58,7 +57,6 @@ const ImagenesProf = ({ idProfesional }) => {
         <img key={index} src={imagen.url} alt="Imagen" />
       ))}
     </div>
-
         
       </div>
       <form onSubmit={handleSubmit}>
@@ -69,8 +67,4 @@ const ImagenesProf = ({ idProfesional }) => {
   );
 };
 
-
 export default ImagenesProf;
-
-
-

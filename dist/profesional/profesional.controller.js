@@ -111,6 +111,23 @@ let ProfesionalController = class ProfesionalController {
     async desbloquearProfesional(id) {
         return this.profesionalService.desbloquearProfesional(id);
     }
+    async cambiarPassword(req, { password }) {
+        try {
+            const id = req.user?.sub;
+            if (!id) {
+                throw new Error('Usuario no autenticado');
+            }
+            const profesionalActualizado = await this.profesionalService.updatePassword(id, password);
+            return profesionalActualizado;
+        }
+        catch (error) {
+            console.error('Error al cambiar la contraseña:', error);
+            throw error;
+        }
+    }
+    async actualizarValoracion(id, valoracion) {
+        return this.profesionalService.actualizarValoracion(id, valoracion.valoracion);
+    }
 };
 exports.ProfesionalController = ProfesionalController;
 __decorate([
@@ -192,6 +209,23 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ProfesionalController.prototype, "desbloquearProfesional", null);
+__decorate([
+    (0, common_1.Put)('cambiar-password'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProfesionalController.prototype, "cambiarPassword", null);
+__decorate([
+    (0, common_1.Put)(':id/valoracion'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], ProfesionalController.prototype, "actualizarValoracion", null);
 exports.ProfesionalController = ProfesionalController = __decorate([
     (0, common_1.Controller)('profesional'),
     __metadata("design:paramtypes", [profesional_service_1.ProfesionalService, jwt_1.JwtService])

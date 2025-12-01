@@ -39,6 +39,21 @@ async update(id: number, administrador: Administrador): Promise<Administrador | 
   async delete(id: number): Promise<void> {
     await this.administradorRepository.delete(id);
   }
+
+
+
+
+
+
+  async updatePassword(id: number, password: string): Promise<Administrador> {
+  const administrador = await this.findOne(id);
+  if (!administrador) {
+    throw new Error(`Administrador con id ${id} no encontrado`);
+  }
+  administrador.password = password;
+  return this.administradorRepository.save(administrador);
+}
+
 }
 
 
