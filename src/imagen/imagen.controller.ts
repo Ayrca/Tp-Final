@@ -31,7 +31,7 @@ async getImage(@Param('id') id: number) {
     return [];
   }
   return imagenes.map((imagen) => ({
-    url: `${BASE_URL}/assets/imagenesUsuariosProfesionales/${imagen.url}`,
+  url: `/assets/imagenesUsuariosProfesionales/${imagen.url}`,
   }));
 }
 

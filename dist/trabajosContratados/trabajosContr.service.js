@@ -38,23 +38,6 @@ let TrabajoContratadoService = class TrabajoContratadoService {
         return this.trabajoContratadoRepository.find({
             where: { usuarioComun: { idusuarioComun: idUsuarioComun } },
             relations: ['profesional', 'usuarioComun'],
-            select: {
-                idcontratacion: true,
-                rubro: true,
-                estado: true,
-                fechaContratacion: true,
-                valoracion: true,
-                comentario: true,
-                telefonoProfesional: true,
-                telefonoCliente: true,
-                profesional: { nombre: true },
-                usuarioComun: {
-                    idusuarioComun: true,
-                    nombre: true,
-                    apellido: true,
-                    telefono: true
-                }
-            }
         });
     }
     async findByProfesionalId(idProfesional) {
