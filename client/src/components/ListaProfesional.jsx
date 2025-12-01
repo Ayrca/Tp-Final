@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import * as jwtDecode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import CarruselVertical from '../components/CarruselVertical';
 import Carrusel from '../components/Carrusel';
 import Swal from 'sweetalert2';
