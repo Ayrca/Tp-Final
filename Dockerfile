@@ -1,26 +1,35 @@
-# Usamos Node.js ligero
-FROM node:20-alpine
+# ======= Stage 1: Build =======
+FROM node:20-alpine AS builder
 
-# Establecemos carpeta de trabajo
+# Instalamos dependencias necesarias para build
 WORKDIR /app
-
-# Copiamos package.json y package-lock.json
 COPY package*.json ./
-
-# Instalamos dependencias de desarrollo necesarias para build
 RUN npm install
 
-# Copiamos el resto del proyecto
+# Copiamos todo el proyecto
 COPY . .
 
-# Construimos el proyecto NestJS
+# Construimos la app
 RUN npm run build
 
-# Exponemos el puerto que usará la app (Railway define PORT)
-EXPOSE 3000
+# ======= Stage 2: Production =======
+FROM node:20-alpine
 
-# Definimos variables de entorno
-ENV NODE_ENV=production
+# Carpeta de trabajo
+WORKDIR /app
 
-# Comando para arrancar la app
+# Copiamos solo las dependencias de producción
+COPY package*.json ./
+RUN npm install --production
+
+# Copiamos la carpeta 'dist' desde el build
+COPY --from=builder /app/dist ./dist
+
+# Copiamos archivos necesarios para ejecución (si tienes env, etc.)
+COPY --from=builder /app/package*.json ./
+
+# Exponemos el puerto (Railway asigna process.env.PORT)
+EXPOSE 8080
+
+# Comando para iniciar la app
 CMD ["node", "dist/main.js"]
