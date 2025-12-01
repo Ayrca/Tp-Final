@@ -27,24 +27,7 @@ async actualizarEstado(idcontratacion: number, estado: string, comentario: strin
 async findByUsuarioComunId(idUsuarioComun: number): Promise<TrabajoContratado[]> {
   return this.trabajoContratadoRepository.find({
     where: { usuarioComun: { idusuarioComun: idUsuarioComun } },
-    relations: ['profesional', 'usuarioComun'],
-    select: {
-      idcontratacion: true,
-      rubro: true,
-      estado: true,
-      fechaContratacion: true,
-      valoracion: true,
-      comentario: true,
-      telefonoProfesional: true,
-      telefonoCliente: true,
-      profesional: { nombre: true },
-      usuarioComun: { 
-        idusuarioComun: true, 
-        nombre: true, 
-        apellido: true, 
-        telefono: true 
-      }
-    }
+    relations: ['profesional', 'usuarioComun'], 
   });
 }
 

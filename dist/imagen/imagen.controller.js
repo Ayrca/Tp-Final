@@ -72,7 +72,7 @@ let ImagenController = class ImagenController {
             return [];
         }
         return imagenes.map((imagen) => ({
-            url: `${BASE_URL}/assets/imagenesUsuariosProfesionales/${imagen.url}`,
+            url: `/assets/imagenesUsuariosProfesionales/${imagen.url}`,
         }));
     }
     async cambiarAvatar(file, idUsuario, tipoUsuario) {
