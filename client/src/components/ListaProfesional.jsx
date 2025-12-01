@@ -173,13 +173,15 @@ const ListaProfesional = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
+  <>
+    {/* Wrapper principal para desktop */}
     <div className="layout-profesionales-wrapper">
-      <div className="carrusel-desktop">
+      {/* Carrusel izquierdo */}
+      <div className="carrusel-desktop izquierda">
         <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
       </div>
-      <div className="carrusel-mobile">
-        <Carrusel itemsPerView={1} altura={alturaCarrusel} />
-      </div>
+
+      {/* Center con cards */}
       <div className="profesionales-center" ref={centroRef}>
         {profesionales.length === 0 ? (
           <p>No hay profesionales disponibles</p>
@@ -219,6 +221,8 @@ const ListaProfesional = () => {
             ))}
           </div>
         )}
+
+        {/* Paginación */}
         {totalPages > 1 && (
           <div className="pagination">
             <button onClick={prevPage} disabled={currentPage === 1}>◀</button>
@@ -227,7 +231,18 @@ const ListaProfesional = () => {
           </div>
         )}
       </div>
+
+      {/* Carrusel derecho */}
+      <div className="carrusel-desktop derecha">
+        <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
+      </div>
     </div>
+
+    {/* Carrusel horizontal solo para mobile */}
+    <div className="carrusel-mobile">
+      <Carrusel itemsPerView={1} altura={alturaCarrusel} />
+    </div>
+  </>
   );
 };
 
