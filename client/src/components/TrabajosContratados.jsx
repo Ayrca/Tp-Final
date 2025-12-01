@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/trabajosContratados.css';
 import Swal from 'sweetalert2';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   const [trabajos, setTrabajos] = useState([]);
   const [error, setError] = useState(null);
-  const esProfesional = jwtDecode(localStorage.getItem('token')).tipo === 'profesional';
+
+  const token = localStorage.getItem('token');
+  const esProfesional = token ? jwtDecode(token).tipo === 'profesional' : false;
 
   const fetchTrabajos = async () => {
     try {

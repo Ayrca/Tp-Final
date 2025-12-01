@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import CarruselVertical from '../components/CarruselVertical';
 import Carrusel from '../components/Carrusel';
 import Swal from 'sweetalert2';
@@ -13,6 +13,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 const getIdUsuarioLogueado = () => {
   const token = localStorage.getItem('token');
   if (!token) return null;
+
   const decodedToken = jwtDecode(token);
   return decodedToken.sub;
 };
