@@ -132,7 +132,7 @@ __decorate([
 ], Profesional.prototype, "fechaNacimiento", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Date)
+    __metadata("design:type", Number)
 ], Profesional.prototype, "valoracion", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

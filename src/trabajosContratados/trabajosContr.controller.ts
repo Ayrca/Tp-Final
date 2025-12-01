@@ -2,13 +2,9 @@ import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { TrabajoContratadoService } from './trabajosContr.service';
 import { TrabajoContratado } from './trabajosContr.entity';
 
-
-
-
 @Controller('trabajoContratado')
 export class TrabajoContratadoController {
   constructor(private readonly trabajoContratadoService: TrabajoContratadoService) {}
-
 
 
 @Put(':idcontratacion')
@@ -17,29 +13,28 @@ async actualizarEstado(@Param('idcontratacion') idcontratacion: number, @Body() 
 }
 
 
-
 @Get(':idProfesional')
 async findByProfesionalId(@Param('idProfesional') idProfesional: number): Promise<TrabajoContratado[]> {
   return this.trabajoContratadoService.findByProfesionalId(idProfesional);
 }
-
 
 @Get('usuario/:idusuarioComun')
 async findByUsuarioComunId(@Param('idusuarioComun') idUsuarioComun: number): Promise<TrabajoContratado[]> {
   return this.trabajoContratadoService.findByUsuarioComunId(idUsuarioComun);
 }
 
-
-
   @Post()
   async create(@Body() trabajoContratado: TrabajoContratado): Promise<TrabajoContratado> {
     return this.trabajoContratadoService.create(trabajoContratado);
   }
 
-
-
   @Delete(':idTrabajoContratado')
   async delete(@Param('idTrabajoContratado') idTrabajoContratado: number): Promise<void> {
     return this.trabajoContratadoService.delete(idTrabajoContratado);
+  }
+
+  @Get('promedio-valoracion/:idusuarioProfesional')
+  async getPromedioValoracion(@Param('idusuarioProfesional') idusuarioProfesional: number) {
+    return this.trabajoContratadoService.getPromedioValoracion(idusuarioProfesional);
   }
 }

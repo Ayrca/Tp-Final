@@ -14,7 +14,7 @@ export declare class Profesional {
     estadoCuenta: boolean;
     descripcion: string;
     fechaNacimiento: Date;
-    valoracion: Date;
+    valoracion: number;
     disponible: boolean;
     comparePassword(password: string): Promise<any>;
     hashPassword(): Promise<void>;
