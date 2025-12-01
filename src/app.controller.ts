@@ -1,4 +1,3 @@
-
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
@@ -11,7 +10,9 @@ export class AppController {
     return this.appService.getHello();
   }
 
-
+  // Endpoint para test de disponibilidad
+  @Get('ping')
+  ping() {
+    return { status: 'ok' };
+  }
 }
-
-
