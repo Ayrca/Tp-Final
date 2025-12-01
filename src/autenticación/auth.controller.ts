@@ -41,6 +41,9 @@ async forgotPassword(@Body('email') email: string) {
   }
 }
 
+
+
+
   @Post('reset-password/:token')
   async resetPassword(@Body('password') password: string, @Param('token') token: string) {
     try {
@@ -51,6 +54,9 @@ async forgotPassword(@Body('email') email: string) {
     }
   }
 
+
+
+
 @Get('usuario/:userId/:tipo')
 async getUsuario(@Param('userId', ParseIntPipe) userId: number, @Param('tipo') tipo: string) {
   try {
@@ -59,5 +65,9 @@ async getUsuario(@Param('userId', ParseIntPipe) userId: number, @Param('tipo') t
   } catch (error) {
     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   }
-}  
+}
+
+
+
+  
 }
