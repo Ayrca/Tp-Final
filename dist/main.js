@@ -13,8 +13,17 @@ async function bootstrap() {
         credentials: true,
     });
     const port = process.env.PORT || 3000;
+    console.log('🔵 PORT env:', process.env.PORT);
     await app.listen(port, '0.0.0.0');
     console.log(`🚀 Server running on port ${port}`);
+    process.on('SIGTERM', () => {
+        console.log('⚠️ SIGTERM recibido. Cerrando aplicación...');
+        process.exit(0);
+    });
+    process.on('SIGINT', () => {
+        console.log('⚠️ SIGINT recibido. Cerrando aplicación...');
+        process.exit(0);
+    });
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
