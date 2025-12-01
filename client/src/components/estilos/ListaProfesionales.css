@@ -135,29 +135,32 @@
 }
 
 /* Disponibilidad */
-#disponible {
+.disponible {
   width: auto;
   padding: 4px 12px;
   border: 2px solid black;
   font-size: 14px;
   font-weight: 600;
   border-radius: 8px;
-}
-
-#disponible.disponible {
   color: #22c55e;
   border-color: #22c55e;
   background-color: #dcfce7;
 }
 
-#disponible.no-disponible {
+.no-disponible {
+  width: auto;
+  padding: 4px 12px;
+  border: 2px solid black;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
   color: #ee2525;
   border-color: #ef4444;
   background-color: #fee2e2;
 }
 
 /* Paginador */
-.paginador {
+.pagination {
   grid-column: 1 / -1;
   text-align: center;
   margin-top: 20px;
@@ -166,7 +169,7 @@
   gap: 16px;
 }
 
-.paginador button {
+.pagination button {
   padding: 8px 14px;
   border-radius: 10px;
   border: none;
@@ -176,12 +179,12 @@
   font-weight: 600;
 }
 
-.paginador button:disabled {
+.pagination button:disabled {
   background: #9ca3af;
   cursor: not-allowed;
 }
 
-.paginador span {
+.pagination span {
   font-weight: 600;
   color: #111827;
 }
@@ -278,6 +281,7 @@
   transform: scale(1.04);
 }
 
+/* Estrellas */
 .estrellas {
   display: flex;
   gap: 2px;
