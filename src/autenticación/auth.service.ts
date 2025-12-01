@@ -6,7 +6,6 @@ import { JwtService } from '@nestjs/jwt';
 import { AdministradorService } from '../administrador/administrador.service';
 import { MailerService } from '@nestjs-modules/mailer';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 @Injectable()
 export class AuthService {
@@ -51,9 +50,13 @@ export class AuthService {
     return null;
   }
 
+
+
+
 async validarPassword(usuario: any, password: string) {
   return await usuario.comparePassword(password);
 }
+
 
  async generateToken(usuario: any, tipo: string) {
     let payload;
@@ -67,6 +70,8 @@ async validarPassword(usuario: any, password: string) {
     return this.jwtService.sign(payload);
   }
 
+
+
   async getUsuario(id: number, tipo: string) {
     if (tipo === 'profesional') {
       return this.profesionalService.findOne(id);
@@ -76,6 +81,7 @@ async validarPassword(usuario: any, password: string) {
       return this.administradorService.findOne(id);
     }
   }
+
 
 async forgotPassword(email: string) {
   try {
@@ -94,7 +100,7 @@ async forgotPassword(email: string) {
       throw new Error('Usuario no encontrado');
     }
     const token = this.jwtService.sign({ userId: user.idusuarioProfesional || user.idusuarioComun || user.idusuarioAdm, tipo: user.tipo }, { expiresIn: '1h' });
-    const url = `${BASE_URL}/reset-password/${token}`;
+    const url = `http://localhost:3001/reset-password/${token}`;
     await this.mailerService.sendMail({
       to: email,
       subject: 'Cambio de contraseña',
@@ -106,6 +112,8 @@ async forgotPassword(email: string) {
     throw new Error('Error al enviar el correo electrónico');
   }
 }
+
+
 
 async resetPassword(token: string, password: string) {
   const decoded = this.jwtService.verify(token);
@@ -130,4 +138,9 @@ async resetPassword(token: string, password: string) {
   }
   return { message: 'Contraseña cambiada' };
 }
+
+
+
+
 }
+
