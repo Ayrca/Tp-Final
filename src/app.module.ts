@@ -55,6 +55,11 @@ import { JwtModule } from '@nestjs/jwt';
         synchronize: false,
         autoLoadEntities: false,
         logging: false,
+        extra: {
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          },
       }),
     ImagenOficiosModule,
     ImagenPropagandaModule,
