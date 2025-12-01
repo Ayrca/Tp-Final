@@ -34,7 +34,7 @@ AppModule = __decorate([
 ], AppModule);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(AppModule);
-    await app.listen(process.env.PORT || 3000, '0.0.0.0');
+    await app.listen(process.env.PORT || 8080, '0.0.0.0');
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
