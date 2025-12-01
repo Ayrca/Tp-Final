@@ -13,6 +13,8 @@ import Registro from './components/Registro';
 import PerfilComercial from './components/PerfilComercial';
 import PerfilUsuario from './components/PerfUsuario';
 import PerfilAdmin from './components/PerfilAdmin';
+import RecuperoPassword from './components/RecuperoPassword';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   return (
@@ -43,15 +45,17 @@ function App() {
 
         </div>
       } />
-       <Route path="/oficios/:id" element={<ListaProfesional />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/oficios/:id" element={<ListaProfesional />} />
       <Route path="/oficios" element={<Oficios />} />
       <Route path="/profesional/:id" element={<ListaProfesional />} />
-       <Route path="/" element={<Home />} />
       <Route path="/pre-registro" element={<PreRegistro />} />
       <Route path="/registro" element={<Registro />} />
       <Route path="usuario/perfil" element={<PerfilUsuario />} />
       <Route path="/profesional/perfil/:id" element={<PerfilComercial />} />
-      <Route path="/admin/perfil" component={PerfilAdmin} />
+      <Route path="/admin/perfil" element={<PerfilAdmin />} />
+      <Route path="/RecuperoPassword" element={<RecuperoPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
     </Routes>
 
   );
