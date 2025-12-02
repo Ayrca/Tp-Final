@@ -7,6 +7,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 const ImagenesProf = ({ idProfesional }) => {
   const [imagenes, setImagenes] = useState([]);
   const [file, setFile] = useState(null);
+  const [reload, setReload] = useState(false); // <- nuevo estado para recargar
 
   // PAGINACIÓN
   const [paginaActual, setPaginaActual] = useState(1);
@@ -14,35 +15,41 @@ const ImagenesProf = ({ idProfesional }) => {
 
   const indexUltima = paginaActual * imagenesPorPagina;
   const indexPrimera = indexUltima - imagenesPorPagina;
-
   const imagenesPagina = imagenes.slice(indexPrimera, indexUltima);
   const totalPaginas = Math.ceil(imagenes.length / imagenesPorPagina);
 
-useEffect(() => {
-  axios.get(`${BASE_URL}/imagen/${idProfesional}`)
-    .then((response) => setImagenes(response.data))
-    .catch((error) => console.error(error));
-}, [idProfesional]);
+  // Traer imágenes
+  useEffect(() => {
+    if (!idProfesional) return;
 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  const token = localStorage.getItem('token');
-  const formData = new FormData();
-  formData.append('file', file);
+    axios.get(`${BASE_URL}/imagen/${idProfesional}`)
+      .then((response) => setImagenes(response.data))
+      .catch((error) => console.error(error));
+  }, [idProfesional, reload]); // <- reload dispara fetch nuevamente
 
-  axios.post(`${BASE_URL}/imagen/upload/${idProfesional}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${token}`,
-    }
-  })
-  .then((response) => {
-    setImagenes([...imagenes, response.data]);
-  })
-  .catch((error) => {
-    console.error('Error al subir imagen:', error);
-  });
-};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!file) return;
+
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('file', file);
+
+    axios.post(`${BASE_URL}/imagen/upload/${idProfesional}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      }
+    })
+    .then((response) => {
+      setFile(null); // limpiar input
+      document.getElementById('file-input').value = ''; // reset input
+      setReload(prev => !prev); // fuerza recargar imágenes desde API
+    })
+    .catch((error) => {
+      console.error('Error al subir imagen:', error);
+    });
+  };
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
