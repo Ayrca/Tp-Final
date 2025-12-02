@@ -12,6 +12,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
 
   const token = localStorage.getItem('token');
   const esProfesional = token ? jwtDecode(token).tipo === 'profesional' : false;
+  const idLogueado = esProfesional ? jwtDecode(token).sub : null;
 
   // Paginación
   const [paginaActual, setPaginaActual] = useState(1);
@@ -30,7 +31,6 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
         } else return;
 
         if (response && Array.isArray(response.data)) {
-          // Ordenar por fecha descendente (más reciente primero)
           const trabajosOrdenados = response.data.sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion));
           setTrabajos(trabajosOrdenados);
           setError(null);
@@ -38,7 +38,6 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
           setTrabajos([]);
           setError('No se pudo obtener los trabajos correctamente');
         }
-
       } catch (err) {
         setTrabajos([]);
         setError('Error al conectar con la API');
@@ -83,88 +82,85 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   };
 
   // Funciones de finalizar/cancelar
-const crearModalValoracion = async () => {
-  return Swal.fire({
-    title: 'Finalizar trabajo',
-    html: `
-      <textarea id="comentario" class="swal2-textarea" placeholder="Escribe un comentario..."></textarea>
-      <div class="star-container">
-        <span class="star" data-value="1">★</span>
-        <span class="star" data-value="2">★</span>
-        <span class="star" data-value="3">★</span>
-        <span class="star" data-value="4">★</span>
-        <span class="star" data-value="5">★</span>
-      </div>
-      <input type="hidden" id="valoracion">
-    `,
-    showCancelButton: true,
-    confirmButtonText: 'Finalizar',
-    cancelButtonText: 'Volver',
-    didOpen: () => {
-      const estrellas = Swal.getPopup().querySelectorAll('.star');
-      const inputValoracion = Swal.getPopup().querySelector('#valoracion');
-      estrellas.forEach((star, idx) => {
-        star.addEventListener('click', () => {
-          const value = parseInt(star.dataset.value);
-          inputValoracion.value = value;
-          estrellas.forEach((s, i) => i < value ? s.classList.add('selected') : s.classList.remove('selected'));
+  const crearModalValoracion = async () => {
+    return Swal.fire({
+      title: 'Finalizar trabajo',
+      html: `
+        <textarea id="comentario" class="swal2-textarea" placeholder="Escribe un comentario..."></textarea>
+        <div class="star-container">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+        </div>
+        <input type="hidden" id="valoracion">
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Finalizar',
+      cancelButtonText: 'Volver',
+      didOpen: () => {
+        const estrellas = Swal.getPopup().querySelectorAll('.star');
+        const inputValoracion = Swal.getPopup().querySelector('#valoracion');
+        estrellas.forEach((star, idx) => {
+          star.addEventListener('click', () => {
+            const value = parseInt(star.dataset.value);
+            inputValoracion.value = value;
+            estrellas.forEach((s, i) => i < value ? s.classList.add('selected') : s.classList.remove('selected'));
+          });
+          star.addEventListener('mouseover', () => {
+            estrellas.forEach((s, i) => s.style.color = i <= idx ? '#ffa500' : '#ccc');
+          });
+          star.addEventListener('mouseout', () => {
+            estrellas.forEach((s, i) => s.style.color = i < parseInt(inputValoracion.value) ? 'gold' : '#ccc');
+          });
         });
-        star.addEventListener('mouseover', () => {
-          estrellas.forEach((s, i) => s.style.color = i <= idx ? '#ffa500' : '#ccc');
-        });
-        star.addEventListener('mouseout', () => {
-          estrellas.forEach((s, i) => s.style.color = i < parseInt(inputValoracion.value) ? 'gold' : '#ccc');
-        });
-      });
-    },
-    preConfirm: () => {
-      const valoracion = parseInt(document.getElementById('valoracion').value);
-      const comentario = document.getElementById('comentario').value.trim();
+      },
+      preConfirm: () => {
+        const valoracion = parseInt(document.getElementById('valoracion').value);
+        const comentario = document.getElementById('comentario').value.trim();
 
-      if (!comentario && (isNaN(valoracion) || valoracion < 1 || valoracion > 5)) {
-        Swal.showValidationMessage('Debes ingresar un comentario y seleccionar una valoración entre 1 y 5');
-        return false;
-      }
+        if (!comentario && (isNaN(valoracion) || valoracion < 1 || valoracion > 5)) {
+          Swal.showValidationMessage('Debes ingresar un comentario y seleccionar una valoración entre 1 y 5');
+          return false;
+        }
 
-      if (!comentario) {
-        Swal.showValidationMessage('Debes ingresar un comentario');
-        return false;
-      }
+        if (!comentario) {
+          Swal.showValidationMessage('Debes ingresar un comentario');
+          return false;
+        }
 
-      if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
-        Swal.showValidationMessage('Debes seleccionar una valoración entre 1 y 5');
-        return false;
-      }
+        if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
+          Swal.showValidationMessage('Debes seleccionar una valoración entre 1 y 5');
+          return false;
+        }
 
-      return { comentario, valoracion };
-    },
-  });
-};
+        return { comentario, valoracion };
+      },
+    });
+  };
 
-const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
-  const formValues = await crearModalValoracion();
-  if (!formValues?.value) return;
+  const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
+    const formValues = await crearModalValoracion();
+    if (!formValues?.value) return;
 
-  const { comentario, valoracion } = formValues.value;
+    const { comentario, valoracion } = formValues.value;
 
-  try {
-    await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'terminado', comentario, valoracion });
-    Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
-    const fetch = idProfesional
-      ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
-      : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-    const resp = await fetch;
-    setTrabajos(
-      Array.isArray(resp.data)
-        ? resp.data
-            .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
-            .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
-        : []
-    );
-  } catch (error) {
-    console.error('Error al finalizar el trabajo:', error);
-  }
-};
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'terminado', comentario, valoracion });
+      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
+      );
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+
+    } catch (error) {
+      console.error('Error al finalizar el trabajo:', error);
+    }
+  };
 
   const handleCancelar = async (idcontratacion) => {
     const { value: comentario } = await Swal.fire({
@@ -188,119 +184,102 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
     try {
       await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'cancelado', comentario });
       Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
-      const fetch = idProfesional
-        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
-        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-      const resp = await fetch;
-      setTrabajos(
-        Array.isArray(resp.data)
-          ? resp.data
-              .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
-              .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
-          : []
+
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
       );
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+
     } catch (error) {
       console.error('Error al cancelar el trabajo:', error);
     }
   };
 
-    const handleFinalizarProfesional = async (idcontratacion) => {
-      const { value: comentario } = await Swal.fire({
-        title: 'Finalizar trabajo',
-        input: 'textarea',
-        inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
-        showCancelButton: true,
-        confirmButtonText: 'Finalizar',
-        cancelButtonText: 'Volver',
-        preConfirm: (value) => {
-          if (!value || value.trim() === '') {
-            Swal.showValidationMessage('Debes ingresar un comentario antes de finalizar');
-            return false;
-          }
-          return value.trim();
+  const handleFinalizarProfesional = async (idcontratacion) => {
+    const { value: comentario } = await Swal.fire({
+      title: 'Finalizar trabajo',
+      input: 'textarea',
+      inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
+      showCancelButton: true,
+      confirmButtonText: 'Finalizar',
+      cancelButtonText: 'Volver',
+      preConfirm: (value) => {
+        if (!value || value.trim() === '') {
+          Swal.showValidationMessage('Debes ingresar un comentario antes de finalizar');
+          return false;
         }
+        return value.trim();
+      }
+    });
+
+    if (!comentario) return;
+
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+        estado: 'finalizado_profesional',
+        comentario
       });
 
-      if (!comentario) return;
+      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
 
-      try {
-        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-          estado: 'finalizado_profesional',
-          comentario
-        });
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
+      );
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
 
-        Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+    } catch (error) {
+      console.error('Error al finalizar el trabajo:', error);
+      Swal.fire('Error', 'Ocurrió un error al finalizar el trabajo', 'error');
+    }
+  };
 
-        // Refrescar lista
-        const fetch = idProfesional
-          ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
-          : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-        const resp = await fetch;
-        setTrabajos(
-          Array.isArray(resp.data)
-            ? resp.data
-                .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
-                .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
-            : []        );
-
-      } catch (error) {
-        console.error('Error al finalizar el trabajo:', error);
-        Swal.fire('Error', 'Ocurrió un error al finalizar el trabajo', 'error');
-      }
-    };
-
-    const handleCancelarProfesional = async (idcontratacion) => {
-      const formValues = await Swal.fire({
-        title: 'Cancelar trabajo',
-        input: 'textarea',
-        inputPlaceholder: 'Explica la razón de la cancelación',
-        showCancelButton: true,
-        confirmButtonText: 'Cancelar trabajo',
-        cancelButtonText: 'Volver',
-        preConfirm: (value) => {
-          if (!value || value.trim() === '') {
-            Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
-            return false;
-          }
-          return value.trim();
+  const handleCancelarProfesional = async (idcontratacion) => {
+    const formValues = await Swal.fire({
+      title: 'Cancelar trabajo',
+      input: 'textarea',
+      inputPlaceholder: 'Explica la razón de la cancelación',
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar trabajo',
+      cancelButtonText: 'Volver',
+      preConfirm: (value) => {
+        if (!value || value.trim() === '') {
+          Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+          return false;
         }
+        return value.trim();
+      }
+    });
+
+    if (!formValues?.value) return;
+    const comentario = formValues.value;
+
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { 
+        estado: 'cancelado_profesional', 
+        comentario 
       });
 
-      // Si canceló el modal o no ingresó comentario, salir
-      if (!formValues?.value) return;
+      Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
 
-      const comentario = formValues.value;
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
+      );
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
 
-      try {
-        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { 
-          estado: 'cancelado_profesional', 
-          comentario 
-        });
-
-        Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
-
-        // Refrescar lista
-        const fetch = idProfesional
-          ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
-          : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-        const resp = await fetch;
-        setTrabajos(
-          Array.isArray(resp.data)
-            ? resp.data
-                .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
-                .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
-            : []
-        );
-
-      } catch (error) {
-        console.error('Error al cancelar el trabajo:', error);
-        Swal.fire('Error', 'Ocurrió un error al cancelar el trabajo', 'error');
-      }
-    };
+    } catch (error) {
+      console.error('Error al cancelar el trabajo:', error);
+      Swal.fire('Error', 'Ocurrió un error al cancelar el trabajo', 'error');
+    }
+  };
 
   return (
     <div className="trabajos-contratados">
-      {/* Grilla de tarjetas */}
       <div className={`trabajos-grid gallery-grid ${fadeTrabajos}`}>
         {trabajosPagina.length > 0 ? (
           trabajosPagina.map((trabajo) => (
@@ -335,7 +314,7 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
                  <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
               </p>
 
-                {!["terminado", "cancelado", "finalizado_profesional", "cancelado_profesional"].includes(trabajo.estado) && (
+              {!["terminado", "cancelado", "finalizado_profesional", "cancelado_profesional"].includes(trabajo.estado) && (
                 <div className="botones-trabajo">
                   {idProfesional ? (
                     <>
@@ -357,7 +336,6 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
         )}
       </div>
 
-      {/* Paginación centrada */}
       {totalPaginasTrabajos > 1 && (
         <div className="gallery-pagination-wrapper">
           <div className="gallery-pagination">
