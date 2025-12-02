@@ -8,19 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
 const usuario_module_1 = require("../usuario/usuario.module");
 const profesional_module_1 = require("../profesional/profesional.module");
 const administrador_module_1 = require("../administrador/administrador.module");
 const jwt_1 = require("@nestjs/jwt");
-const mailer_1 = require("@nestjs-modules/mailer");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
             usuario_module_1.UsuarioModule,
             profesional_module_1.ProfesionalModule,
             administrador_module_1.AdministradorModule,
@@ -28,20 +31,6 @@ exports.AuthModule = AuthModule = __decorate([
                 secret: 'mi-llave-secreta',
                 signOptions: { expiresIn: '1h' },
             }),
-            mailer_1.MailerModule.forRoot({
-                transport: {
-                    host: 'smtp-relay.brevo.com',
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: '9d201f001@smtp-brevo.com',
-                        pass: 'DS50pEfHyxCa7BP1',
-                    },
-                },
-                defaults: {
-                    from: '"Mi App" <proyectoafip26@gmail.com>',
-                },
-            })
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService],

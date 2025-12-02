@@ -3,7 +3,8 @@ import { UsuarioService } from '../usuario/usuario.service';
 import { ProfesionalService } from '../profesional/profesional.service';
 import { JwtService } from '@nestjs/jwt';
 import { AdministradorService } from '../administrador/administrador.service';
-import { MailerService } from '@nestjs-modules/mailer';
+
+import * as brevo from '@getbrevo/brevo';
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
@@ -14,16 +15,18 @@ export class AuthService {
     private readonly profesionalService: ProfesionalService,
     private readonly administradorService: AdministradorService,
     private readonly jwtService: JwtService,
-    private readonly mailerService: MailerService,
   ) {}
 
+  // -------------------------------------------------------------
+  // LOGIN
+  // -------------------------------------------------------------
   async login(email: string, password: string) {
     console.log('Iniciando sesión con email:', email);
     const usuario = await this.usuarioService.findOneByEmail(email);
     const profesional = await this.profesionalService.findOneByEmail(email);
     const administrador = await this.administradorService.findOneByEmail(email);
 
-  if (usuario) {
+    if (usuario) {
       const isValid = await usuario.comparePassword(password);
       if (isValid) {
         const token = await this.generateToken(usuario, 'usuario');
@@ -45,16 +48,21 @@ export class AuthService {
       console.log('Usuario, profesional o administrador no encontrado');
       return null;
     }
+
     console.log('Contraseña incorrecta');
     return null;
   }
 
-async validarPassword(usuario: any, password: string) {
-  return await usuario.comparePassword(password);
-}
+  async validarPassword(usuario: any, password: string) {
+    return await usuario.comparePassword(password);
+  }
 
- async generateToken(usuario: any, tipo: string) {
+  // -------------------------------------------------------------
+  // GENERAR TOKEN
+  // -------------------------------------------------------------
+  async generateToken(usuario: any, tipo: string) {
     let payload;
+
     if (tipo === 'usuario') {
       payload = { sub: usuario.idusuarioComun, tipo };
     } else if (tipo === 'profesional') {
@@ -62,9 +70,13 @@ async validarPassword(usuario: any, password: string) {
     } else if (tipo === 'administrador') {
       payload = { sub: usuario.idusuarioAdm, tipo };
     }
+
     return this.jwtService.sign(payload);
   }
 
+  // -------------------------------------------------------------
+  // OBTENER USUARIO POR TIPO
+  // -------------------------------------------------------------
   async getUsuario(id: number, tipo: string) {
     if (tipo === 'profesional') {
       return this.profesionalService.findOne(id);
@@ -75,80 +87,99 @@ async validarPassword(usuario: any, password: string) {
     }
   }
 
-async forgotPassword(email: string) {
-  try {
-    const usuario = await this.usuarioService.findOneByEmail(email);
-    const profesional = await this.profesionalService.findOneByEmail(email);
-    const administrador = await this.administradorService.findOneByEmail(email);
+  // -------------------------------------------------------------
+  // ENVÍO DE EMAIL - BREVO API HTTP
+  // -------------------------------------------------------------
+  private async sendResetEmail(email: string, url: string) {
+    const apiInstance = new brevo.TransactionalEmailsApi();
 
-    let user;
-    if (usuario) {
-      user = usuario;
-    } else if (profesional) {
-      user = profesional;
-    } else if (administrador) {
-      user = administrador;
-    }
-
-    if (!user) {
-      throw new Error('Usuario no encontrado');
-    }
-
-    const token = this.jwtService.sign(
-      {
-        userId:
-          user.idusuarioProfesional ||
-          user.idusuarioComun ||
-          user.idusuarioAdm,
-        tipo: user.tipo,
-      },
-      { expiresIn: '1h' }
+    apiInstance.setApiKey(
+      brevo.TransactionalEmailsApiApiKeys.apiKey,
+      process.env.BREVO_API_KEY!,
     );
 
-    const url = `${FRONTEND_URL}/ResetPassword/${token}`;
 
-    await this.mailerService
-      .sendMail({
-        to: email,
-        subject: 'Cambio de contraseña',
-        text: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
-      })
-      .then(() => console.log('MAIL ENVIADO OK'))
-      .catch((err) => console.log('ERROR SMTP:', err));
+    const sendEmail = {
+      to: [{ email }],
+      sender: { name: "Mi App", email: "proyectoafip26@gmail.com" }, // Correo verificado en Brevo
+      subject: "Cambio de contraseña",
+      textContent: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
+    };
 
-    return { message: 'Email enviado', token };
-  } catch (error) {
-    console.log(error);
-    throw new Error('Error al enviar el correo electrónico');
+    try {
+      await apiInstance.sendTransacEmail(sendEmail);
+      console.log("MAIL ENVIADO OK (BREVO API)");
+    } catch (error) {
+      console.log("ERROR BREVO API:", error);
+      throw new Error("Error enviando email con Brevo");
+    }
+  }
+
+  // -------------------------------------------------------------
+  // FORGOT PASSWORD
+  // -------------------------------------------------------------
+  async forgotPassword(email: string) {
+    try {
+      const usuario = await this.usuarioService.findOneByEmail(email);
+      const profesional = await this.profesionalService.findOneByEmail(email);
+      const administrador = await this.administradorService.findOneByEmail(email);
+
+      let user;
+      if (usuario) user = usuario;
+      else if (profesional) user = profesional;
+      else if (administrador) user = administrador;
+
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+
+      const token = this.jwtService.sign(
+        {
+          userId:
+            user.idusuarioProfesional ||
+            user.idusuarioComun ||
+            user.idusuarioAdm,
+          tipo: user.tipo,
+        },
+        { expiresIn: '1h' }
+      );
+
+      const url = `${FRONTEND_URL}/ResetPassword/${token}`;
+
+      await this.sendResetEmail(email, url);
+
+      return { message: 'Email enviado', token };
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error al enviar el correo electrónico');
+    }
+  }
+
+  // -------------------------------------------------------------
+  // RESET PASSWORD
+  // -------------------------------------------------------------
+  async resetPassword(token: string, password: string) {
+    const decoded = this.jwtService.verify(token);
+
+    let user;
+    if (decoded.tipo === 'profesional') {
+      user = await this.profesionalService.findOne(decoded.userId);
+    } else if (decoded.tipo === 'usuario') {
+      user = await this.usuarioService.findOne(decoded.userId);
+    } else if (decoded.tipo === 'administrador') {
+      user = await this.administradorService.findOne(decoded.userId);
+    }
+
+    if (!user) throw new Error('Usuario no encontrado');
+
+    if (decoded.tipo === 'profesional') {
+      await this.profesionalService.updatePassword(decoded.userId, password);
+    } else if (decoded.tipo === 'usuario') {
+      await this.usuarioService.updatePassword(decoded.userId, password);
+    } else if (decoded.tipo === 'administrador') {
+      await this.administradorService.updatePassword(decoded.userId, password);
+    }
+
+    return { message: 'Contraseña cambiada' };
   }
 }
-
-async resetPassword(token: string, password: string) {
-  const decoded = this.jwtService.verify(token);
-  let user;
-  if (decoded.tipo === 'profesional') {
-    user = await this.profesionalService.findOne(decoded.userId);
-  } else if (decoded.tipo === 'usuario') {
-    user = await this.usuarioService.findOne(decoded.userId);
-  } else if (decoded.tipo === 'administrador') {
-    user = await this.administradorService.findOne(decoded.userId);
-  }
-  if (!user) {
-    throw new Error('Usuario no encontrado');
-  }
-  // Actualiza la contraseña del usuario
-  if (decoded.tipo === 'profesional') {
-    await this.profesionalService.updatePassword(decoded.userId, password);
-  } else if (decoded.tipo === 'usuario') {
-    await this.usuarioService.updatePassword(decoded.userId, password);
-  } else if (decoded.tipo === 'administrador') {
-    await this.administradorService.updatePassword(decoded.userId, password);
-  }
-  return { message: 'Contraseña cambiada' };
-}
-
-
-
-
-}
-
