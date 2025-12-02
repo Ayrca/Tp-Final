@@ -145,20 +145,27 @@ let AuthService = class AuthService {
             const profesional = await this.profesionalService.findOneByEmail(email);
             const administrador = await this.administradorService.findOneByEmail(email);
             let user;
-            if (usuario)
+            let tipo = null;
+            if (usuario) {
                 user = usuario;
-            else if (profesional)
+                tipo = 'usuario';
+            }
+            else if (profesional) {
                 user = profesional;
-            else if (administrador)
+                tipo = 'profesional';
+            }
+            else if (administrador) {
                 user = administrador;
+                tipo = 'administrador';
+            }
             if (!user) {
-                throw new Error('Usuario no encontrado');
+                throw new Error('No existe una cuenta registrada con ese email');
             }
             const token = this.jwtService.sign({
                 userId: user.idusuarioProfesional ||
                     user.idusuarioComun ||
                     user.idusuarioAdm,
-                tipo: user.tipo,
+                tipo,
             }, { expiresIn: '1h' });
             const url = `${FRONTEND_URL}/ResetPassword/${token}`;
             await this.sendResetEmail(email, url);

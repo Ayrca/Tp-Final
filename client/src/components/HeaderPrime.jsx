@@ -168,7 +168,12 @@ const HeaderPrime = () => {
               </div>
 
               <div className="forgot-password">
-                <Link to="/RecuperoPassword">Recuperar contraseña</Link>
+                <Link
+                  to="/RecuperoPassword"
+                  onClick={() => setShowModal(false)}
+                >
+                  Recuperar contraseña
+                </Link>
               </div>
 
               <div className="login-actions">

@@ -118,42 +118,52 @@ export class AuthService {
   // -------------------------------------------------------------
   // FORGOT PASSWORD
   // -------------------------------------------------------------
-  async forgotPassword(email: string) {
-    try {
-      const usuario = await this.usuarioService.findOneByEmail(email);
-      const profesional = await this.profesionalService.findOneByEmail(email);
-      const administrador = await this.administradorService.findOneByEmail(email);
+async forgotPassword(email: string) {
+  try {
+    const usuario = await this.usuarioService.findOneByEmail(email);
+    const profesional = await this.profesionalService.findOneByEmail(email);
+    const administrador = await this.administradorService.findOneByEmail(email);
 
-      let user;
-      if (usuario) user = usuario;
-      else if (profesional) user = profesional;
-      else if (administrador) user = administrador;
+    let user;
+    let tipo: 'usuario' | 'profesional' | 'administrador' | null = null;
 
-      if (!user) {
-        throw new Error('Usuario no encontrado');
-      }
-
-      const token = this.jwtService.sign(
-        {
-          userId:
-            user.idusuarioProfesional ||
-            user.idusuarioComun ||
-            user.idusuarioAdm,
-          tipo: user.tipo,
-        },
-        { expiresIn: '1h' }
-      );
-
-      const url = `${FRONTEND_URL}/ResetPassword/${token}`;
-
-      await this.sendResetEmail(email, url);
-
-      return { message: 'Email enviado', token };
-    } catch (error) {
-      console.log(error);
-      throw new Error('Error al enviar el correo electrónico');
+    if (usuario) {
+      user = usuario;
+      tipo = 'usuario';
+    } else if (profesional) {
+      user = profesional;
+      tipo = 'profesional';
+    } else if (administrador) {
+      user = administrador;
+      tipo = 'administrador';
     }
+
+    if (!user) {
+      throw new Error('No existe una cuenta registrada con ese email');
+    }
+
+    const token = this.jwtService.sign(
+      {
+        userId:
+          user.idusuarioProfesional ||
+          user.idusuarioComun ||
+          user.idusuarioAdm,
+        tipo,
+      },
+      { expiresIn: '1h' }
+    );
+
+    const url = `${FRONTEND_URL}/ResetPassword/${token}`;
+
+    await this.sendResetEmail(email, url);
+
+    return { message: 'Email enviado', token };
+
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error al enviar el correo electrónico');
   }
+}
 
   // -------------------------------------------------------------
   // RESET PASSWORD
