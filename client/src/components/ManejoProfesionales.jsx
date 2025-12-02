@@ -78,8 +78,20 @@ const ManejoProfesionales = () => {
               <td>{profesional.direccion}</td>
               <td>{profesional.fechaNacimiento}</td>
               <td>
-                {profesional.avatar && <img src={profesional.avatar} alt="Avatar" width="50" height="50" />}
-              </td>
+              <td>
+                <img
+                  src={
+                    profesional.avatar
+                      ? profesional.avatar.startsWith('http')
+                        ? profesional.avatar
+                        : `${BASE_URL}${profesional.avatar}` // URL completa
+                      : '/assets/images/avatar-de-usuario.png' // imagen por defecto
+                  }
+                  alt="Avatar"
+                  width="50"
+                  height="50"
+                />
+              </td>              </td>
               <td className={profesional.estadoCuenta ? 'activo' : 'bloqueado'}>{profesional.estadoCuenta ? 'Activo' : 'Bloqueado'}</td>
               <td>
                 {profesional.estadoCuenta ? (

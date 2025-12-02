@@ -9,7 +9,7 @@ const ManejoUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    axios.get('${BASE_URL}/usuario')
+    axios.get(`${BASE_URL}/usuario`)
       .then((response) => {
         console.log(response);
         setUsuarios(response.data);
@@ -81,8 +81,19 @@ const ManejoUsuarios = () => {
               <td>{usuario.direccion}</td>
               <td>{usuario.fechaNacimiento}</td>
               <td>
-  {usuario.avatar && <img src={usuario.avatar} alt="Avatar" width="50" height="50" />}
-</td>
+              <img
+                src={
+                  usuario.avatar
+                    ? usuario.avatar.startsWith('http')
+                      ? usuario.avatar
+                      : `${BASE_URL}${usuario.avatar}` // URL completa
+                    : '/assets/images/avatar-de-usuario.png' // por defecto
+                }
+                alt="Avatar"
+                width="50"
+                height="50"
+              />
+              </td>
               <td className={usuario.estadoCuenta ? 'activo' : 'bloqueado'}>{usuario.estadoCuenta ? 'Activo' : 'Bloqueado'}</td>
               <td>
                 {usuario.estadoCuenta ? (
