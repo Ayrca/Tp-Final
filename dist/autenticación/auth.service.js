@@ -108,13 +108,21 @@ let AuthService = class AuthService {
             if (!user) {
                 throw new Error('Usuario no encontrado');
             }
-            const token = this.jwtService.sign({ userId: user.idusuarioProfesional || user.idusuarioComun || user.idusuarioAdm, tipo: user.tipo }, { expiresIn: '1h' });
+            const token = this.jwtService.sign({
+                userId: user.idusuarioProfesional ||
+                    user.idusuarioComun ||
+                    user.idusuarioAdm,
+                tipo: user.tipo,
+            }, { expiresIn: '1h' });
             const url = `${FRONTEND_URL}/ResetPassword/${token}`;
-            await this.mailerService.sendMail({
+            await this.mailerService
+                .sendMail({
                 to: email,
                 subject: 'Cambio de contraseña',
                 text: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
-            });
+            })
+                .then(() => console.log('MAIL ENVIADO OK'))
+                .catch((err) => console.log('ERROR SMTP:', err));
             return { message: 'Email enviado', token };
         }
         catch (error) {

@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { UsuarioService } from '../usuario/usuario.service';
 import { ProfesionalService } from '../profesional/profesional.service';
@@ -23,7 +22,6 @@ export class AuthService {
     const usuario = await this.usuarioService.findOneByEmail(email);
     const profesional = await this.profesionalService.findOneByEmail(email);
     const administrador = await this.administradorService.findOneByEmail(email);
-
 
   if (usuario) {
       const isValid = await usuario.comparePassword(password);
@@ -51,13 +49,9 @@ export class AuthService {
     return null;
   }
 
-
-
-
 async validarPassword(usuario: any, password: string) {
   return await usuario.comparePassword(password);
 }
-
 
  async generateToken(usuario: any, tipo: string) {
     let payload;
@@ -71,8 +65,6 @@ async validarPassword(usuario: any, password: string) {
     return this.jwtService.sign(payload);
   }
 
-
-
   async getUsuario(id: number, tipo: string) {
     if (tipo === 'profesional') {
       return this.profesionalService.findOne(id);
@@ -83,12 +75,12 @@ async validarPassword(usuario: any, password: string) {
     }
   }
 
-
 async forgotPassword(email: string) {
   try {
     const usuario = await this.usuarioService.findOneByEmail(email);
     const profesional = await this.profesionalService.findOneByEmail(email);
     const administrador = await this.administradorService.findOneByEmail(email);
+
     let user;
     if (usuario) {
       user = usuario;
@@ -97,24 +89,39 @@ async forgotPassword(email: string) {
     } else if (administrador) {
       user = administrador;
     }
+
     if (!user) {
       throw new Error('Usuario no encontrado');
     }
-    const token = this.jwtService.sign({ userId: user.idusuarioProfesional || user.idusuarioComun || user.idusuarioAdm, tipo: user.tipo }, { expiresIn: '1h' });
+
+    const token = this.jwtService.sign(
+      {
+        userId:
+          user.idusuarioProfesional ||
+          user.idusuarioComun ||
+          user.idusuarioAdm,
+        tipo: user.tipo,
+      },
+      { expiresIn: '1h' }
+    );
+
     const url = `${FRONTEND_URL}/ResetPassword/${token}`;
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Cambio de contraseña',
-      text: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
-    });
-    return { message: 'Email enviado', token }; // Devuelve el token generado
+
+    await this.mailerService
+      .sendMail({
+        to: email,
+        subject: 'Cambio de contraseña',
+        text: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
+      })
+      .then(() => console.log('MAIL ENVIADO OK'))
+      .catch((err) => console.log('ERROR SMTP:', err));
+
+    return { message: 'Email enviado', token };
   } catch (error) {
     console.log(error);
     throw new Error('Error al enviar el correo electrónico');
   }
 }
-
-
 
 async resetPassword(token: string, password: string) {
   const decoded = this.jwtService.verify(token);
