@@ -335,7 +335,7 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
                  <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
               </p>
 
-              {trabajo.estado !== "terminado" && trabajo.estado !== "cancelado" && (
+                {!["terminado", "cancelado", "finalizado_profesional", "cancelado_profesional"].includes(trabajo.estado) && (
                 <div className="botones-trabajo">
                   {idProfesional ? (
                     <>
