@@ -190,8 +190,18 @@ const ListaProfesional = () => {
             {currentProfesionales.map((profesional, index) => (
               <article key={index} className="profesional-item compact">
                 <div className="infoContainer">
-                  <img src={profesional.avatar || 'ruta-por-defecto.jpg'} alt={profesional.nombre} />
-                  <div className="profesional-data">
+                <img
+                  src={
+                    profesional.avatar
+                      ? profesional.avatar.startsWith('http')
+                        ? profesional.avatar
+                        : `${BASE_URL}${profesional.avatar}`
+                      : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png' // por defecto
+                  }
+                  alt={profesional.nombre}
+                  className="avatar-profesional"
+                />                  
+                <div className="profesional-data">
                     <div className="profesional-header">
                       <h2>{profesional.nombre} {profesional.apellido}</h2>
                       <label className={profesional.disponible ? 'disponible' : 'no-disponible'}>

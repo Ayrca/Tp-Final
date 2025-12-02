@@ -89,11 +89,17 @@ const PerfilComercial = () => {
 
       {/* HEADER */}
       <div className="perfil-header">
-        {profesional.avatar ? (
-          <img src={profesional.avatar} alt="Avatar" className="avatar-comercial" />
-        ) : (
-          <div className="avatar-placeholder-comercial">Sin imagen</div>
-        )}
+        <img
+          src={
+            profesional.avatar
+              ? profesional.avatar.startsWith('http')
+                ? profesional.avatar
+                : `${BASE_URL}${profesional.avatar}`
+              : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png'
+          }
+          alt={profesional.nombre}
+          className="avatar-comercial"
+        />
 
         <div className="perfil-info">
           <h2>{profesional.empresa}</h2>

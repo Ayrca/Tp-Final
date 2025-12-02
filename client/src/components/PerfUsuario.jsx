@@ -118,17 +118,17 @@ const PerfUsuario = () => {
         {/* ==== Avatar + nombre ==== */}
         <div className="pu-header">
           <div className="pu-avatar-box">
-            <img
-              src={
-                usuario.avatar
-                  ? usuario.avatar.startsWith('http')
-                    ? usuario.avatar
-                    : `${BASE_URL}${usuario.avatar}`
-                  : '/assets/images/avatar-de-usuario.png'
-              }
-              alt="Avatar"
-              className="pu-avatar-img"
-            />
+        <img
+          src={
+            usuario.avatar
+              ? usuario.avatar.startsWith('http')
+                ? usuario.avatar
+                : `${BASE_URL}${usuario.avatar}`
+              : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png' // por defecto
+          }
+          alt="Avatar"
+          className="pu-avatar-img"
+        />
 
             <input
               type="file"
