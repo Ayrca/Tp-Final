@@ -131,3 +131,40 @@
 .star-container .star:hover ~ .star {
   color: #ccc; 
 }
+
+/* Paginacion */
+.gallery-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.pag-btn {
+  background: #3b82f6;       
+  border: 1px solid #dcdcdc;
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;              
+  transition: background .25s, transform .25s;
+}
+
+.pag-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.pag-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #93c5fd;       
+}
+
+.pag-indicator {
+  font-size: 15px;
+  color: #555;
+  font-weight: 500;
+}

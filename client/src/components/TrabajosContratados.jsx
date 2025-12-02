@@ -13,69 +13,73 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   const token = localStorage.getItem('token');
   const esProfesional = token ? jwtDecode(token).tipo === 'profesional' : false;
 
-  const fetchTrabajos = async () => {
-    try {
-      let response;
-
-      if (idProfesional) {
-        response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
-      } else if (idusuarioComun) {
-        response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-      } else {
-        return;
-      }
-
-      if (response && Array.isArray(response.data)) {
-        setTrabajos(response.data);
-        setError(null);
-      } else {
-        setTrabajos([]);
-        setError('No se pudo obtener los trabajos correctamente');
-      }
-    } catch (err) {
-      setTrabajos([]);
-      setError('Error al conectar con la API');
-      console.error(err);
-    }
-  };
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [fadeTrabajos, setFadeTrabajos] = useState("fade-in");
+  const trabajosPorPagina = 6; // 3 columnas x 2 filas
 
   useEffect(() => {
-    if (idProfesional || idusuarioComun) {
-      fetchTrabajos();
-    }
+    const fetchTrabajos = async () => {
+      try {
+        let response;
+
+        if (idProfesional) {
+          response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+        } else if (idusuarioComun) {
+          response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+        } else return;
+
+        if (response && Array.isArray(response.data)) {
+          setTrabajos(response.data);
+          setError(null);
+        } else {
+          setTrabajos([]);
+          setError('No se pudo obtener los trabajos correctamente');
+        }
+      } catch (err) {
+        setTrabajos([]);
+        setError('Error al conectar con la API');
+        console.error(err);
+      }
+    };
+
+    fetchTrabajos();
   }, [idProfesional, idusuarioComun]);
 
-  // Traducir estados
+  // PAGINACIÓN
+  const totalPaginasTrabajos = Math.ceil(trabajos.length / trabajosPorPagina);
+  const inicioTrabajos = (paginaActual - 1) * trabajosPorPagina;
+  const trabajosPagina = trabajos.slice(inicioTrabajos, inicioTrabajos + trabajosPorPagina);
+
+  const cambiarPaginaTrabajos = (nueva) => {
+    setFadeTrabajos("fade-out");
+    setTimeout(() => {
+      setPaginaActual(nueva);
+      setFadeTrabajos("fade-in");
+    }, 300);
+  };
+
+  // Funciones auxiliares
   const traducirEstado = (estado) => {
     switch (estado) {
-      case 'terminado':
-        return 'Finalizado por Cliente';
-      case 'finalizado_profesional':
-        return 'Finalizado por Profesional';
-      case 'cancelado':
-        return 'Cancelado por Cliente';
-      case 'cancelado_profesional':
-        return 'Cancelado por Profesional';
-      default:
-        return estado;
+      case 'terminado': return 'Finalizado por Cliente';
+      case 'finalizado_profesional': return 'Finalizado por Profesional';
+      case 'cancelado': return 'Cancelado por Cliente';
+      case 'cancelado_profesional': return 'Cancelado por Profesional';
+      default: return estado;
     }
   };
 
-  // Componente para mostrar estrellas pequeñas
-  const StarRatingSmall = ({ rating }) => {
-    const maxStars = 5;
-    return (
-      <div className="star-rating-small">
-        {[...Array(maxStars)].map((_, i) => (
-          <span key={i} className={i < rating ? "star filled" : "star"}>
-            ★
-          </span>
-        ))}
-      </div>
-    );
+  const renderEstrellas = (valoracion) => {
+    const maxEstrellas = 5;
+    return [...Array(maxEstrellas)].map((_, i) => (
+      <span key={i} className={i < valoracion ? "estrella llena" : "estrella vacia"}>
+        {i < valoracion ? "★" : "☆"}
+      </span>
+    ));
   };
 
-  // Modal con estrellas clickeables
+  // Funciones de finalizar/cancelar (sin cambios)
   const crearModalValoracion = async () => {
     return Swal.fire({
       title: 'Finalizar trabajo',
@@ -100,27 +104,15 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
           star.addEventListener('click', () => {
             const value = parseInt(star.dataset.value);
             inputValoracion.value = value;
-            estrellas.forEach((s, i) => {
-              if (i < value) s.classList.add('selected');
-              else s.classList.remove('selected');
-            });
+            estrellas.forEach((s, i) => i < value ? s.classList.add('selected') : s.classList.remove('selected'));
           });
-
-          // hover solo para visual
           star.addEventListener('mouseover', () => {
-            estrellas.forEach((s, i) => {
-              if (i < idx + 1) s.style.color = '#ffa500';
-              else s.style.color = '#ccc';
-            });
+            estrellas.forEach((s, i) => s.style.color = i <= idx ? '#ffa500' : '#ccc');
           });
           star.addEventListener('mouseout', () => {
-            estrellas.forEach((s, i) => {
-              if (i < parseInt(inputValoracion.value)) s.style.color = 'gold';
-              else s.style.color = '#ccc';
-            });
+            estrellas.forEach((s, i) => s.style.color = i < parseInt(inputValoracion.value) ? 'gold' : '#ccc');
           });
         });
-
       },
       preConfirm: () => {
         const valoracion = parseInt(document.getElementById('valoracion').value);
@@ -142,45 +134,49 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
 
     try {
       const { comentario, valoracion } = formValues.value;
-      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-        estado: 'terminado',
-        comentario,
-        valoracion,
-      });
-
-      // Actualizar promedio del profesional
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'terminado', comentario, valoracion });
       const responsePromedio = await axios.get(`${BASE_URL}/trabajoContratado/promedio-valoracion/${idusuarioProfesional}`);
       const promedioValoracion = responsePromedio.data;
-      await axios.put(`${BASE_URL}/profesional/${idusuarioProfesional}/valoracion`, {
-        valoracion: promedioValoracion,
-      });
-
+      await axios.put(`${BASE_URL}/profesional/${idusuarioProfesional}/valoracion`, { valoracion: promedioValoracion });
       Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
-      fetchTrabajos();
+      // Refrescar
+      const fetch = idProfesional
+        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
+        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      const resp = await fetch;
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
     } catch (error) {
       console.error('Error al finalizar el trabajo:', error);
     }
   };
 
-  const handleCancelar = async (idcontratacion) => {
-    const { value: comentario } = await Swal.fire({
-      title: '¿Estás seguro de cancelar?',
-      input: 'textarea',
-      inputPlaceholder: 'Explica la razón de la cancelación',
-      showCancelButton: true,
-      confirmButtonText: 'Cancelar',
-      cancelButtonText: 'Volver',
-    });
+      const handleCancelar = async (idcontratacion) => {
+        const { value: comentario } = await Swal.fire({
+          title: '¿Estás seguro de cancelar?',
+          input: 'textarea',
+          inputPlaceholder: 'Explica la razón de la cancelación',
+          showCancelButton: true,
+          confirmButtonText: 'Cancelar',
+          cancelButtonText: 'Volver',
+          preConfirm: (value) => {
+            if (!value || value.trim() === '') {
+              Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+              return false;
+            }
+            return value;
+          }
+        });
 
-    if (!comentario) return;
+        if (!comentario) return;
 
     try {
-      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-        estado: 'cancelado',
-        comentario,
-      });
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'cancelado', comentario });
       Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
-      fetchTrabajos();
+      const fetch = idProfesional
+        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
+        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      const resp = await fetch;
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
     } catch (error) {
       console.error('Error al cancelar el trabajo:', error);
     }
@@ -199,36 +195,45 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     if (!comentario) return;
 
     try {
-      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-        estado: 'finalizado_profesional',
-        comentario,
-      });
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'finalizado_profesional', comentario });
       Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
-      fetchTrabajos();
+      const fetch = idProfesional
+        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
+        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      const resp = await fetch;
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
     } catch (error) {
       console.error('Error al finalizar el trabajo:', error);
     }
   };
 
-  const handleCancelarProfesional = async (idcontratacion) => {
-    const { value: comentario } = await Swal.fire({
-      title: 'Cancelar trabajo',
-      input: 'textarea',
-      inputPlaceholder: 'Explica la razón de la cancelación',
-      showCancelButton: true,
-      confirmButtonText: 'Cancelar trabajo',
-      cancelButtonText: 'Volver'
-    });
+    const handleCancelarProfesional = async (idcontratacion) => {
+      const { value: comentario } = await Swal.fire({
+        title: 'Cancelar trabajo',
+        input: 'textarea',
+        inputPlaceholder: 'Explica la razón de la cancelación',
+        showCancelButton: true,
+        confirmButtonText: 'Cancelar trabajo',
+        cancelButtonText: 'Volver',
+        preConfirm: (value) => {
+          if (!value || value.trim() === '') {
+            Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+            return false;
+          }
+          return value;
+        }
+      });
 
-    if (!comentario) return;
+      if (!comentario) return;
 
     try {
-      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-        estado: 'cancelado_profesional',
-        comentario,
-      });
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'cancelado_profesional', comentario });
       Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
-      fetchTrabajos();
+      const fetch = idProfesional
+        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
+        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      const resp = await fetch;
+      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
     } catch (error) {
       console.error('Error al cancelar el trabajo:', error);
     }
@@ -236,20 +241,23 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
 
   return (
     <div className="trabajos-contratados">
-      {Array.isArray(trabajos) && trabajos.length > 0 ? (
-        trabajos.map((trabajo) => (
-          <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
-            {idProfesional ? (
-              <p><span>Cliente:</span> <span className="dato">{trabajo.usuarioComun?.nombre}</span></p>
-            ) : (
-              <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
-            )}
-            <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
-            <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
-            <p>
-              <span>Fecha de contratación:</span> 
-              <span className="dato">
-                {new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
+
+      <h3>Trabajos realizados</h3>
+
+      <div className={`trabajos-grid gallery-grid ${fadeTrabajos}`}>
+        {trabajosPagina.length > 0 ? (
+          trabajosPagina.map((trabajo) => (
+            <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
+              {idProfesional ? (
+                <p><span>Cliente:</span> <span className="dato">{trabajo.usuarioComun?.nombre}</span></p>
+              ) : (
+                <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
+              )}
+              <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
+              <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
+              <p>
+                <span>Fecha de contratación:</span> 
+                <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
                   day: '2-digit',
                   month: 'long',
                   year: 'numeric',
@@ -257,40 +265,64 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
                   minute: '2-digit',
                   second: '2-digit',
                   hour12: false
-                })}
-              </span>
-            </p>
-            <p>
-              <span>Valoración:</span>
-              <span className="dato">
-                {trabajo.valoracion ? <StarRatingSmall rating={trabajo.valoracion} /> : "Sin valoración"}
-              </span>
-            </p>
-            <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
-            <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> 
-               <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
-            </p>
+                })}</span>
+              </p>
+              <p>
+                <span>Valoración:</span>
+                <span className="dato">
+                  {trabajo.valoracion ? renderEstrellas(trabajo.valoracion) : "Sin valoración"}
+                </span>
+              </p>
+              <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
+              <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> 
+                 <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
+              </p>
 
-            {trabajo.estado !== "terminado" && trabajo.estado !== "cancelado" && (
-              <div className="botones-trabajo">
-                {idProfesional ? (
-                  <>
-                    <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
-                    <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
-                  </>
-                ) : (
-                  <>
-                    <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
-                    <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-        ))
-      ) : (
-        <p>No hay trabajos contratados</p>
+              {trabajo.estado !== "terminado" && trabajo.estado !== "cancelado" && (
+                <div className="botones-trabajo">
+                  {idProfesional ? (
+                    <>
+                      <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
+                      <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
+                      <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>No hay trabajos contratados</p>
+        )}
+      </div>
+
+      {/* Paginación */}
+      {totalPaginasTrabajos > 1 && (
+        <div className="gallery-pagination">
+          <button
+            className="pag-btn"
+            disabled={paginaActual === 1}
+            onClick={() => cambiarPaginaTrabajos(paginaActual - 1)}
+          >
+            ◀
+          </button>
+
+          <span className="pag-indicator">{paginaActual} / {totalPaginasTrabajos}</span>
+
+          <button
+            className="pag-btn"
+            disabled={paginaActual === totalPaginasTrabajos}
+            onClick={() => cambiarPaginaTrabajos(paginaActual + 1)}
+          >
+            ▶
+          </button>
+        </div>
       )}
+
       {error && <p>Error: {error}</p>}
     </div>
   );
