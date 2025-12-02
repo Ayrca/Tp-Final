@@ -55,7 +55,7 @@ function App() {
       <Route path="/profesional/perfil/:id" element={<PerfilComercial />} />
       <Route path="/admin/perfil" element={<PerfilAdmin />} />
       <Route path="/RecuperoPassword" element={<RecuperoPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/ResetPassword/:token" element={<ResetPassword />} />
     </Routes>
 
   );
