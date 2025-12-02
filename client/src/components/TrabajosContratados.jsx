@@ -295,11 +295,17 @@ useEffect(() => {
         {trabajosPagina.length > 0 ? (
           trabajosPagina.map((trabajo) => (
             <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
-              {idProfesional ? (
-                <p><span>Cliente:</span> <span className="dato">{trabajo.usuarioComun?.nombre}</span></p>
-              ) : (
-                <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
-              )}
+            {idProfesional ? (
+              <p>
+                <span>Cliente:</span> 
+                <span className="dato">{trabajo.usuarioComun?.nombre} {trabajo.usuarioComun?.apellido}</span>
+              </p>
+            ) : (
+              <p>
+                <span>Profesional:</span> 
+                <span className="dato">{trabajo.profesional?.nombre} {trabajo.profesional?.apellido}</span>
+              </p>
+            )}
               <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
               <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
               <p>

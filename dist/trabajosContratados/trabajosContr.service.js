@@ -17,7 +17,6 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const trabajosContr_entity_1 = require("./trabajosContr.entity");
-const typeorm_3 = require("typeorm");
 let TrabajoContratadoService = class TrabajoContratadoService {
     trabajoContratadoRepository;
     constructor(trabajoContratadoRepository) {
@@ -51,6 +50,7 @@ let TrabajoContratadoService = class TrabajoContratadoService {
                 profesional: {
                     idusuarioProfesional: true,
                     nombre: true,
+                    apellido: true,
                 },
                 usuarioComun: {
                     idusuarioComun: true,
@@ -74,8 +74,17 @@ let TrabajoContratadoService = class TrabajoContratadoService {
                 comentario: true,
                 telefonoProfesional: true,
                 telefonoCliente: true,
-                profesional: { idusuarioProfesional: true },
-                usuarioComun: { idusuarioComun: true, nombre: true, apellido: true, telefono: true }
+                profesional: {
+                    idusuarioProfesional: true,
+                    nombre: true,
+                    apellido: true
+                },
+                usuarioComun: {
+                    idusuarioComun: true,
+                    nombre: true,
+                    apellido: true,
+                    telefono: true
+                }
             }
         });
     }
@@ -100,7 +109,8 @@ let TrabajoContratadoService = class TrabajoContratadoService {
                 telefonoCliente: true,
                 profesional: {
                     idusuarioProfesional: true,
-                    nombre: true
+                    nombre: true,
+                    apellido: true
                 },
                 usuarioComun: {
                     idusuarioComun: true,
@@ -120,7 +130,7 @@ let TrabajoContratadoService = class TrabajoContratadoService {
             where: {
                 profesional: { idusuarioProfesional },
                 estado: 'terminado',
-                valoracion: (0, typeorm_3.MoreThan)(0),
+                valoracion: (0, typeorm_2.MoreThan)(0),
             },
         });
         if (trabajosContratados.length === 0) {
