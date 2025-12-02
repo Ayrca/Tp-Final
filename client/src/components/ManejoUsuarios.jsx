@@ -8,7 +8,7 @@ const ManejoUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    console.log('BASE_URL:', BASE_URL); // <-- Ver si la variable se está tomando correctamente
+    console.log('BASE_URL:', BASE_URL);
 
     axios.get(`${BASE_URL}/usuario`)
       .then((response) => {
