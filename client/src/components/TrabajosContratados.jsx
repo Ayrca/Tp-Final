@@ -19,6 +19,14 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   const [fadeTrabajos, setFadeTrabajos] = useState("fade-in");
   const trabajosPorPagina = 9;
 
+  // Función auxiliar para ordenar trabajos
+  const actualizarTrabajos = (data) => {
+    const trabajosOrdenados = Array.isArray(data)
+      ? data.sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
+      : [];
+    setTrabajos(trabajosOrdenados);
+  };
+
   useEffect(() => {
     const fetchTrabajos = async () => {
       try {
@@ -30,14 +38,8 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
           response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
         } else return;
 
-        if (response && Array.isArray(response.data)) {
-          const trabajosOrdenados = response.data.sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion));
-          setTrabajos(trabajosOrdenados);
-          setError(null);
-        } else {
-          setTrabajos([]);
-          setError('No se pudo obtener los trabajos correctamente');
-        }
+        actualizarTrabajos(response.data);
+        setError(null);
       } catch (err) {
         setTrabajos([]);
         setError('Error al conectar con la API');
@@ -140,7 +142,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     });
   };
 
-  const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
+  const handleFinalizar = async (idcontratacion) => {
     const formValues = await crearModalValoracion();
     if (!formValues?.value) return;
 
@@ -155,7 +157,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
           ? `${BASE_URL}/trabajoContratado/${idLogueado}`
           : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
       );
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+      actualizarTrabajos(resp.data);
 
     } catch (error) {
       console.error('Error al finalizar el trabajo:', error);
@@ -190,7 +192,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
           ? `${BASE_URL}/trabajoContratado/${idLogueado}`
           : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
       );
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+      actualizarTrabajos(resp.data);
 
     } catch (error) {
       console.error('Error al cancelar el trabajo:', error);
@@ -229,7 +231,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
           ? `${BASE_URL}/trabajoContratado/${idLogueado}`
           : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
       );
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+      actualizarTrabajos(resp.data);
 
     } catch (error) {
       console.error('Error al finalizar el trabajo:', error);
@@ -270,7 +272,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
           ? `${BASE_URL}/trabajoContratado/${idLogueado}`
           : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
       );
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+      actualizarTrabajos(resp.data);
 
     } catch (error) {
       console.error('Error al cancelar el trabajo:', error);
@@ -323,7 +325,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
                     </>
                   ) : (
                     <>
-                      <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
+                      <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion)}>Finalizar</button>
                       <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
                     </>
                   )}
