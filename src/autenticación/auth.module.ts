@@ -16,17 +16,23 @@ import { MailerModule } from '@nestjs-modules/mailer';
       secret: 'mi-llave-secreta',
       signOptions: { expiresIn: '1h' },
     }),
+
 MailerModule.forRoot({
   transport: {
-    host: 'smtp.gmail.com',
+    host: 'smtp-relay.brevo.com',
     port: 587,
     secure: false,
     auth: {
-      user: 'afipfipa@gmail.com',
-      pass: 'nptw uomr omyj xaao',
+      user: '9d201f001@smtp-brevo.com',
+      pass: 'DS50pEfHyxCa7BP1',
     },
   },
+  defaults: {
+    from: '"Mi App" <proyectoafip26@gmail.com>', 
+  },
 })
+
+
   ],
   controllers: [AuthController],
   providers: [AuthService],
