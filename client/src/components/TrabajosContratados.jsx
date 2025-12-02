@@ -13,27 +13,39 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   const token = localStorage.getItem('token');
   const esProfesional = token ? jwtDecode(token).tipo === 'profesional' : false;
 
-  const fetchTrabajos = async () => {
-    try {
-      let response;
-      if (idProfesional) {
-        response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
-      } else if (idusuarioComun) {
-        response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-      }
-      if (response && Array.isArray(response.data)) {
-        setTrabajos(response.data);
-      } else {
-        setError('La respuesta de la API no es un array');
-      }
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+const fetchTrabajos = async () => {
+  try {
+    let response;
 
-  useEffect(() => {
+    if (idProfesional) {
+      response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+    } else if (idusuarioComun) {
+      response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+    } else {
+      // No hay ID válido, no hacemos nada
+      return;
+    }
+
+    if (response && Array.isArray(response.data)) {
+      setTrabajos(response.data);
+      setError(null); // limpiar cualquier error previo
+    } else {
+      setTrabajos([]);
+      setError('No se pudo obtener los trabajos correctamente');
+    }
+  } catch (err) {
+    setTrabajos([]);
+    setError('Error al conectar con la API');
+    console.error(err);
+  }
+};
+
+useEffect(() => {
+  // Solo llamar a la API si hay un ID válido
+  if (idProfesional || idusuarioComun) {
     fetchTrabajos();
-  }, [idProfesional, idusuarioComun]);
+  }
+}, [idProfesional, idusuarioComun]);
 
   const handleCancelar = async (idcontratacion) => {
     const { value: comentario } = await Swal.fire({

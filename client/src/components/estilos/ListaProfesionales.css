@@ -145,6 +145,8 @@
   color: #22c55e;
   border-color: #22c55e;
   background-color: #dcfce7;
+  display: inline-block;
+  margin-bottom: 8px;
 }
 
 .no-disponible {
@@ -157,6 +159,8 @@
   color: #ee2525;
   border-color: #ef4444;
   background-color: #fee2e2;
+  display: inline-block;
+  margin-bottom: 8px;
 }
 
 /* Paginador */

@@ -13,6 +13,7 @@ const PerfilUsuario = () => {
   const [usuario, setUsuario] = useState({});
   const [editando, setEditando] = useState(false);
 
+  // Traer datos del usuario al cargar
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -61,6 +62,8 @@ const PerfilUsuario = () => {
   const handleAvatarChange = async (event) => {
     try {
       const file = event.target.files[0];
+      console.log('Archivo seleccionado:', file);
+
       if (!file) {
         Swal.fire({
           title: 'Error',
@@ -74,13 +77,15 @@ const PerfilUsuario = () => {
       formData.append('avatar', file);
 
       const token = localStorage.getItem('token');
-      const tipoUsuario =
-        usuario.tipo === 'profesional' ? 'profesional' : 'Cliente';
+      console.log('Token:', token);
 
-      const idUsuario =
-        usuario.tipo === 'profesional'
-          ? usuario.idusuarioProfesional
-          : usuario.idusuarioComun;
+      const tipoUsuario = usuario.tipo === 'profesional' ? 'profesional' : 'Cliente';
+      const idUsuario = usuario.tipo === 'profesional'
+        ? usuario.idusuarioProfesional
+        : usuario.idusuarioComun;
+
+      console.log('idUsuario:', idUsuario, 'tipoUsuario:', tipoUsuario);
+      console.log('URL de subida:', `${BASE_URL}/avatar/subir/${idUsuario}/${tipoUsuario}`);
 
       const response = await axios.post(
         `${BASE_URL}/avatar/subir/${idUsuario}/${tipoUsuario}`,
@@ -93,8 +98,22 @@ const PerfilUsuario = () => {
         }
       );
 
-      setUsuario({ ...usuario, avatar: response.data.avatar });
+      console.log('Respuesta API avatar:', response.data);
+
+      // Actualizar estado para mostrar el avatar inmediatamente
+      setUsuario({ 
+        ...usuario, 
+        avatar: response.data.avatar 
+          ? response.data.avatar.startsWith('http')
+            ? response.data.avatar
+            : `${BASE_URL}/uploads/${response.data.avatar}`
+          : null 
+      });
+
+      // Limpiar input de archivo
+      event.target.value = '';
     } catch (error) {
+      console.error('Error subir avatar:', error.response || error);
       Swal.fire({
         title: 'Error',
         text: 'No se pudo subir el avatar',
@@ -103,6 +122,7 @@ const PerfilUsuario = () => {
     }
   };
 
+  // Mostrar PerfilAdmin si es admin
   if (usuario.tipo === 'admin') return <PerfilAdmin />;
 
   return (
@@ -112,7 +132,11 @@ const PerfilUsuario = () => {
         {/* ==== Avatar + nombre ==== */}
         <div className="pu-header">
           <div className="pu-avatar-box">
-            <img src={usuario.avatar} alt="Avatar" className="pu-avatar-img" />
+            <img
+              src={usuario.avatar || '/assets/images/avatar-de-usuario.png'}
+              alt="Avatar"
+              className="pu-avatar-img"
+            />
 
             <input
               type="file"
@@ -129,9 +153,7 @@ const PerfilUsuario = () => {
           <div className="pu-title-box">
             <h2>Mi Perfil</h2>
             <p className="pu-type">
-              {usuario.tipo === 'profesional'
-                ? 'Profesional'
-                : 'Usuario Cliente'}
+              {usuario.tipo === 'profesional' ? 'Profesional' : 'Usuario Cliente'}
             </p>
           </div>
         </div>
@@ -150,8 +172,6 @@ const PerfilUsuario = () => {
         {/* ==== Galería profesional ==== */}
         {usuario.tipo === 'profesional' && usuario.idusuarioProfesional && (
           <div className="pu-section">
-            <h3 className="pu-section-title">Galería de trabajos</h3>
-
             <ImagenesProf
               idProfesional={usuario.idusuarioProfesional}
               filas={3}
@@ -162,8 +182,6 @@ const PerfilUsuario = () => {
 
         {/* ==== Trabajos contratados ==== */}
         <div className="pu-section">
-          <h3 className="pu-section-title">Trabajos contratados</h3>
-
           <TrabajosContratados
             idProfesional={usuario.idusuarioProfesional}
             idusuarioComun={usuario.idusuarioComun}
