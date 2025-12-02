@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AdministradorService } from '../administrador/administrador.service';
 import { MailerService } from '@nestjs-modules/mailer';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 @Injectable()
 export class AuthService {
@@ -101,7 +101,7 @@ async forgotPassword(email: string) {
       throw new Error('Usuario no encontrado');
     }
     const token = this.jwtService.sign({ userId: user.idusuarioProfesional || user.idusuarioComun || user.idusuarioAdm, tipo: user.tipo }, { expiresIn: '1h' });
-    const url = `${BASE_URL}/reset-password/${token}`;
+    const url = `${FRONTEND_URL}/ResetPassword/${token}`;
     await this.mailerService.sendMail({
       to: email,
       subject: 'Cambio de contraseña',
