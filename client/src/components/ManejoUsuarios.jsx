@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/ManejoUsuarios.css';
@@ -9,20 +8,24 @@ const ManejoUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
+    console.log('BASE_URL:', BASE_URL); // <-- Ver si la variable se está tomando correctamente
+
     axios.get(`${BASE_URL}/usuario`)
       .then((response) => {
-        console.log(response);
+        console.log('Respuesta API /usuario:', response);
+        console.log('response.data:', response.data);
         setUsuarios(response.data);
       })
       .catch((error) => {
-        console.error(error);
+        console.error('Error al traer usuarios:', error);
       });
   }, []);
 
   const handleBaneo = (id) => {
+    console.log('Banear usuario con id:', id);
     axios.put(`${BASE_URL}/usuario/${id}/baneo`)
       .then((response) => {
-        console.log(response);
+        console.log('Respuesta baneo:', response);
         setUsuarios(usuarios.map((usuario) => {
           if (usuario.idusuarioComun === id) {
             return { ...usuario, estadoCuenta: 0 };
@@ -31,14 +34,15 @@ const ManejoUsuarios = () => {
         }));
       })
       .catch((error) => {
-        console.error(error);
+        console.error('Error al banear usuario:', error);
       });
   };
 
   const handleDesbloqueo = (id) => {
+    console.log('Desbloquear usuario con id:', id);
     axios.put(`${BASE_URL}/usuario/${id}/desbloqueo`)
       .then((response) => {
-        console.log(response);
+        console.log('Respuesta desbloqueo:', response);
         setUsuarios(usuarios.map((usuario) => {
           if (usuario.idusuarioComun === id) {
             return { ...usuario, estadoCuenta: 1 };
@@ -47,9 +51,11 @@ const ManejoUsuarios = () => {
         }));
       })
       .catch((error) => {
-        console.error(error);
+        console.error('Error al desbloquear usuario:', error);
       });
   };
+
+  console.log('Usuarios en estado:', usuarios);
 
   return (
     <div className="manejo-usuarios">
@@ -70,40 +76,48 @@ const ManejoUsuarios = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(usuarios) && usuarios.map((usuario) => (
-            <tr key={usuario.idusuarioComun}>
-              <td>{usuario.idusuarioComun}</td>
-              <td>{usuario.nombre}</td>
-              <td>{usuario.apellido}</td>
-              <td>{usuario.email}</td>
-              <td>{usuario.tipo}</td>
-              <td>{usuario.telefono}</td>
-              <td>{usuario.direccion}</td>
-              <td>{usuario.fechaNacimiento}</td>
-              <td>
-              <img
-                src={
-                  usuario.avatar
-                    ? usuario.avatar.startsWith('http')
-                      ? usuario.avatar
-                      : `${BASE_URL}${usuario.avatar}` // URL completa
-                    : '/assets/images/avatar-de-usuario.png' // por defecto
-                }
-                alt="Avatar"
-                width="50"
-                height="50"
-              />
-              </td>
-              <td className={usuario.estadoCuenta ? 'activo' : 'bloqueado'}>{usuario.estadoCuenta ? 'Activo' : 'Bloqueado'}</td>
-              <td>
-                {usuario.estadoCuenta ? (
-                  <button onClick={() => handleBaneo(usuario.idusuarioComun)}>Banear</button>
-                ) : (
-                  <button onClick={() => handleDesbloqueo(usuario.idusuarioComun)}>Desbloquear</button>
-                )}
-              </td>
+          {Array.isArray(usuarios) && usuarios.length > 0 ? (
+            usuarios.map((usuario) => (
+              <tr key={usuario.idusuarioComun}>
+                <td>{usuario.idusuarioComun}</td>
+                <td>{usuario.nombre}</td>
+                <td>{usuario.apellido}</td>
+                <td>{usuario.email}</td>
+                <td>{usuario.tipo}</td>
+                <td>{usuario.telefono}</td>
+                <td>{usuario.direccion}</td>
+                <td>{usuario.fechaNacimiento}</td>
+                <td>
+                  <img
+                    src={
+                      usuario.avatar
+                        ? usuario.avatar.startsWith('http')
+                          ? usuario.avatar
+                          : `${BASE_URL}${usuario.avatar}` 
+                        : '/assets/images/avatar-de-usuario.png'
+                    }
+                    alt="Avatar"
+                    width="50"
+                    height="50"
+                  />
+                </td>
+                <td className={usuario.estadoCuenta ? 'activo' : 'bloqueado'}>
+                  {usuario.estadoCuenta ? 'Activo' : 'Bloqueado'}
+                </td>
+                <td>
+                  {usuario.estadoCuenta ? (
+                    <button onClick={() => handleBaneo(usuario.idusuarioComun)}>Banear</button>
+                  ) : (
+                    <button onClick={() => handleDesbloqueo(usuario.idusuarioComun)}>Desbloquear</button>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="11">No hay usuarios disponibles</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
