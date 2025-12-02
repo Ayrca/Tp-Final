@@ -7,7 +7,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 const ImagenesProf = ({ idProfesional }) => {
   const [imagenes, setImagenes] = useState([]);
   const [file, setFile] = useState(null);
-  const [reload, setReload] = useState(false); // <- nuevo estado para recargar
+  const [reload, setReload] = useState(false);
 
   // PAGINACIÓN
   const [paginaActual, setPaginaActual] = useState(1);
@@ -18,14 +18,16 @@ const ImagenesProf = ({ idProfesional }) => {
   const imagenesPagina = imagenes.slice(indexPrimera, indexUltima);
   const totalPaginas = Math.ceil(imagenes.length / imagenesPorPagina);
 
-  // Traer imágenes
-  useEffect(() => {
-    if (!idProfesional) return;
+    useEffect(() => {
+      if (!idProfesional) return;
 
-    axios.get(`${BASE_URL}/imagen/${idProfesional}`)
-      .then((response) => setImagenes(response.data))
-      .catch((error) => console.error(error));
-  }, [idProfesional, reload]); // <- reload dispara fetch nuevamente
+      axios.get(`${BASE_URL}/imagen/${idProfesional}`)
+        .then((response) => {
+          // invertimos para que la última imagen subida aparezca primero
+          setImagenes(response.data.reverse());
+        })
+        .catch((error) => console.error(error));
+    }, [idProfesional, reload]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -41,18 +43,12 @@ const ImagenesProf = ({ idProfesional }) => {
         Authorization: `Bearer ${token}`,
       }
     })
-    .then((response) => {
-      setFile(null); // limpiar input
-      document.getElementById('file-input').value = ''; // reset input
-      setReload(prev => !prev); // fuerza recargar imágenes desde API
+    .then(() => {
+      setFile(null);
+      document.getElementById('file-input').value = '';
+      setReload(prev => !prev);
     })
-    .catch((error) => {
-      console.error('Error al subir imagen:', error);
-    });
-  };
-
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    .catch((error) => console.error('Error al subir imagen:', error));
   };
 
   return (
@@ -67,19 +63,31 @@ const ImagenesProf = ({ idProfesional }) => {
 
       {/* PAGINACIÓN */}
       {totalPaginas > 1 && (
-        <div className="paginacion">
-          <button disabled={paginaActual === 1} onClick={() => setPaginaActual(paginaActual - 1)}>
-            Anterior
+        <div className="gallery-pagination">
+          <button
+            className="pag-btn"
+            disabled={paginaActual === 1}
+            onClick={() => setPaginaActual(paginaActual - 1)}
+          >
+            ◀
           </button>
 
-          <button disabled={paginaActual === totalPaginas} onClick={() => setPaginaActual(paginaActual + 1)}>
-            Siguiente
+          <span className="pag-indicator">
+            {paginaActual} / {totalPaginas}
+          </span>
+
+          <button
+            className="pag-btn"
+            disabled={paginaActual === totalPaginas}
+            onClick={() => setPaginaActual(paginaActual + 1)}
+          >
+            ▶
           </button>
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        <input type="file" id="file-input" accept="image/*" onChange={handleFileChange} />
+        <input type="file" id="file-input" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
         <button type="submit" id="agregar-imagen">Agregar imagen</button>
       </form>
     </div>

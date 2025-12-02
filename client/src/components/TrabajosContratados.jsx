@@ -80,74 +80,82 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   };
 
   // Funciones de finalizar/cancelar
-  const crearModalValoracion = async () => {
-    return Swal.fire({
-      title: 'Finalizar trabajo',
-      html: `
-        <textarea id="comentario" class="swal2-textarea" placeholder="Escribe un comentario..."></textarea>
-        <div class="star-container">
-          <span class="star" data-value="1">★</span>
-          <span class="star" data-value="2">★</span>
-          <span class="star" data-value="3">★</span>
-          <span class="star" data-value="4">★</span>
-          <span class="star" data-value="5">★</span>
-        </div>
-        <input type="hidden" id="valoracion">
-      `,
-      showCancelButton: true,
-      confirmButtonText: 'Finalizar',
-      cancelButtonText: 'Volver',
-      didOpen: () => {
-        const estrellas = Swal.getPopup().querySelectorAll('.star');
-        const inputValoracion = Swal.getPopup().querySelector('#valoracion');
-        estrellas.forEach((star, idx) => {
-          star.addEventListener('click', () => {
-            const value = parseInt(star.dataset.value);
-            inputValoracion.value = value;
-            estrellas.forEach((s, i) => i < value ? s.classList.add('selected') : s.classList.remove('selected'));
-          });
-          star.addEventListener('mouseover', () => {
-            estrellas.forEach((s, i) => s.style.color = i <= idx ? '#ffa500' : '#ccc');
-          });
-          star.addEventListener('mouseout', () => {
-            estrellas.forEach((s, i) => s.style.color = i < parseInt(inputValoracion.value) ? 'gold' : '#ccc');
-          });
+const crearModalValoracion = async () => {
+  return Swal.fire({
+    title: 'Finalizar trabajo',
+    html: `
+      <textarea id="comentario" class="swal2-textarea" placeholder="Escribe un comentario..."></textarea>
+      <div class="star-container">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+      </div>
+      <input type="hidden" id="valoracion">
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Finalizar',
+    cancelButtonText: 'Volver',
+    didOpen: () => {
+      const estrellas = Swal.getPopup().querySelectorAll('.star');
+      const inputValoracion = Swal.getPopup().querySelector('#valoracion');
+      estrellas.forEach((star, idx) => {
+        star.addEventListener('click', () => {
+          const value = parseInt(star.dataset.value);
+          inputValoracion.value = value;
+          estrellas.forEach((s, i) => i < value ? s.classList.add('selected') : s.classList.remove('selected'));
         });
-      },
-      preConfirm: () => {
-        const valoracion = parseInt(document.getElementById('valoracion').value);
-        if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
-          Swal.showValidationMessage('Debes seleccionar una valoración entre 1 y 5');
-          return false;
-        }
-        return {
-          comentario: document.getElementById('comentario').value,
-          valoracion: valoracion,
-        };
-      },
-    });
-  };
+        star.addEventListener('mouseover', () => {
+          estrellas.forEach((s, i) => s.style.color = i <= idx ? '#ffa500' : '#ccc');
+        });
+        star.addEventListener('mouseout', () => {
+          estrellas.forEach((s, i) => s.style.color = i < parseInt(inputValoracion.value) ? 'gold' : '#ccc');
+        });
+      });
+    },
+    preConfirm: () => {
+      const valoracion = parseInt(document.getElementById('valoracion').value);
+      const comentario = document.getElementById('comentario').value.trim();
 
-  const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
-    const formValues = await crearModalValoracion();
-    if (!formValues?.value) return;
+      if (!comentario && (isNaN(valoracion) || valoracion < 1 || valoracion > 5)) {
+        Swal.showValidationMessage('Debes ingresar un comentario y seleccionar una valoración entre 1 y 5');
+        return false;
+      }
 
-    try {
-      const { comentario, valoracion } = formValues.value;
-      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'terminado', comentario, valoracion });
-      const responsePromedio = await axios.get(`${BASE_URL}/trabajoContratado/promedio-valoracion/${idusuarioProfesional}`);
-      const promedioValoracion = responsePromedio.data;
-      await axios.put(`${BASE_URL}/profesional/${idusuarioProfesional}/valoracion`, { valoracion: promedioValoracion });
-      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
-      const fetch = idProfesional
-        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
-        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-      const resp = await fetch;
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
-    } catch (error) {
-      console.error('Error al finalizar el trabajo:', error);
-    }
-  };
+      if (!comentario) {
+        Swal.showValidationMessage('Debes ingresar un comentario');
+        return false;
+      }
+
+      if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
+        Swal.showValidationMessage('Debes seleccionar una valoración entre 1 y 5');
+        return false;
+      }
+
+      return { comentario, valoracion };
+    },
+  });
+};
+
+const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
+  const formValues = await crearModalValoracion();
+  if (!formValues?.value) return;
+
+  const { comentario, valoracion } = formValues.value;
+
+  try {
+    await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'terminado', comentario, valoracion });
+    Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+    const fetch = idProfesional
+      ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
+      : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+    const resp = await fetch;
+    setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+  } catch (error) {
+    console.error('Error al finalizar el trabajo:', error);
+  }
+};
 
   const handleCancelar = async (idcontratacion) => {
     const { value: comentario } = await Swal.fire({

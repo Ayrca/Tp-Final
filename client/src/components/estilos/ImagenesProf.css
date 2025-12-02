@@ -29,29 +29,44 @@
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
 }
 
-/* PAGINACIÓN */
-.paginacion {
-  margin-top: 15px;
+/* PAGINACIÓN estilo consistente con otras secciones */
+.gallery-pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
-.paginacion button {
-  background: #33b27b;
-  border: none;
-  padding: 8px 16px;
+.pag-btn {
+  background: #3b82f6;
+  border: 1px solid #dcdcdc;
+  padding: 6px 12px;
   border-radius: 10px;
-  color: white;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 16px;
+  color: white;
+  transition: background 0.25s, transform 0.25s;
 }
 
-.paginacion button:disabled {
-  background: #b4b4b4;
+.pag-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.pag-btn:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
+  background: #93c5fd;
 }
 
+.pag-indicator {
+  font-size: 15px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* Formulario de subir imagen */
 #file-input {
   margin-top: 10px;
 }
