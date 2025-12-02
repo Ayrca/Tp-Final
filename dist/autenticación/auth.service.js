@@ -126,7 +126,7 @@ let AuthService = class AuthService {
         apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
         const sendEmail = {
             to: [{ email }],
-            sender: { name: "Mi App", email: "proyectoafip26@gmail.com" },
+            sender: { name: "Mi App", email: "proyectoafip29@gmail.com" },
             subject: "Cambio de contraseña",
             textContent: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
         };

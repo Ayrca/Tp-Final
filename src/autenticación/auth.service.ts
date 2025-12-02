@@ -101,7 +101,7 @@ export class AuthService {
 
     const sendEmail = {
       to: [{ email }],
-      sender: { name: "Mi App", email: "proyectoafip26@gmail.com" }, // Correo verificado en Brevo
+      sender: { name: "Mi App", email: "proyectoafip29@gmail.com" }, // Correo verificado en Brevo
       subject: "Cambio de contraseña",
       textContent: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
     };
