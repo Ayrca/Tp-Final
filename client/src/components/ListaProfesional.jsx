@@ -85,56 +85,66 @@ const ListaProfesional = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  // Contratar profesional
-  const handleContratar = useCallback(async (profesional) => {
-    if (!idusuarioComun) {
-      Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
-      return;
-    }
-    if (idusuarioComun === profesional.idusuarioProfesional) {
-      Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
-      return;
-    }
-    try {
-      const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
-      const usuarioLogueado = response.data;
-      const oficio = await obtenerOficio(profesional.idusuarioProfesional);
+    // Contratar profesional
+    const handleContratar = useCallback(async (profesional) => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
+        return;
+      }
 
-      const datosContratacion = {
-        usuarioComun: { idusuarioComun },
-        profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
-        rubro: oficio.oficio.nombre,
-        telefonoProfesional: profesional.telefono,
-        telefonoCliente: usuarioLogueado.telefono,
-        estado: "pendiente",
-        valoracion: 0,
-        comentario: '',
-        fechaContratacion: new Date(),
-      };
+      const usuarioLogueado = jwtDecode(token);
 
-      axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion)
-        .then(() => {
-          Swal.fire({
-            title: 'Éxito',
-            text: 'La solicitud de contrato se ha enviado correctamente',
-            icon: 'success',
-          });
-        })
-        .catch(() => {
-          Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error al procesar la solicitud',
-            icon: 'error',
-          });
+      // Validación: profesionales no pueden contratar
+      if (usuarioLogueado.tipo === 'profesional') {
+        Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
+        return;
+      }
+
+      // Validación: un usuario no puede contratarse a sí mismo
+      if (usuarioLogueado.sub === profesional.idusuarioProfesional) {
+        Swal.fire({ title: 'Error', text: 'No puedes contratarte a ti mismo', icon: 'error' });
+        return;
+      }
+
+      try {
+        // Obtenemos datos del usuario logueado
+        const response = await axios.get(`${BASE_URL}/usuario/${usuarioLogueado.sub}`);
+        const usuario = response.data;
+
+        // Obtenemos el oficio del profesional
+        const oficio = await obtenerOficio(profesional.idusuarioProfesional);
+
+        const datosContratacion = {
+          usuarioComun: { idusuarioComun: usuario.idusuarioComun },
+          profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
+          rubro: oficio?.oficio?.nombre || '',
+          telefonoProfesional: profesional.telefono,
+          telefonoCliente: usuario.telefono,
+          estado: "pendiente",
+          valoracion: 0,
+          comentario: '',
+          fechaContratacion: new Date(),
+        };
+
+        // Creamos la contratación
+        await axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion);
+
+        Swal.fire({
+          title: 'Éxito',
+          text: 'La solicitud de contrato se ha enviado correctamente',
+          icon: 'success',
         });
-    } catch (error) {
-      Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error al procesar la solicitud',
-        icon: 'error',
-      });
-    }
-  }, [idusuarioComun, idOficios]);
+
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al procesar la solicitud',
+          icon: 'error',
+        });
+      }
+    }, [idOficios]);
 
   // Conectar profesional (WhatsApp)
   const handleConectar = async (profesional) => {

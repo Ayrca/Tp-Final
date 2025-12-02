@@ -11,6 +11,7 @@ const ImagenesProf = ({ idProfesional }) => {
 
   // PAGINACIÓN
   const [paginaActual, setPaginaActual] = useState(1);
+  const [fadeImagenes, setFadeImagenes] = useState("fade-in");
   const imagenesPorPagina = 9;
 
   const indexUltima = paginaActual * imagenesPorPagina;
@@ -18,16 +19,16 @@ const ImagenesProf = ({ idProfesional }) => {
   const imagenesPagina = imagenes.slice(indexPrimera, indexUltima);
   const totalPaginas = Math.ceil(imagenes.length / imagenesPorPagina);
 
-    useEffect(() => {
-      if (!idProfesional) return;
+  useEffect(() => {
+    if (!idProfesional) return;
 
-      axios.get(`${BASE_URL}/imagen/${idProfesional}`)
-        .then((response) => {
-          // invertimos para que la última imagen subida aparezca primero
-          setImagenes(response.data.reverse());
-        })
-        .catch((error) => console.error(error));
-    }, [idProfesional, reload]);
+    axios.get(`${BASE_URL}/imagen/${idProfesional}`)
+      .then((response) => {
+        // invertimos para que la última imagen subida aparezca primero
+        setImagenes(response.data.reverse());
+      })
+      .catch((error) => console.error(error));
+  }, [idProfesional, reload]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -51,11 +52,19 @@ const ImagenesProf = ({ idProfesional }) => {
     .catch((error) => console.error('Error al subir imagen:', error));
   };
 
+  const cambiarPagina = (nueva) => {
+    setFadeImagenes("fade-out"); 
+    setTimeout(() => {
+      setPaginaActual(nueva);     
+      setFadeImagenes("fade-in"); 
+    }, 300);
+  };
+
   return (
     <div className='cajaImagenes'>
       <h3>Imágenes de Trabajos anteriores</h3>
 
-      <div className="imagenes-container">
+      <div className={`imagenes-container ${fadeImagenes}`}>
         {imagenesPagina.map((imagen, index) => (
           <img key={index} src={imagen.url} alt="Imagen" />
         ))}
@@ -67,7 +76,7 @@ const ImagenesProf = ({ idProfesional }) => {
           <button
             className="pag-btn"
             disabled={paginaActual === 1}
-            onClick={() => setPaginaActual(paginaActual - 1)}
+            onClick={() => cambiarPagina(paginaActual - 1)}
           >
             ◀
           </button>
@@ -79,7 +88,7 @@ const ImagenesProf = ({ idProfesional }) => {
           <button
             className="pag-btn"
             disabled={paginaActual === totalPaginas}
-            onClick={() => setPaginaActual(paginaActual + 1)}
+            onClick={() => cambiarPagina(paginaActual + 1)}
           >
             ▶
           </button>
@@ -87,7 +96,12 @@ const ImagenesProf = ({ idProfesional }) => {
       )}
 
       <form onSubmit={handleSubmit}>
-        <input type="file" id="file-input" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+        <input
+          type="file"
+          id="file-input"
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
         <button type="submit" id="agregar-imagen">Agregar imagen</button>
       </form>
     </div>

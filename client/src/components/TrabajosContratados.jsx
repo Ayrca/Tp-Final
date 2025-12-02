@@ -189,30 +189,37 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
     }
   };
 
-  const handleFinalizarProfesional = async (idcontratacion) => {
-    const { value: comentario } = await Swal.fire({
-      title: 'Finalizar trabajo',
-      input: 'textarea',
-      inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
-      showCancelButton: true,
-      confirmButtonText: 'Finalizar',
-      cancelButtonText: 'Volver'
-    });
+    const handleFinalizarProfesional = async (idcontratacion) => {
+      const { value: comentario } = await Swal.fire({
+        title: 'Finalizar trabajo',
+        input: 'textarea',
+        inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
+        showCancelButton: true,
+        confirmButtonText: 'Finalizar',
+        cancelButtonText: 'Volver',
+        preConfirm: (value) => {
+          if (!value || value.trim() === '') {
+            Swal.showValidationMessage('Debes ingresar un comentario antes de finalizar');
+            return false;
+          }
+          return value;
+        }
+      });
 
-    if (!comentario) return;
+      if (!comentario) return;
 
-    try {
-      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'finalizado_profesional', comentario });
-      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
-      const fetch = idProfesional
-        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
-        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-      const resp = await fetch;
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
-    } catch (error) {
-      console.error('Error al finalizar el trabajo:', error);
-    }
-  };
+      try {
+        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'finalizado_profesional', comentario });
+        Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+        const fetch = idProfesional
+          ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
+          : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+        const resp = await fetch;
+        setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+      } catch (error) {
+        console.error('Error al finalizar el trabajo:', error);
+      }
+    };
 
   const handleCancelarProfesional = async (idcontratacion) => {
     const { value: comentario } = await Swal.fire({
