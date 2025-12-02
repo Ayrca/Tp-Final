@@ -174,7 +174,17 @@ const PerfilComercial = () => {
             <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
               <h4>{trabajo.rubro}</h4>
               <p><strong>Estado del Trabajo:</strong> {traducirEstado(trabajo.estado)}</p>
-              <p><strong>Fecha de contratación:</strong> {trabajo.fechaContratacion}</p>
+              <p>
+                <strong>Fecha de contratación:</strong> {new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                })}
+              </p>
               <p><strong>Cliente:</strong> {trabajo.usuarioComun.nombre} {trabajo.usuarioComun.apellido}</p>
               <p><strong>Comentario:</strong> {trabajo.comentario}</p>
               <p><strong>Valoración:</strong> {renderEstrellas(trabajo.valoracion)}</p>

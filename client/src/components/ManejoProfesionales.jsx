@@ -76,7 +76,15 @@ const ManejoProfesionales = () => {
               <td>{profesional.email}</td>
               <td>{profesional.telefono}</td>
               <td>{profesional.direccion}</td>
-              <td>{profesional.fechaNacimiento}</td>
+              <td>
+                {profesional.fechaNacimiento
+                  ? new Date(profesional.fechaNacimiento).toLocaleDateString('es-AR', {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric'
+                    })
+                  : ''}
+              </td>
               <td>
               <td>
                 <img

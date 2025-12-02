@@ -86,7 +86,15 @@ const ManejoUsuarios = () => {
                 <td>{usuario.tipo}</td>
                 <td>{usuario.telefono}</td>
                 <td>{usuario.direccion}</td>
-                <td>{usuario.fechaNacimiento}</td>
+                <td>
+                  {usuario.fechaNacimiento
+                    ? new Date(usuario.fechaNacimiento).toLocaleDateString('es-AR', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                      })
+                    : ''}
+                </td>
                 <td>
                   <img
                     src={

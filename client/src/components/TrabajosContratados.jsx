@@ -96,7 +96,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
       didOpen: () => {
         const estrellas = Swal.getPopup().querySelectorAll('.star');
         const inputValoracion = Swal.getPopup().querySelector('#valoracion');
-        estrellas.forEach((star) => {
+        estrellas.forEach((star, idx) => {
           star.addEventListener('click', () => {
             const value = parseInt(star.dataset.value);
             inputValoracion.value = value;
@@ -105,7 +105,22 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
               else s.classList.remove('selected');
             });
           });
+
+          // hover solo para visual
+          star.addEventListener('mouseover', () => {
+            estrellas.forEach((s, i) => {
+              if (i < idx + 1) s.style.color = '#ffa500';
+              else s.style.color = '#ccc';
+            });
+          });
+          star.addEventListener('mouseout', () => {
+            estrellas.forEach((s, i) => {
+              if (i < parseInt(inputValoracion.value)) s.style.color = 'gold';
+              else s.style.color = '#ccc';
+            });
+          });
         });
+
       },
       preConfirm: () => {
         const valoracion = parseInt(document.getElementById('valoracion').value);
@@ -231,7 +246,20 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
             )}
             <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
             <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
-            <p><span>Fecha de contratación:</span> <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR')}</span></p>
+            <p>
+              <span>Fecha de contratación:</span> 
+              <span className="dato">
+                {new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                })}
+              </span>
+            </p>
             <p>
               <span>Valoración:</span>
               <span className="dato">

@@ -3,7 +3,7 @@
 .trabajos-contratados {
   margin-bottom: 30px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -93,13 +93,13 @@
 /* MODALES DE SWEETALERT */
 
 .swal2-popup {
-  width: 400px !important;
+  width: 500px !important;
   padding: 25px !important;
 }
 
 .swal2-textarea {
   width: 100% !important;
-  min-height: 80px !important;
+  min-height: 120px !important; /* aumentar altura */
   resize: vertical;
   font-size: 1rem;
   padding: 10px;
@@ -129,5 +129,5 @@
 
 .star-container .star:hover,
 .star-container .star:hover ~ .star {
-  color: #ffa500;
+  color: #ccc; 
 }
