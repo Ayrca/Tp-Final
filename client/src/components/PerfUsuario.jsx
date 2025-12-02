@@ -9,20 +9,6 @@ import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-// ⭐ Componente de estrellas agregado
-const StarRating = ({ rating }) => {
-  const maxStars = 5;
-  return (
-    <div className="star-rating">
-      {[...Array(maxStars)].map((_, index) => (
-        <span key={index} className={index < rating ? "star filled" : "star"}>
-          ★
-        </span>
-      ))}
-    </div>
-  );
-};
-
 const PerfUsuario = () => {
   const [usuario, setUsuario] = useState({});
   const [editando, setEditando] = useState(false);
@@ -162,11 +148,6 @@ const PerfUsuario = () => {
                 ? 'Profesional'
                 : 'Usuario Cliente'}
             </p>
-
-            {/* ⭐ ESTRELLAS SOLO SI ES PROFESIONAL */}
-            {usuario.tipo === 'profesional' && (
-              <StarRating rating={usuario.calificacionPromedio || 0} />
-            )}
           </div>
         </div>
 
