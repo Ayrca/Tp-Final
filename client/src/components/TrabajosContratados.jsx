@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/trabajosContratados.css';
 import Swal from 'sweetalert2';
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -13,272 +13,259 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   const token = localStorage.getItem('token');
   const esProfesional = token ? jwtDecode(token).tipo === 'profesional' : false;
 
-const fetchTrabajos = async () => {
-  try {
-    let response;
+  const fetchTrabajos = async () => {
+    try {
+      let response;
 
-    if (idProfesional) {
-      response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
-    } else if (idusuarioComun) {
-      response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-    } else {
-      // No hay ID válido, no hacemos nada
-      return;
-    }
+      if (idProfesional) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+      } else if (idusuarioComun) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      } else {
+        return;
+      }
 
-    if (response && Array.isArray(response.data)) {
-      setTrabajos(response.data);
-      setError(null); // limpiar cualquier error previo
-    } else {
+      if (response && Array.isArray(response.data)) {
+        setTrabajos(response.data);
+        setError(null);
+      } else {
+        setTrabajos([]);
+        setError('No se pudo obtener los trabajos correctamente');
+      }
+    } catch (err) {
       setTrabajos([]);
-      setError('No se pudo obtener los trabajos correctamente');
+      setError('Error al conectar con la API');
+      console.error(err);
     }
-  } catch (err) {
-    setTrabajos([]);
-    setError('Error al conectar con la API');
-    console.error(err);
-  }
-};
+  };
 
-useEffect(() => {
-  // Solo llamar a la API si hay un ID válido
-  if (idProfesional || idusuarioComun) {
-    fetchTrabajos();
-  }
-}, [idProfesional, idusuarioComun]);
+  useEffect(() => {
+    if (idProfesional || idusuarioComun) {
+      fetchTrabajos();
+    }
+  }, [idProfesional, idusuarioComun]);
+
+  // Traducir estados
+  const traducirEstado = (estado) => {
+    switch (estado) {
+      case 'terminado':
+        return 'Finalizado por Cliente';
+      case 'finalizado_profesional':
+        return 'Finalizado por Profesional';
+      case 'cancelado':
+        return 'Cancelado por Cliente';
+      case 'cancelado_profesional':
+        return 'Cancelado por Profesional';
+      default:
+        return estado;
+    }
+  };
+
+  // Componente para mostrar estrellas pequeñas
+  const StarRatingSmall = ({ rating }) => {
+    const maxStars = 5;
+    return (
+      <div className="star-rating-small">
+        {[...Array(maxStars)].map((_, i) => (
+          <span key={i} className={i < rating ? "star filled" : "star"}>
+            ★
+          </span>
+        ))}
+      </div>
+    );
+  };
+
+  // Modal con estrellas clickeables
+  const crearModalValoracion = async () => {
+    return Swal.fire({
+      title: 'Finalizar trabajo',
+      html: `
+        <textarea id="comentario" class="swal2-textarea" placeholder="Escribe un comentario..."></textarea>
+        <div class="star-container">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+        </div>
+        <input type="hidden" id="valoracion">
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Finalizar',
+      cancelButtonText: 'Volver',
+      didOpen: () => {
+        const estrellas = Swal.getPopup().querySelectorAll('.star');
+        const inputValoracion = Swal.getPopup().querySelector('#valoracion');
+        estrellas.forEach((star) => {
+          star.addEventListener('click', () => {
+            const value = parseInt(star.dataset.value);
+            inputValoracion.value = value;
+            estrellas.forEach((s, i) => {
+              if (i < value) s.classList.add('selected');
+              else s.classList.remove('selected');
+            });
+          });
+        });
+      },
+      preConfirm: () => {
+        const valoracion = parseInt(document.getElementById('valoracion').value);
+        if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
+          Swal.showValidationMessage('Debes seleccionar una valoración entre 1 y 5');
+          return false;
+        }
+        return {
+          comentario: document.getElementById('comentario').value,
+          valoracion: valoracion,
+        };
+      },
+    });
+  };
+
+  const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
+    const formValues = await crearModalValoracion();
+    if (!formValues?.value) return;
+
+    try {
+      const { comentario, valoracion } = formValues.value;
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+        estado: 'terminado',
+        comentario,
+        valoracion,
+      });
+
+      // Actualizar promedio del profesional
+      const responsePromedio = await axios.get(`${BASE_URL}/trabajoContratado/promedio-valoracion/${idusuarioProfesional}`);
+      const promedioValoracion = responsePromedio.data;
+      await axios.put(`${BASE_URL}/profesional/${idusuarioProfesional}/valoracion`, {
+        valoracion: promedioValoracion,
+      });
+
+      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+      fetchTrabajos();
+    } catch (error) {
+      console.error('Error al finalizar el trabajo:', error);
+    }
+  };
 
   const handleCancelar = async (idcontratacion) => {
     const { value: comentario } = await Swal.fire({
       title: '¿Estás seguro de cancelar?',
-      text: 'Proporciona un comentario sobre la razón de la cancelación',
       input: 'textarea',
-      inputPlaceholder: 'Comentario',
+      inputPlaceholder: 'Explica la razón de la cancelación',
       showCancelButton: true,
       confirmButtonText: 'Cancelar',
       cancelButtonText: 'Volver',
     });
-    if (comentario) {
-      try {
-        const response = await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-          estado: 'cancelado',
-          comentario,
-        });
-        if (response.status === 200) fetchTrabajos();
-      } catch (error) {
-        console.error('Error al cancelar el trabajo:', error);
-      }
+
+    if (!comentario) return;
+
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+        estado: 'cancelado',
+        comentario,
+      });
+      Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
+      fetchTrabajos();
+    } catch (error) {
+      console.error('Error al cancelar el trabajo:', error);
     }
   };
 
-const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
-  console.log('idcontratacion:', idcontratacion);
-  console.log('idProfesional2:', idusuarioProfesional);
-  const { value: formValues } = await Swal.fire({
-    title: 'Finalizar trabajo',
-    html: '<input id="comentario" class="swal2-input" placeholder="Comentario">' + '<input id="valoracion" type="number" class="swal2-input" placeholder="Valoracion (1-5)">',
-    focusConfirm: false,
-    showCancelButton: true,
-    confirmButtonText: 'Finalizar',
-    cancelButtonText: 'Volver',
-    preConfirm: () => {
-      const valoracion = parseInt(document.getElementById('valoracion').value);
-      if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
-        Swal.showValidationMessage('La valoración debe ser un número entre 1 y 5');
-        return false;
-      }
-      return {
-        comentario: document.getElementById('comentario').value,
-        valoracion: valoracion,
-      };
-    },
-  });
+  const handleFinalizarProfesional = async (idcontratacion) => {
+    const { value: comentario } = await Swal.fire({
+      title: 'Finalizar trabajo',
+      input: 'textarea',
+      inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
+      showCancelButton: true,
+      confirmButtonText: 'Finalizar',
+      cancelButtonText: 'Volver'
+    });
 
-    if (formValues) {
-      try {
-        const response = await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-          estado: 'terminado',
-          comentario: formValues.comentario,
-          valoracion: formValues.valoracion,
-        });
-      if (response.status === 200) {
-        const responsePromedio = await axios.get(`${BASE_URL}/trabajoContratado/promedio-valoracion/${idusuarioProfesional}`);
-        const promedioValoracion = responsePromedio.data;
-        const responseProfesionalUpdate = await axios.put(`${BASE_URL}/profesional/${idusuarioProfesional}/valoracion`, {
-          valoracion: promedioValoracion,
-        });
+    if (!comentario) return;
 
-        if (responseProfesionalUpdate.status === 200) {
-          Swal.fire({
-            title: 'Finalizado',
-            text: 'El trabajo ha sido finalizado correctamente',
-            icon: 'success',
-          });
-          fetchTrabajos();
-        } else {
-          console.error('Error al actualizar el perfil del profesional');
-        }
-      } else {
-        console.error('Error al finalizar el trabajo');
-      }
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+        estado: 'finalizado_profesional',
+        comentario,
+      });
+      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+      fetchTrabajos();
     } catch (error) {
       console.error('Error al finalizar el trabajo:', error);
     }
-  }
-}
+  };
 
-  const actualizarValoracionProfesional = async (idusuarioProfesional) => {
+  const handleCancelarProfesional = async (idcontratacion) => {
+    const { value: comentario } = await Swal.fire({
+      title: 'Cancelar trabajo',
+      input: 'textarea',
+      inputPlaceholder: 'Explica la razón de la cancelación',
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar trabajo',
+      cancelButtonText: 'Volver'
+    });
+
+    if (!comentario) return;
+
     try {
-      const response = await axios.get(`${BASE_URL}/trabajoContratado/${idusuarioProfesional}`);
-      const contrataciones = response.data;
-      const valoraciones = contrataciones
-        .filter((c) => c.estado === 'terminado' && c.valoracion !== null)
-        .map((c) => c.valoracion);
-      const valoracionPromedio =
-        valoraciones.length > 0
-          ? valoraciones.reduce((a, b) => a + b, 0) / valoraciones.length
-          : 0;
-      await axios.put(`${BASE_URL}/profesional/${idusuarioProfesional}`, { valoracion: valoracionPromedio });
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+        estado: 'cancelado_profesional',
+        comentario,
+      });
+      Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
+      fetchTrabajos();
     } catch (error) {
-      console.error('Error al actualizar la valoración del profesional:', error);
+      console.error('Error al cancelar el trabajo:', error);
     }
   };
 
-    const handleFinalizarProfesional = async (idcontratacion) => {
-      const { value: comentario } = await Swal.fire({
-        title: 'Finalizar trabajo',
-        input: 'textarea',
-        inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
-        showCancelButton: true,
-        confirmButtonText: 'Finalizar',
-        cancelButtonText: 'Volver'
-      });
-
-      if (!comentario) return;
-
-      try {
-        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-          estado: 'finalizado_profesional',
-          comentario,
-        });
-
-        Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
-        fetchTrabajos();
-      } catch (error) {
-        console.error('Error al finalizar el trabajo:', error);
-      }
-    };
-
-    const handleCancelarProfesional = async (idcontratacion) => {
-      const { value: comentario } = await Swal.fire({
-        title: 'Cancelar trabajo',
-        input: 'textarea',
-        inputPlaceholder: 'Explica la razón de la cancelación',
-        showCancelButton: true,
-        confirmButtonText: 'Cancelar trabajo',
-        cancelButtonText: 'Volver'
-      });
-
-      if (!comentario) return;
-
-      try {
-        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-          estado: 'cancelado_profesional',
-          comentario,
-        });
-
-        Swal.fire('Cancelado', 'El trabajo se canceló correctamente', 'success');
-        fetchTrabajos();
-      } catch (error) {
-        console.error('Error al cancelar el trabajo:', error);
-      }
-    };
-
-        const traducirEstado = (estado) => {
-      switch (estado) {
-        case 'terminado':
-          return 'Finalizado por Cliente';
-        case 'finalizado_profesional':
-          return 'Finalizado por Profesional';
-        case 'cancelado':
-          return 'Cancelado por Cliente';
-        case 'cancelado_profesional':
-          return 'Cancelado por Profesional';
-        default:
-          return estado;
-      }
-    };
-
-        const StarRatingSmall = ({ rating }) => {
-      const maxStars = 5;
-      return (
-        <div className="star-rating-small">
-          {[...Array(maxStars)].map((_, i) => (
-            <span key={i} className={i < rating ? "star filled" : "star"}>
-              ★
-            </span>
-          ))}
-        </div>
-      );
-    };
-
   return (
-<div className="trabajos-contratados">
-  {Array.isArray(trabajos) && trabajos.length > 0 ? (  
-    trabajos.map((trabajo) => (  
-      <div key={trabajo.idcontratacion} className="tarjeta-trabajo">       
-        {idProfesional ? (
-          <p><span>Cliente:</span> <span className="dato">{trabajo.usuarioComun?.nombre}</span></p>
-        ) : (
-          <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
-        )}
-        <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
-        <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
-       <p><span>Fecha de contratación:</span> <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
-  day: '2-digit',
-  month: 'long',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hour12: false
-})}</span></p>
-          <p>
-            <span>Valoración:</span> 
-            <span className="dato">
-              {trabajo.valoracion ? (
-                <StarRatingSmall rating={trabajo.valoracion} />
-              ) : (
-                "Sin valoración"
-              )}
-            </span>
-          </p>
-        <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
-<p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> <span className="dato"> 
-  {esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional } 
-</span></p>
-        {trabajo.estado !== "terminado" && trabajo.estado !== "cancelado" && (
-        <div className="botones-trabajo">
-          {idProfesional ? (
-            <div>
-         <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
-              <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
-            </div>
-          ) : (
-            <div>
-<button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>     
-              <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
+    <div className="trabajos-contratados">
+      {Array.isArray(trabajos) && trabajos.length > 0 ? (
+        trabajos.map((trabajo) => (
+          <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
+            {idProfesional ? (
+              <p><span>Cliente:</span> <span className="dato">{trabajo.usuarioComun?.nombre}</span></p>
+            ) : (
+              <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
+            )}
+            <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
+            <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
+            <p><span>Fecha de contratación:</span> <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR')}</span></p>
+            <p>
+              <span>Valoración:</span>
+              <span className="dato">
+                {trabajo.valoracion ? <StarRatingSmall rating={trabajo.valoracion} /> : "Sin valoración"}
+              </span>
+            </p>
+            <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
+            <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> 
+               <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
+            </p>
+
+            {trabajo.estado !== "terminado" && trabajo.estado !== "cancelado" && (
+              <div className="botones-trabajo">
+                {idProfesional ? (
+                  <>
+                    <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
+                    <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
+                  </>
+                ) : (
+                  <>
+                    <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
+                    <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
+        ))
+      ) : (
+        <p>No hay trabajos contratados</p>
       )}
+      {error && <p>Error: {error}</p>}
     </div>
-  )}
-</div>      
-))
-):(
-    <p>No hay trabajos contratados</p>
-  )}
-  {error && <p>Error: {error}</p>}
-</div>
-);
+  );
 };
 
 export default TrabajosContratados;

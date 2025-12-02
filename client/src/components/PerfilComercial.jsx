@@ -84,6 +84,21 @@ const PerfilComercial = () => {
     }, 300);
   };
 
+        const traducirEstado = (estado) => {
+        switch (estado) {
+          case 'terminado':
+            return 'Finalizado por Cliente';
+          case 'finalizado_profesional':
+            return 'Finalizado por Profesional';
+          case 'cancelado':
+            return 'Cancelado por Cliente';
+          case 'cancelado_profesional':
+            return 'Cancelado por Profesional';
+          default:
+            return estado;
+        }
+      };
+
   return (
     <div className="perfil-container">
 
@@ -158,8 +173,8 @@ const PerfilComercial = () => {
           trabajosPagina.map((trabajo) => (
             <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
               <h4>{trabajo.rubro}</h4>
-              <p><strong>Estado:</strong> {trabajo.estado}</p>
-              <p><strong>Fecha:</strong> {trabajo.fechaContratacion}</p>
+              <p><strong>Estado del Trabajo:</strong> {traducirEstado(trabajo.estado)}</p>
+              <p><strong>Fecha de contratación:</strong> {trabajo.fechaContratacion}</p>
               <p><strong>Cliente:</strong> {trabajo.usuarioComun.nombre} {trabajo.usuarioComun.apellido}</p>
               <p><strong>Comentario:</strong> {trabajo.comentario}</p>
               <p><strong>Valoración:</strong> {renderEstrellas(trabajo.valoracion)}</p>
