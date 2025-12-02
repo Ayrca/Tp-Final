@@ -154,7 +154,13 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
       ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
       : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
     const resp = await fetch;
-    setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+    setTrabajos(
+      Array.isArray(resp.data)
+        ? resp.data
+            .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
+            .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
+        : []
+    );
   } catch (error) {
     console.error('Error al finalizar el trabajo:', error);
   }
@@ -186,7 +192,13 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
         ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
         : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
       const resp = await fetch;
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+      setTrabajos(
+        Array.isArray(resp.data)
+          ? resp.data
+              .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
+              .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
+          : []
+      );
     } catch (error) {
       console.error('Error al cancelar el trabajo:', error);
     }
@@ -224,7 +236,12 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
           ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
           : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
         const resp = await fetch;
-        setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+        setTrabajos(
+          Array.isArray(resp.data)
+            ? resp.data
+                .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
+                .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
+            : []        );
 
       } catch (error) {
         console.error('Error al finalizar el trabajo:', error);
@@ -267,7 +284,13 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
           ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
           : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
         const resp = await fetch;
-        setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+        setTrabajos(
+          Array.isArray(resp.data)
+            ? resp.data
+                .filter(trabajo => !['terminado', 'finalizado_profesional', 'cancelado', 'cancelado_profesional'].includes(trabajo.estado))
+                .sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
+            : []
+        );
 
       } catch (error) {
         console.error('Error al cancelar el trabajo:', error);
