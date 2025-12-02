@@ -27,28 +27,37 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     setTrabajos(trabajosOrdenados);
   };
 
-  useEffect(() => {
-    const fetchTrabajos = async () => {
-      try {
-        let response;
+useEffect(() => {
+  const fetchTrabajos = async () => {
+    try {
+      let response;
+      if (idProfesional) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+      } else if (idusuarioComun) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      } else return;
 
-        if (idProfesional) {
-          response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
-        } else if (idusuarioComun) {
-          response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-        } else return;
-
-        actualizarTrabajos(response.data);
+      if (response && Array.isArray(response.data)) {
+        console.log("Trabajos recibidos:", response.data); // <-- Aquí loggeás los objetos
+        const trabajosOrdenados = response.data.sort(
+          (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
+        );
+        setTrabajos(trabajosOrdenados);
         setError(null);
-      } catch (err) {
+      } else {
         setTrabajos([]);
-        setError('Error al conectar con la API');
-        console.error(err);
+        setError('No se pudo obtener los trabajos correctamente');
       }
-    };
+    } catch (err) {
+      setTrabajos([]);
+      setError('Error al conectar con la API');
+      console.error(err);
+    }
+  };
 
-    fetchTrabajos();
-  }, [idProfesional, idusuarioComun]);
+  fetchTrabajos();
+}, [idProfesional, idusuarioComun]);
+
 
   // PAGINACIÓN
   const totalPaginasTrabajos = Math.ceil(trabajos.length / trabajosPorPagina);
