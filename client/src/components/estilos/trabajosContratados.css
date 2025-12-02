@@ -72,3 +72,12 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.star-rating-small {
+  display: inline-flex;
+  font-size: 18px;
+  color: gold;
+}
+.star-rating-small .star {
+  margin-right: 2px;
+}

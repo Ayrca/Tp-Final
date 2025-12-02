@@ -162,6 +162,19 @@ textarea {
   font-weight: 600;
 }
 
+.star-rating {
+  font-size: 1.4rem;
+  margin-top: 5px;
+}
+
+.star {
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
 /* ============================
    RESPONSIVE
 ============================ */

@@ -143,42 +143,83 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
     }
   };
 
-  const handleFinalizarProfesional = async (idcontratacion) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/trabajoContratado/${idcontratacion}`);
-      if (response.status === 200) {
-        const idusuarioProfesional = response.data.usuarioProfesional_idusuarioProfesional;
-        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'terminado' });
-        
-        Swal.fire({ title: 'Finalizado', text: 'El trabajo ha sido finalizado correctamente', icon: 'success' });
-        fetchTrabajos();
-      } else {
-        console.error('Error al finalizar el trabajo');
-      }
-    } catch (error) {
-      console.error('Error al finalizar el trabajo:', error);
-    }
-  };
-
-  const handleCancelarProfesional = async (idcontratacion) => {
-    try {
-      const response = await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
-        estado: 'cancelado',
+    const handleFinalizarProfesional = async (idcontratacion) => {
+      const { value: comentario } = await Swal.fire({
+        title: 'Finalizar trabajo',
+        input: 'textarea',
+        inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
+        showCancelButton: true,
+        confirmButtonText: 'Finalizar',
+        cancelButtonText: 'Volver'
       });
-      if (response.status === 200) {
-        Swal.fire({
-          title: 'Cancelado',
-          text: 'El trabajo ha sido cancelado correctamente',
-          icon: 'success',
+
+      if (!comentario) return;
+
+      try {
+        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+          estado: 'finalizado_profesional',
+          comentario,
         });
+
+        Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
         fetchTrabajos();
-      } else {
-        console.error('Error al cancelar el trabajo');
+      } catch (error) {
+        console.error('Error al finalizar el trabajo:', error);
       }
-    } catch (error) {
-      console.error('Error al cancelar el trabajo:', error);
-    }
-  };
+    };
+
+    const handleCancelarProfesional = async (idcontratacion) => {
+      const { value: comentario } = await Swal.fire({
+        title: 'Cancelar trabajo',
+        input: 'textarea',
+        inputPlaceholder: 'Explica la razón de la cancelación',
+        showCancelButton: true,
+        confirmButtonText: 'Cancelar trabajo',
+        cancelButtonText: 'Volver'
+      });
+
+      if (!comentario) return;
+
+      try {
+        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+          estado: 'cancelado_profesional',
+          comentario,
+        });
+
+        Swal.fire('Cancelado', 'El trabajo se canceló correctamente', 'success');
+        fetchTrabajos();
+      } catch (error) {
+        console.error('Error al cancelar el trabajo:', error);
+      }
+    };
+
+        const traducirEstado = (estado) => {
+      switch (estado) {
+        case 'terminado':
+          return 'Finalizado por Cliente';
+        case 'finalizado_profesional':
+          return 'Finalizado por Profesional';
+        case 'cancelado':
+          return 'Cancelado por Cliente';
+        case 'cancelado_profesional':
+          return 'Cancelado por Profesional';
+        default:
+          return estado;
+      }
+    };
+
+        const StarRatingSmall = ({ rating }) => {
+      const maxStars = 5;
+      return (
+        <div className="star-rating-small">
+          {[...Array(maxStars)].map((_, i) => (
+            <span key={i} className={i < rating ? "star filled" : "star"}>
+              ★
+            </span>
+          ))}
+        </div>
+      );
+    };
 
   return (
 <div className="trabajos-contratados">
@@ -191,7 +232,7 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
           <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
         )}
         <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
-        <p><span>Estado del Trabajo:</span> <span className="dato">{trabajo.estado}</span></p>
+        <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
        <p><span>Fecha de contratación:</span> <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
   day: '2-digit',
   month: 'long',
@@ -201,7 +242,16 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
   second: '2-digit',
   hour12: false
 })}</span></p>
-        <p><span>Valoración:</span> <span className="dato">{trabajo.valoracion}</span></p>
+          <p>
+            <span>Valoración:</span> 
+            <span className="dato">
+              {trabajo.valoracion ? (
+                <StarRatingSmall rating={trabajo.valoracion} />
+              ) : (
+                "Sin valoración"
+              )}
+            </span>
+          </p>
         <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
 <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> <span className="dato"> 
   {esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional } 

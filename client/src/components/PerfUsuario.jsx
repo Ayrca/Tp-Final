@@ -9,6 +9,20 @@ import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+// ⭐ Componente de estrellas agregado
+const StarRating = ({ rating }) => {
+  const maxStars = 5;
+  return (
+    <div className="star-rating">
+      {[...Array(maxStars)].map((_, index) => (
+        <span key={index} className={index < rating ? "star filled" : "star"}>
+          ★
+        </span>
+      ))}
+    </div>
+  );
+};
+
 const PerfUsuario = () => {
   const [usuario, setUsuario] = useState({});
   const [editando, setEditando] = useState(false);
@@ -93,7 +107,6 @@ const PerfUsuario = () => {
         }
       );
 
-      // Actualizamos el avatar concatenando la URL completa
       setUsuario({
         ...usuario,
         avatar: response.data.avatar.startsWith('http')
@@ -118,17 +131,17 @@ const PerfUsuario = () => {
         {/* ==== Avatar + nombre ==== */}
         <div className="pu-header">
           <div className="pu-avatar-box">
-        <img
-          src={
-            usuario.avatar
-              ? usuario.avatar.startsWith('http')
-                ? usuario.avatar
-                : `${BASE_URL}${usuario.avatar}`
-              : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png' // por defecto
-          }
-          alt="Avatar"
-          className="pu-avatar-img"
-        />
+            <img
+              src={
+                usuario.avatar
+                  ? usuario.avatar.startsWith('http')
+                    ? usuario.avatar
+                    : `${BASE_URL}${usuario.avatar}`
+                  : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png'
+              }
+              alt="Avatar"
+              className="pu-avatar-img"
+            />
 
             <input
               type="file"
@@ -149,6 +162,11 @@ const PerfUsuario = () => {
                 ? 'Profesional'
                 : 'Usuario Cliente'}
             </p>
+
+            {/* ⭐ ESTRELLAS SOLO SI ES PROFESIONAL */}
+            {usuario.tipo === 'profesional' && (
+              <StarRating rating={usuario.calificacionPromedio || 0} />
+            )}
           </div>
         </div>
 
