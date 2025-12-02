@@ -85,66 +85,60 @@ const ListaProfesional = () => {
       .catch((err) => console.error(err));
   }, []);
 
-    // Contratar profesional
-    const handleContratar = useCallback(async (profesional) => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
-        return;
-      }
+// Contratar profesional
+const handleContratar = useCallback(async (profesional) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
+    return;
+  }
 
-      const usuarioLogueado = jwtDecode(token);
+  const usuarioLogueado = jwtDecode(token);
 
-      // Validación: profesionales no pueden contratar
-      if (usuarioLogueado.tipo === 'profesional') {
-        Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
-        return;
-      }
+  // Validación: los profesionales no pueden contratar
+  if (usuarioLogueado.tipo === 'profesional') {
+    Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
+    return;
+  }
 
-      // Validación: un usuario no puede contratarse a sí mismo
-      if (usuarioLogueado.sub === profesional.idusuarioProfesional) {
-        Swal.fire({ title: 'Error', text: 'No puedes contratarte a ti mismo', icon: 'error' });
-        return;
-      }
+  try {
+    // Obtenemos datos del usuario logueado
+    const response = await axios.get(`${BASE_URL}/usuario/${usuarioLogueado.sub}`);
+    const usuario = response.data;
 
-      try {
-        // Obtenemos datos del usuario logueado
-        const response = await axios.get(`${BASE_URL}/usuario/${usuarioLogueado.sub}`);
-        const usuario = response.data;
+    // Obtenemos el oficio del profesional
+    const oficio = await obtenerOficio(profesional.idusuarioProfesional);
 
-        // Obtenemos el oficio del profesional
-        const oficio = await obtenerOficio(profesional.idusuarioProfesional);
+    const datosContratacion = {
+      usuarioComun: { idusuarioComun: usuario.idusuarioComun },
+      profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
+      rubro: oficio?.oficio?.nombre || '',
+      telefonoProfesional: profesional.telefono,
+      telefonoCliente: usuario.telefono,
+      estado: "pendiente",
+      valoracion: 0,
+      comentario: '',
+      fechaContratacion: new Date(),
+    };
 
-        const datosContratacion = {
-          usuarioComun: { idusuarioComun: usuario.idusuarioComun },
-          profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
-          rubro: oficio?.oficio?.nombre || '',
-          telefonoProfesional: profesional.telefono,
-          telefonoCliente: usuario.telefono,
-          estado: "pendiente",
-          valoracion: 0,
-          comentario: '',
-          fechaContratacion: new Date(),
-        };
+    // Creamos la contratación
+    await axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion);
 
-        // Creamos la contratación
-        await axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion);
+    Swal.fire({
+      title: 'Éxito',
+      text: 'La solicitud de contrato se ha enviado correctamente',
+      icon: 'success',
+    });
 
-        Swal.fire({
-          title: 'Éxito',
-          text: 'La solicitud de contrato se ha enviado correctamente',
-          icon: 'success',
-        });
-
-      } catch (error) {
-        console.error(error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error al procesar la solicitud',
-          icon: 'error',
-        });
-      }
-    }, [idOficios]);
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: 'Error',
+      text: 'Ocurrió un error al procesar la solicitud',
+      icon: 'error',
+    });
+  }
+}, [idOficios]);
 
   // Conectar profesional (WhatsApp)
   const handleConectar = async (profesional) => {

@@ -30,12 +30,15 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
         } else return;
 
         if (response && Array.isArray(response.data)) {
-          setTrabajos(response.data);
+          // Ordenar por fecha descendente (más reciente primero)
+          const trabajosOrdenados = response.data.sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion));
+          setTrabajos(trabajosOrdenados);
           setError(null);
         } else {
           setTrabajos([]);
           setError('No se pudo obtener los trabajos correctamente');
         }
+
       } catch (err) {
         setTrabajos([]);
         setError('Error al conectar con la API');
@@ -202,22 +205,30 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
             Swal.showValidationMessage('Debes ingresar un comentario antes de finalizar');
             return false;
           }
-          return value;
+          return value.trim();
         }
       });
 
       if (!comentario) return;
 
       try {
-        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'finalizado_profesional', comentario });
+        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+          estado: 'finalizado_profesional',
+          comentario
+        });
+
         Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+
+        // Refrescar lista
         const fetch = idProfesional
           ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
           : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
         const resp = await fetch;
         setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+
       } catch (error) {
         console.error('Error al finalizar el trabajo:', error);
+        Swal.fire('Error', 'Ocurrió un error al finalizar el trabajo', 'error');
       }
     };
 
