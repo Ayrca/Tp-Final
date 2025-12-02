@@ -32,13 +32,18 @@ const PerfilComercial = () => {
         })
         .catch(() => {});
 
-      axios
-        .get(`${BASE_URL}/trabajoContratado/${profesional.idusuarioProfesional}`)
-        .then((response) => {
-          if (Array.isArray(response.data)) setTrabajos(response.data);
-          else setError("La respuesta de la API no es un array");
-        })
-        .catch((error) => setError(error.message));
+        axios
+          .get(`${BASE_URL}/trabajoContratado/${profesional.idusuarioProfesional}`)
+          .then((response) => {
+            if (Array.isArray(response.data)) {
+              // Ordenar por fecha descendente
+              const trabajosOrdenados = response.data.sort(
+                (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
+              );
+              setTrabajos(trabajosOrdenados);
+            } else setError("La respuesta de la API no es un array");
+          })
+          .catch((error) => setError(error.message));
     }
   }, [profesional]);
 

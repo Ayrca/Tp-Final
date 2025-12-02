@@ -232,37 +232,48 @@ const handleFinalizar = async (idcontratacion, idusuarioProfesional) => {
       }
     };
 
-  const handleCancelarProfesional = async (idcontratacion) => {
-    const { value: comentario } = await Swal.fire({
-      title: 'Cancelar trabajo',
-      input: 'textarea',
-      inputPlaceholder: 'Explica la razón de la cancelación',
-      showCancelButton: true,
-      confirmButtonText: 'Cancelar trabajo',
-      cancelButtonText: 'Volver',
-      preConfirm: (value) => {
-        if (!value || value.trim() === '') {
-          Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
-          return false;
+    const handleCancelarProfesional = async (idcontratacion) => {
+      const formValues = await Swal.fire({
+        title: 'Cancelar trabajo',
+        input: 'textarea',
+        inputPlaceholder: 'Explica la razón de la cancelación',
+        showCancelButton: true,
+        confirmButtonText: 'Cancelar trabajo',
+        cancelButtonText: 'Volver',
+        preConfirm: (value) => {
+          if (!value || value.trim() === '') {
+            Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+            return false;
+          }
+          return value.trim();
         }
-        return value;
+      });
+
+      // Si canceló el modal o no ingresó comentario, salir
+      if (!formValues?.value) return;
+
+      const comentario = formValues.value;
+
+      try {
+        await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { 
+          estado: 'cancelado_profesional', 
+          comentario 
+        });
+
+        Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
+
+        // Refrescar lista
+        const fetch = idProfesional
+          ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
+          : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+        const resp = await fetch;
+        setTrabajos(Array.isArray(resp.data) ? resp.data : []);
+
+      } catch (error) {
+        console.error('Error al cancelar el trabajo:', error);
+        Swal.fire('Error', 'Ocurrió un error al cancelar el trabajo', 'error');
       }
-    });
-
-    if (!comentario) return;
-
-    try {
-      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'cancelado_profesional', comentario });
-      Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
-      const fetch = idProfesional
-        ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
-        : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-      const resp = await fetch;
-      setTrabajos(Array.isArray(resp.data) ? resp.data : []);
-    } catch (error) {
-      console.error('Error al cancelar el trabajo:', error);
-    }
-  };
+    };
 
   return (
     <div className="trabajos-contratados">
