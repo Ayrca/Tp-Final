@@ -79,7 +79,7 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     ));
   };
 
-  // Funciones de finalizar/cancelar (sin cambios)
+  // Funciones de finalizar/cancelar
   const crearModalValoracion = async () => {
     return Swal.fire({
       title: 'Finalizar trabajo',
@@ -139,7 +139,6 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
       const promedioValoracion = responsePromedio.data;
       await axios.put(`${BASE_URL}/profesional/${idusuarioProfesional}/valoracion`, { valoracion: promedioValoracion });
       Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
-      // Refrescar
       const fetch = idProfesional
         ? axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`)
         : axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
@@ -150,24 +149,24 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     }
   };
 
-      const handleCancelar = async (idcontratacion) => {
-        const { value: comentario } = await Swal.fire({
-          title: '¿Estás seguro de cancelar?',
-          input: 'textarea',
-          inputPlaceholder: 'Explica la razón de la cancelación',
-          showCancelButton: true,
-          confirmButtonText: 'Cancelar',
-          cancelButtonText: 'Volver',
-          preConfirm: (value) => {
-            if (!value || value.trim() === '') {
-              Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
-              return false;
-            }
-            return value;
-          }
-        });
+  const handleCancelar = async (idcontratacion) => {
+    const { value: comentario } = await Swal.fire({
+      title: '¿Estás seguro de cancelar?',
+      input: 'textarea',
+      inputPlaceholder: 'Explica la razón de la cancelación',
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar',
+      cancelButtonText: 'Volver',
+      preConfirm: (value) => {
+        if (!value || value.trim() === '') {
+          Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+          return false;
+        }
+        return value;
+      }
+    });
 
-        if (!comentario) return;
+    if (!comentario) return;
 
     try {
       await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'cancelado', comentario });
@@ -207,24 +206,24 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     }
   };
 
-    const handleCancelarProfesional = async (idcontratacion) => {
-      const { value: comentario } = await Swal.fire({
-        title: 'Cancelar trabajo',
-        input: 'textarea',
-        inputPlaceholder: 'Explica la razón de la cancelación',
-        showCancelButton: true,
-        confirmButtonText: 'Cancelar trabajo',
-        cancelButtonText: 'Volver',
-        preConfirm: (value) => {
-          if (!value || value.trim() === '') {
-            Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
-            return false;
-          }
-          return value;
+  const handleCancelarProfesional = async (idcontratacion) => {
+    const { value: comentario } = await Swal.fire({
+      title: 'Cancelar trabajo',
+      input: 'textarea',
+      inputPlaceholder: 'Explica la razón de la cancelación',
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar trabajo',
+      cancelButtonText: 'Volver',
+      preConfirm: (value) => {
+        if (!value || value.trim() === '') {
+          Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+          return false;
         }
-      });
+        return value;
+      }
+    });
 
-      if (!comentario) return;
+    if (!comentario) return;
 
     try {
       await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'cancelado_profesional', comentario });
@@ -240,92 +239,91 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
   };
 
   return (
- <div className="trabajos-contratados">
-
-  <div className={`trabajos-grid gallery-grid ${fadeTrabajos}`}>
-    {trabajosPagina.length > 0 ? (
-      trabajosPagina.map((trabajo) => (
-        <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
-          {idProfesional ? (
-            <p><span>Cliente:</span> <span className="dato">{trabajo.usuarioComun?.nombre}</span></p>
-          ) : (
-            <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
-          )}
-          <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
-          <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
-          <p>
-            <span>Fecha de contratación:</span> 
-            <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false
-            })}</span>
-          </p>
-          <p>
-            <span>Valoración:</span>
-            <span className="dato">
-              {trabajo.valoracion ? renderEstrellas(trabajo.valoracion) : "Sin valoración"}
-            </span>
-          </p>
-          <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
-          <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> 
-             <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
-          </p>
-
-          {trabajo.estado !== "terminado" && trabajo.estado !== "cancelado" && (
-            <div className="botones-trabajo">
+    <div className="trabajos-contratados">
+      {/* Grilla de tarjetas */}
+      <div className={`trabajos-grid gallery-grid ${fadeTrabajos}`}>
+        {trabajosPagina.length > 0 ? (
+          trabajosPagina.map((trabajo) => (
+            <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
               {idProfesional ? (
-                <>
-                  <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
-                  <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
-                </>
+                <p><span>Cliente:</span> <span className="dato">{trabajo.usuarioComun?.nombre}</span></p>
               ) : (
-                <>
-                  <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
-                  <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
-                </>
+                <p><span>Profesional:</span> <span className="dato">{trabajo.profesional?.nombre}</span></p>
+              )}
+              <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
+              <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
+              <p>
+                <span>Fecha de contratación:</span> 
+                <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                })}</span>
+              </p>
+              <p>
+                <span>Valoración:</span>
+                <span className="dato">
+                  {trabajo.valoracion ? renderEstrellas(trabajo.valoracion) : "Sin valoración"}
+                </span>
+              </p>
+              <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
+              <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> 
+                 <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
+              </p>
+
+              {trabajo.estado !== "terminado" && trabajo.estado !== "cancelado" && (
+                <div className="botones-trabajo">
+                  {idProfesional ? (
+                    <>
+                      <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
+                      <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion, trabajo.profesional.idusuarioProfesional)}>Finalizar</button>
+                      <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
+                    </>
+                  )}
+                </div>
               )}
             </div>
-          )}
-        </div>
-      ))
-    ) : (
-      <p>No hay trabajos contratados</p>
-    )}
-  </div>
-
-  {/* Paginación centrada */}
-  {totalPaginasTrabajos > 1 && (
-    <div className="gallery-pagination-wrapper">
-      <div className="gallery-pagination">
-        <button
-          className="pag-btn"
-          disabled={paginaActual === 1}
-          onClick={() => cambiarPaginaTrabajos(paginaActual - 1)}
-        >
-          ◀
-        </button>
-
-        <span className="pag-indicator">{paginaActual} / {totalPaginasTrabajos}</span>
-
-        <button
-          className="pag-btn"
-          disabled={paginaActual === totalPaginasTrabajos}
-          onClick={() => cambiarPaginaTrabajos(paginaActual + 1)}
-        >
-          ▶
-        </button>
+          ))
+        ) : (
+          <p>No hay trabajos contratados</p>
+        )}
       </div>
+
+      {/* Paginación centrada */}
+      {totalPaginasTrabajos > 1 && (
+        <div className="gallery-pagination-wrapper">
+          <div className="gallery-pagination">
+            <button
+              className="pag-btn"
+              disabled={paginaActual === 1}
+              onClick={() => cambiarPaginaTrabajos(paginaActual - 1)}
+            >
+              ◀
+            </button>
+
+            <span className="pag-indicator">{paginaActual} / {totalPaginasTrabajos}</span>
+
+            <button
+              className="pag-btn"
+              disabled={paginaActual === totalPaginasTrabajos}
+              onClick={() => cambiarPaginaTrabajos(paginaActual + 1)}
+            >
+              ▶
+            </button>
+          </div>
+        </div>
+      )}
+
+      {error && <p>Error: {error}</p>}
     </div>
-  )}
-
-  {error && <p>Error: {error}</p>}
-</div>
-
   );
 };
 

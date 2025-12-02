@@ -1,10 +1,19 @@
-/* trabajos contratados */
-
+/* Contenedor principal: apila verticalmente grilla y paginación */
 .trabajos-contratados {
   margin-bottom: 30px;
+  display: flex;
+  flex-direction: column; /* apila verticalmente */
+  gap: 20px; /* separación entre grilla y paginación */
+  align-items: center; /* centra horizontalmente contenido */
+}
+
+/* Grilla de tarjetas */
+.trabajos-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  width: 100%;
+  justify-items: center; /* centra cada tarjeta dentro del grid */
 }
 
 .tarjeta-trabajo {
@@ -91,7 +100,6 @@
 }
 
 /* MODALES DE SWEETALERT */
-
 .swal2-popup {
   width: 500px !important;
   padding: 25px !important;
@@ -99,7 +107,7 @@
 
 .swal2-textarea {
   width: 100% !important;
-  min-height: 120px !important; /* aumentar altura */
+  min-height: 120px !important;
   resize: vertical;
   font-size: 1rem;
   padding: 10px;
@@ -133,6 +141,12 @@
 }
 
 /* Paginacion */
+.gallery-pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .gallery-pagination {
   display: flex;
   justify-content: center;

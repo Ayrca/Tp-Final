@@ -1,16 +1,4 @@
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
+/* ====== Botones de disponibilidad ====== */
 .btn-success {
   background-color: green;
   color: white;
@@ -18,6 +6,12 @@
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #006400;
 }
 
 .btn-danger {
@@ -27,4 +21,21 @@
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #8b0000;
+}
+
+/* ====== Input de descripción grande ====== */
+.descripcion-input {
+  width: 100%;
+  min-height: 120px;
+  font-size: 1rem;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical; /* permite cambiar altura */
 }
