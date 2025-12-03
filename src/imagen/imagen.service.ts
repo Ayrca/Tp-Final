@@ -40,8 +40,9 @@ async guardarImagen(file: any, idProfesional: number): Promise<any> {
   const filename = file.originalname;
   const filePath = `client/public/assets/imagenesUsuariosProfesionales/${filename}`;
   fs.renameSync(file.path, filePath);
+
   const imagen = new Imagen();
-  imagen.url = filename;
+  imagen.url = `/assets/imagenesUsuariosProfesionales/${filename}`;  
   imagen.idProfesional = idProfesional;
   await this.imagenRepository.save(imagen);
   return { message: 'Imagen guardada con éxito' };

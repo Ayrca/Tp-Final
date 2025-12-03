@@ -71,7 +71,7 @@ let ImagenService = class ImagenService {
         const filePath = `client/public/assets/imagenesUsuariosProfesionales/${filename}`;
         fs.renameSync(file.path, filePath);
         const imagen = new imagen_entity_1.Imagen();
-        imagen.url = filename;
+        imagen.url = `/assets/imagenesUsuariosProfesionales/${filename}`;
         imagen.idProfesional = idProfesional;
         await this.imagenRepository.save(imagen);
         return { message: 'Imagen guardada con éxito' };
