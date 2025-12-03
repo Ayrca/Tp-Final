@@ -216,13 +216,15 @@ const ListaProfesional = () => {
 
         {/* Center con cards */}
         <div className="profesionales-center" ref={centroRef}>
+          {/* Título siempre visible si nombreOficio existe */}
+          {nombreOficio && (
+            <h1 className="titulo-oficio">Profesionales de {nombreOficio}</h1>
+          )}
+
           {profesionales.length === 0 ? (
             <p>No hay profesionales disponibles</p>
           ) : (
             <>
-              {nombreOficio && (
-                <h1 className="titulo-oficio">Profesionales de {nombreOficio}</h1>
-              )}
               <div className="grid-profesionales">
                 {currentProfesionales.map((profesional, index) => (
                   <article key={index} className="profesional-item compact">

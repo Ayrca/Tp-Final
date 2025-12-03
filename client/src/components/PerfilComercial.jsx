@@ -11,6 +11,7 @@ const PerfilComercial = () => {
 
   const [imagenes, setImagenes] = useState([]);
   const [trabajos, setTrabajos] = useState([]);
+  const [valoracionPromedio, setValoracionPromedio] = useState(0);
   const [error, setError] = useState(null);
 
   // GALERÍA
@@ -25,25 +26,35 @@ const PerfilComercial = () => {
 
   useEffect(() => {
     if (profesional) {
-      axios
-        .get(`${BASE_URL}/imagen/${profesional.idusuarioProfesional}`)
+      // Traer imágenes
+      axios.get(`${BASE_URL}/imagen/${profesional.idusuarioProfesional}`)
         .then((response) => {
           if (Array.isArray(response.data)) setImagenes(response.data);
         })
         .catch(() => {});
 
-        axios
-          .get(`${BASE_URL}/trabajoContratado/${profesional.idusuarioProfesional}`)
-          .then((response) => {
-            if (Array.isArray(response.data)) {
-              // Ordenar por fecha descendente
-              const trabajosOrdenados = response.data.sort(
-                (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
-              );
-              setTrabajos(trabajosOrdenados);
-            } else setError("La respuesta de la API no es un array");
-          })
-          .catch((error) => setError(error.message));
+      // Traer trabajos
+      axios.get(`${BASE_URL}/trabajoContratado/${profesional.idusuarioProfesional}`)
+        .then((response) => {
+          if (Array.isArray(response.data)) {
+            // Ordenar por fecha descendente
+            const trabajosOrdenados = response.data.sort(
+              (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
+            );
+            setTrabajos(trabajosOrdenados);
+
+            // Calcular valoración promedio
+            const trabajosValorados = trabajosOrdenados.filter(t => t.valoracion && t.valoracion > 0);
+            if (trabajosValorados.length > 0) {
+              const suma = trabajosValorados.reduce((acc, t) => acc + t.valoracion, 0);
+              setValoracionPromedio(suma / trabajosValorados.length);
+            } else {
+              setValoracionPromedio(0);
+            }
+
+          } else setError("La respuesta de la API no es un array");
+        })
+        .catch((error) => setError(error.message));
     }
   }, [profesional]);
 
@@ -89,20 +100,15 @@ const PerfilComercial = () => {
     }, 300);
   };
 
-        const traducirEstado = (estado) => {
-        switch (estado) {
-          case 'terminado':
-            return 'Finalizado por Cliente';
-          case 'finalizado_profesional':
-            return 'Finalizado por Profesional';
-          case 'cancelado':
-            return 'Cancelado por Cliente';
-          case 'cancelado_profesional':
-            return 'Cancelado por Profesional';
-          default:
-            return estado;
-        }
-      };
+  const traducirEstado = (estado) => {
+    switch (estado) {
+      case 'terminado': return 'Finalizado por Cliente';
+      case 'finalizado_profesional': return 'Finalizado por Profesional';
+      case 'cancelado': return 'Cancelado por Cliente';
+      case 'cancelado_profesional': return 'Cancelado por Profesional';
+      default: return estado;
+    }
+  };
 
   return (
     <div className="perfil-container">
@@ -127,14 +133,13 @@ const PerfilComercial = () => {
           <p><strong>Email:</strong> {profesional.email}</p>
           <p><strong>Tel:</strong> {profesional.telefono}</p>
           <p><strong>Dirección:</strong> {profesional.direccion}</p>
-          <p><strong>Valoración promedio:</strong> {renderEstrellas(profesional.valoracion)}</p>
+          <p><strong>Valoración promedio:</strong> {renderEstrellas(valoracionPromedio)}</p>
           <p className="descripcion">{profesional.descripcion}</p>
         </div>
       </div>
 
       {/* GALERÍA */}
       <h3>Galería de trabajos</h3>
-
       <div className={`imagenes-comercial-container gallery-grid ${fadeGaleria}`}>
         {imagenesPagina.length > 0 ? (
           imagenesPagina.map((img, i) => (
@@ -172,7 +177,6 @@ const PerfilComercial = () => {
 
       {/* TRABAJOS */}
       <h3>Trabajos realizados</h3>
-
       <div className={`trabajos-grid gallery-grid ${fadeTrabajos}`}>
         {trabajosPagina.length > 0 ? (
           trabajosPagina.map((trabajo) => (

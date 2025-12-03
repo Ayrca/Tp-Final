@@ -14,6 +14,31 @@
   padding: 0 20px;
 }
 
+/* Título del oficio */
+.titulo-oficio {
+  font-size: 2rem;        
+  font-weight: 700;    
+  color: #2f89c8;       
+  text-align: center;       
+  margin: 20px 0;          
+  padding: 10px 15px;      
+  letter-spacing: 1px;     
+  text-transform: uppercase; 
+}
+
+/* Subtítulo cuando no hay profesionales */
+.titulo-oficio.no-profesionales {
+  font-size: 2rem;        
+  font-weight: 700;    
+  color: #2f89c8;       
+  text-align: center;       
+  margin: 20px 0;          
+  padding: 10px 15px;      
+  letter-spacing: 1px;     
+  text-transform: uppercase; 
+}
+
+
 /* Carrusel vertical izquierdo y derecho */
 .carrusel-desktop {
   width: 300px; /* tamaño fijo en desktop */
