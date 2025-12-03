@@ -168,6 +168,14 @@ form#registro-form button[type="submit"]:hover {
   background-color: #2980b9;
 }
 
+.mensaje-oficio {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
 /* Responsive */
 
 @media (max-width: 768px) {
@@ -234,3 +242,4 @@ form#registro-form button[type="submit"]:hover {
     padding: 0.7rem 1.2rem;
   }
 }
+

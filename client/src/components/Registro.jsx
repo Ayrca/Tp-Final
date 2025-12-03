@@ -296,6 +296,11 @@ const Registro = () => {
               ))}
             </select>
 
+             {/* Mensaje debajo del selector */}
+            <small className="mensaje-oficio">
+              Para sugerir agregar un oficio nuevo, por favor contactese al mail <a href="mailto:proyectoafip29@gmail.com">proyectoafip29@gmail.com</a>.
+            </small>
+
             <label htmlFor="empresa">Empresa (opcional):</label>
             <input
               type="text"
