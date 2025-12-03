@@ -11,7 +11,7 @@
   
 }
 
-/*.manejo-usuarios button {
+.manejo-usuarios button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -23,7 +23,7 @@
 
 .manejo-usuarios button:hover {
   background-color: #3e8e41;
-}*/
+}
 
 .manejo-usuarios form {
   margin-top: 20px;
