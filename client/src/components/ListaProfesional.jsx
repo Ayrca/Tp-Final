@@ -48,6 +48,8 @@ const ListaProfesional = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const centroRef = useRef(null);
   const [alturaCarrusel, setAlturaCarrusel] = useState(0);
+  const [nombreOficio, setNombreOficio] = useState('');
+
 
   // Obtener oficio de un profesional
   const obtenerOficio = async (idProfesional) => {
@@ -59,6 +61,15 @@ const ListaProfesional = () => {
       return null;
     }
   };
+
+  //titulo del oficio seleccionado
+      useEffect(() => {
+      if (!id) return;
+
+      axios.get(`${BASE_URL}/oficios/${id}`)
+        .then(res => setNombreOficio(res.data.nombre))
+        .catch(err => console.error("Error al obtener oficio:", err));
+    }, [id]);
 
   // Lista de profesionales (o por oficio)
   useEffect(() => {
@@ -186,6 +197,9 @@ const ListaProfesional = () => {
             <p>No hay profesionales disponibles</p>
           ) : (
             <>
+                    {nombreOficio && (
+          <h1 className="titulo-oficio">Profesionales de {nombreOficio}</h1>
+        )}
               <div className="grid-profesionales">
                 {currentProfesionales.map((profesional, index) => (
                   <article key={index} className="profesional-item compact">

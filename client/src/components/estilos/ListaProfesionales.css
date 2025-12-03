@@ -14,6 +14,15 @@
   padding: 0 20px;
 }
 
+/* titulo oficio */
+.titulo-oficio {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #2f89c8;
+}
+
 /* Carrusel vertical izquierdo y derecho */
 .carrusel-desktop {
   width: 300px; /* tamaño fijo en desktop */
