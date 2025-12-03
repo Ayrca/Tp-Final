@@ -101,27 +101,19 @@
 
 /* MODALES DE SWEETALERT */
 .swal2-popup {
-  width: 650px !important;    
-  max-width: 90vw !important;
-  padding: 30px !important;
+  width: 500px !important;
+  padding: 25px !important;
 }
 
-/* Ajustar el contenedor del contenido del modal */
-.swal2-html-container {
-  width: 100% !important;
-  max-height: 60vh !important; /* evita overflow vertical */
-  overflow-y: auto;
-}
-
-/* Textarea cómodo */
 .swal2-textarea {
-  width: 100% !important;
-  min-height: 160px !important; /* más grande */
+  width: 80% !important;
+  min-height: 120px !important;
   resize: vertical;
   font-size: 1rem;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #bcbcbc;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
 }
 
 /* Contenedor de estrellas clickeables */
