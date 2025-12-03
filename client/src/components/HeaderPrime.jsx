@@ -51,24 +51,32 @@ const HeaderPrime = () => {
     };
   }, [showModal]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(`${BASE_URL}/auth/login`, { email, password });
-      const token = response.data.access_token;
-      localStorage.setItem('token', token);
-      setIsLoggedIn(true);
-      setShowModal(false);
-      setDropdownOpen(false);
-      Swal.fire('Éxito', 'Has iniciado sesión correctamente', 'success').then(() => navigate('/'));
-    } catch (error) {
-      if (error.response?.data?.message) {
-        Swal.fire('Error', error.response.data.message, 'error');
-      } else {
-        console.error(error);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post(`${BASE_URL}/auth/login`, { email, password });
+        const token = response.data.token; // asegurate de que coincida con lo que devuelve tu backend
+        localStorage.setItem('token', token);
+        setIsLoggedIn(true);
+        setShowModal(false);
+        setDropdownOpen(false);
+        Swal.fire('Éxito', 'Has iniciado sesión correctamente', 'success').then(() => navigate('/'));
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 403) {
+            // Cuenta bloqueada
+            Swal.fire('Acceso denegado', error.response.data.message, 'warning');
+          } else if (error.response.data.message) {
+            Swal.fire('Error', error.response.data.message, 'error');
+          } else {
+            Swal.fire('Error', 'Ocurrió un error inesperado', 'error');
+          }
+        } else {
+          console.error(error);
+          Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
+        }
       }
-    }
-  };
+    };
 
   const handleLogout = () => {
     localStorage.removeItem('token');

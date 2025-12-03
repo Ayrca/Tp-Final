@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import CarruselVertical from '../components/CarruselVertical';
 import Carrusel from '../components/Carrusel';
 import Swal from 'sweetalert2';
@@ -85,60 +85,55 @@ const ListaProfesional = () => {
       .catch((err) => console.error(err));
   }, []);
 
-// Contratar profesional
-const handleContratar = useCallback(async (profesional) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
-    return;
-  }
+  // Contratar profesional
+  const handleContratar = useCallback(async (profesional) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
+      return;
+    }
 
-  const usuarioLogueado = jwtDecode(token);
+    const usuarioLogueado = jwtDecode(token);
 
-  // Validación: los profesionales no pueden contratar
-  if (usuarioLogueado.tipo === 'profesional') {
-    Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
-    return;
-  }
+    if (usuarioLogueado.tipo === 'profesional') {
+      Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
+      return;
+    }
 
-  try {
-    // Obtenemos datos del usuario logueado
-    const response = await axios.get(`${BASE_URL}/usuario/${usuarioLogueado.sub}`);
-    const usuario = response.data;
+    try {
+      const response = await axios.get(`${BASE_URL}/usuario/${usuarioLogueado.sub}`);
+      const usuario = response.data;
 
-    // Obtenemos el oficio del profesional
-    const oficio = await obtenerOficio(profesional.idusuarioProfesional);
+      const oficio = await obtenerOficio(profesional.idusuarioProfesional);
 
-    const datosContratacion = {
-      usuarioComun: { idusuarioComun: usuario.idusuarioComun },
-      profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
-      rubro: oficio?.oficio?.nombre || '',
-      telefonoProfesional: profesional.telefono,
-      telefonoCliente: usuario.telefono,
-      estado: "pendiente",
-      valoracion: 0,
-      comentario: '',
-      fechaContratacion: new Date(),
-    };
+      const datosContratacion = {
+        usuarioComun: { idusuarioComun: usuario.idusuarioComun },
+        profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
+        rubro: oficio?.oficio?.nombre || '',
+        telefonoProfesional: profesional.telefono,
+        telefonoCliente: usuario.telefono,
+        estado: "pendiente",
+        valoracion: 0,
+        comentario: '',
+        fechaContratacion: new Date(),
+      };
 
-    // Creamos la contratación
-    await axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion);
+      await axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion);
 
-    Swal.fire({
-      title: 'Éxito',
-      text: 'La solicitud de contrato se ha enviado correctamente',
-      icon: 'success',
-    });
-
-  } catch (error) {
-    console.error(error);
-    Swal.fire({
-      title: 'Error',
-      text: 'Ocurrió un error al procesar la solicitud',
-      icon: 'error',
-    });
-  }
-}, [idOficios]);
+      Swal.fire({
+        title: 'Éxito',
+        text: 'La solicitud de contrato se ha enviado correctamente',
+        icon: 'success',
+      });
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Ocurrió un error al procesar la solicitud',
+        icon: 'error',
+      });
+    }
+  }, [idOficios]);
 
   // Conectar profesional (WhatsApp)
   const handleConectar = async (profesional) => {
@@ -177,86 +172,123 @@ const handleContratar = useCallback(async (profesional) => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-  <>
-    {/* Wrapper principal para desktop */}
-    <div className="layout-profesionales-wrapper">
-      {/* Carrusel izquierdo */}
-      <div className="carrusel-desktop izquierda">
-        <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
-      </div>
+    <>
+      {/* Wrapper principal para desktop */}
+      <div className="layout-profesionales-wrapper">
+        {/* Carrusel izquierdo */}
+        <div className="carrusel-desktop izquierda">
+          <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
+        </div>
 
-      {/* Center con cards */}
-      <div className="profesionales-center" ref={centroRef}>
-        {profesionales.length === 0 ? (
-          <p>No hay profesionales disponibles</p>
-        ) : (
-          <div className="grid-profesionales">
-            {currentProfesionales.map((profesional, index) => (
-              <article key={index} className="profesional-item compact">
-                <div className="infoContainer">
-                <img
-                  src={
-                    profesional.avatar
-                      ? profesional.avatar.startsWith('http')
-                        ? profesional.avatar
-                        : `${BASE_URL}${profesional.avatar}`
-                      : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png' // por defecto
-                  }
-                  alt={profesional.nombre}
-                  className="avatar-profesional"
-                />                  
-                <div className="profesional-data">
-                    <div className="profesional-header">
-                      <h2>{profesional.nombre} {profesional.apellido}</h2>
-                      <label className={profesional.disponible ? 'disponible' : 'no-disponible'}>
-                        {profesional.disponible ? 'Disponible' : 'No Disponible'}
-                      </label>
-                    </div>
-                    <div className="datosContainer">
-                      <h2>{profesional.empresa}</h2>
-                      <p>Email: {profesional.email}</p>
-                      <p>Tel: {profesional.telefono}</p>
-                      <p>Dirección: {profesional.direccion}</p>
-                      <div>
-                        <label>Valoración:</label>
-                        <Estrellas valoracion={profesional.valoracion} />
+        {/* Center con cards */}
+        <div className="profesionales-center" ref={centroRef}>
+          {profesionales.length === 0 ? (
+            <p>No hay profesionales disponibles</p>
+          ) : (
+            <>
+              <div className="grid-profesionales">
+                {currentProfesionales.map((profesional, index) => (
+                  <article key={index} className="profesional-item compact">
+                    <div className="infoContainer">
+                      <img
+                        src={
+                          profesional.avatar
+                            ? profesional.avatar.startsWith('http')
+                              ? profesional.avatar
+                              : `${BASE_URL}${profesional.avatar}`
+                            : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png'
+                        }
+                        alt={profesional.nombre}
+                        className="avatar-profesional"
+                      />
+                      <div className="profesional-data">
+                        <div className="profesional-header">
+                          <h2>{profesional.nombre} {profesional.apellido}</h2>
+                          <label className={profesional.disponible ? 'disponible' : 'no-disponible'}>
+                            {profesional.disponible ? 'Disponible' : 'No Disponible'}
+                          </label>
+                        </div>
+                        <div className="datosContainer">
+                          <h2>{profesional.empresa}</h2>
+                          <p>Email: {profesional.email}</p>
+                          <p>Tel: {profesional.telefono}</p>
+                          <p>Dirección: {profesional.direccion}</p>
+                          <div>
+                            <label>Valoración:</label>
+                            <Estrellas valoracion={profesional.valoracion} />
+                          </div>
+                        </div>
+
+                        <div className="profesional-buttons">
+                          <Link to={`/profesional/perfil/${profesional.idusuarioProfesional}`} state={{ profesional }}>
+                            <button className="verMas">Ver Más</button>
+                          </Link>
+
+                          <button
+                            className="conectar"
+                            onClick={() => {
+                              if (!profesional.disponible) {
+                                Swal.fire({
+                                  icon: 'warning',
+                                  title: 'Profesional no disponible',
+                                  text: 'Este profesional se encuentra de vacaciones o no disponible. Por favor intenta con otro profesional.',
+                                });
+                                return;
+                              }
+                              handleConectar(profesional);
+                            }}
+                            disabled={!profesional.disponible}
+                          >
+                            Conectar
+                          </button>
+
+                          <button
+                            className="contratar"
+                            onClick={() => {
+                              if (!profesional.disponible) {
+                                Swal.fire({
+                                  icon: 'warning',
+                                  title: 'Profesional no disponible',
+                                  text: 'Este profesional se encuentra de vacaciones o no disponible. Por favor intenta con otro profesional.',
+                                });
+                                return;
+                              }
+                              handleContratar(profesional);
+                            }}
+                            disabled={!profesional.disponible}
+                          >
+                            Contratar
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="profesional-buttons">
-                      <Link to={`/profesional/perfil/${profesional.idusuarioProfesional}`} state={{ profesional }}>
-                        <button className="verMas">Ver Más</button>
-                      </Link>
-                      <button className="conectar" onClick={() => handleConectar(profesional)}>Conectar</button>
-                      <button className="contratar" onClick={() => handleContratar(profesional)}>Contratar</button>
-                    </div>
-                  </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* Paginación */}
+              {totalPages > 1 && (
+                <div className="pagination">
+                  <button onClick={prevPage} disabled={currentPage === 1}>◀</button>
+                  <span>{currentPage} / {totalPages}</span>
+                  <button onClick={nextPage} disabled={currentPage === totalPages}>▶</button>
                 </div>
-              </article>
-            ))}
-          </div>
-        )}
+              )}
+            </>
+          )}
+        </div>
 
-        {/* Paginación */}
-        {totalPages > 1 && (
-          <div className="pagination">
-            <button onClick={prevPage} disabled={currentPage === 1}>◀</button>
-            <span>{currentPage} / {totalPages}</span>
-            <button onClick={nextPage} disabled={currentPage === totalPages}>▶</button>
-          </div>
-        )}
+        {/* Carrusel derecho */}
+        <div className="carrusel-desktop derecha">
+          <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
+        </div>
       </div>
 
-      {/* Carrusel derecho */}
-      <div className="carrusel-desktop derecha">
-        <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
+      {/* Carrusel horizontal solo para mobile */}
+      <div className="carrusel-mobile">
+        <Carrusel itemsPerView={1} altura={alturaCarrusel} />
       </div>
-    </div>
-
-    {/* Carrusel horizontal solo para mobile */}
-    <div className="carrusel-mobile">
-      <Carrusel itemsPerView={1} altura={alturaCarrusel} />
-    </div>
-  </>
+    </>
   );
 };
 
