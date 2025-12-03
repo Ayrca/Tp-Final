@@ -1,4 +1,4 @@
-/*.manejo-publicidad {
+.manejo-publicidad {
   width: 80%;
   margin: 40px auto;
   padding: 20px;
@@ -18,7 +18,7 @@
 
 .manejo-publicidad button:hover {
   background-color: #2980b9;
-}*/
+}
 
 .manejo-publicidad form {
   margin-top: 20px;
