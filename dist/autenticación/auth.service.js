@@ -67,9 +67,6 @@ let AuthService = class AuthService {
         const profesional = await this.profesionalService.findOneByEmail(email);
         const administrador = await this.administradorService.findOneByEmail(email);
         if (usuario) {
-            if (!usuario.estadoCuenta) {
-                throw new common_1.ForbiddenException('Su cuenta está bloqueada. Contacte con el administrador al mail proyectoafip29@gmail.com.');
-            }
             const isValid = await usuario.comparePassword(password);
             if (isValid) {
                 const token = await this.generateToken(usuario, 'usuario');
@@ -77,9 +74,6 @@ let AuthService = class AuthService {
             }
         }
         else if (profesional) {
-            if (!profesional.estadoCuenta) {
-                throw new common_1.ForbiddenException('Su cuenta está bloqueada. Contacte con el administrador al mail proyectoafip29@gmail.com.');
-            }
             const isValid = await profesional.comparePassword(password);
             if (isValid) {
                 const token = await this.generateToken(profesional, 'profesional');
@@ -99,6 +93,9 @@ let AuthService = class AuthService {
         }
         console.log('Contraseña incorrecta');
         return null;
+    }
+    async validarPassword(usuario, password) {
+        return await usuario.comparePassword(password);
     }
     async generateToken(usuario, tipo) {
         let payload;

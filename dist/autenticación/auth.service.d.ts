@@ -12,6 +12,7 @@ export declare class AuthService {
         token: string;
         tipo: string;
     } | null>;
+    validarPassword(usuario: any, password: string): Promise<any>;
     generateToken(usuario: any, tipo: string): Promise<string>;
     getUsuario(id: number, tipo: string): Promise<import("../profesional/profesional.entity").Profesional | import("../usuario/usuario.entity").Usuario | import("../administrador/administrador.entity").Administrador | null | undefined>;
     private sendResetEmail;
