@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { UsuarioService } from '../usuario/usuario.service';
 import { ProfesionalService } from '../profesional/profesional.service';
 import { JwtService } from '@nestjs/jwt';
@@ -20,42 +20,44 @@ export class AuthService {
   // -------------------------------------------------------------
   // LOGIN
   // -------------------------------------------------------------
-  async login(email: string, password: string) {
-    console.log('Iniciando sesión con email:', email);
-    const usuario = await this.usuarioService.findOneByEmail(email);
-    const profesional = await this.profesionalService.findOneByEmail(email);
-    const administrador = await this.administradorService.findOneByEmail(email);
+    async login(email: string, password: string) {
+      console.log('Iniciando sesión con email:', email);
+      const usuario = await this.usuarioService.findOneByEmail(email);
+      const profesional = await this.profesionalService.findOneByEmail(email);
+      const administrador = await this.administradorService.findOneByEmail(email);
 
-    if (usuario) {
-      const isValid = await usuario.comparePassword(password);
-      if (isValid) {
-        const token = await this.generateToken(usuario, 'usuario');
-        return { token, tipo: 'usuario' };
+      if (usuario) {
+      if (!usuario.estadoCuenta) {
+        throw new ForbiddenException('Su cuenta está bloqueada. Contacte con el administrador al mail proyectoafip29@gmail.com.');
+        }
+        const isValid = await usuario.comparePassword(password);
+        if (isValid) {
+          const token = await this.generateToken(usuario, 'usuario');
+          return { token, tipo: 'usuario' };
+        }
+      } else if (profesional) {
+        if (!profesional.estadoCuenta) {
+          throw new ForbiddenException('Su cuenta está bloqueada. Contacte con el administrador al mail proyectoafip29@gmail.com.');
+        }
+        const isValid = await profesional.comparePassword(password);
+        if (isValid) {
+          const token = await this.generateToken(profesional, 'profesional');
+          return { token, tipo: 'profesional' };
+        }
+      } else if (administrador) {
+        const isValid = await administrador.comparePassword(password);
+        if (isValid) {
+          const token = await this.generateToken(administrador, 'administrador');
+          return { token, tipo: 'administrador' };
+        }
+      } else {
+        console.log('Usuario, profesional o administrador no encontrado');
+        return null;
       }
-    } else if (profesional) {
-      const isValid = await profesional.comparePassword(password);
-      if (isValid) {
-        const token = await this.generateToken(profesional, 'profesional');
-        return { token, tipo: 'profesional' };
-      }
-    } else if (administrador) {
-      const isValid = await administrador.comparePassword(password);
-      if (isValid) {
-        const token = await this.generateToken(administrador, 'administrador');
-        return { token, tipo: 'administrador' };
-      }
-    } else {
-      console.log('Usuario, profesional o administrador no encontrado');
+
+      console.log('Contraseña incorrecta');
       return null;
     }
-
-    console.log('Contraseña incorrecta');
-    return null;
-  }
-
-  async validarPassword(usuario: any, password: string) {
-    return await usuario.comparePassword(password);
-  }
 
   // -------------------------------------------------------------
   // GENERAR TOKEN
