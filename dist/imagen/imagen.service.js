@@ -58,6 +58,7 @@ let ImagenService = class ImagenService {
     imagenRepository;
     usuarioComunRepository;
     usuarioProfesionalRepository;
+    uploadPath = path.join(__dirname, '..', '..', 'assets', 'imagenesUsuariosProfesionales');
     constructor(imagenRepository, usuarioComunRepository, usuarioProfesionalRepository) {
         this.imagenRepository = imagenRepository;
         this.usuarioComunRepository = usuarioComunRepository;
@@ -67,11 +68,14 @@ let ImagenService = class ImagenService {
         if (!idProfesional) {
             throw new common_1.BadRequestException('El idProfesional es requerido');
         }
-        const filename = file.originalname;
-        const filePath = `client/public/assets/imagenesUsuariosProfesionales/${filename}`;
+        if (!fs.existsSync(this.uploadPath)) {
+            fs.mkdirSync(this.uploadPath, { recursive: true });
+        }
+        const filename = `${Date.now()}-${file.originalname}`;
+        const filePath = path.join(this.uploadPath, filename);
         fs.renameSync(file.path, filePath);
         const imagen = new imagen_entity_1.Imagen();
-        imagen.url = filename;
+        imagen.url = `${process.env.BACKEND_URL}/assets/imagenesUsuariosProfesionales/${filename}`;
         imagen.idProfesional = idProfesional;
         await this.imagenRepository.save(imagen);
         return { message: 'Imagen guardada con éxito' };
@@ -81,11 +85,7 @@ let ImagenService = class ImagenService {
     }
     async obtenerImagen(filename) {
         try {
-            const uploadPath = path.join(__dirname, '..', 'imagenesUsuariosProfesionales');
-            if (!fs.existsSync(uploadPath)) {
-                fs.mkdirSync(uploadPath);
-            }
-            const filePath = path.join(uploadPath, filename);
+            const filePath = path.join(this.uploadPath, filename);
             return fs.readFileSync(filePath);
         }
         catch (error) {

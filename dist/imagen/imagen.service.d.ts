@@ -6,6 +6,7 @@ export declare class ImagenService {
     private readonly imagenRepository;
     private readonly usuarioComunRepository;
     private readonly usuarioProfesionalRepository;
+    private uploadPath;
     constructor(imagenRepository: Repository<Imagen>, usuarioComunRepository: Repository<Usuario>, usuarioProfesionalRepository: Repository<Profesional>);
     guardarImagen(file: any, idProfesional: number): Promise<any>;
     findById(id: number): Promise<Imagen[]>;
