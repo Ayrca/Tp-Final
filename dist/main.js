@@ -6,7 +6,6 @@ const path_1 = require("path");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useStaticAssets((0, path_1.join)(__dirname, '..', 'client', 'public'));
-    app.useStaticAssets((0, path_1.join)(__dirname, '..', 'client', 'public', 'assets'), { prefix: '/assets/' });
     app.enableCors({
         origin: process.env.FRONTEND_URL || '*',
     });

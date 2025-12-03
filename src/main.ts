@@ -6,22 +6,15 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Servir TODO client/public
-  app.useStaticAssets(
-    join(__dirname, '..', 'client', 'public')
-  );
+  // Servir la carpeta 'public' para imágenes y assets
+  app.useStaticAssets(join(__dirname, '..', 'client', 'public'));
 
-  // Servir específicamente la carpeta /assets con su prefijo
-  app.useStaticAssets(
-    join(__dirname, '..', 'client', 'public', 'assets'),
-    { prefix: '/assets/' }
-  );
-
-  // CORS
+  // Permitir CORS para tu frontend
   app.enableCors({
     origin: process.env.FRONTEND_URL || '*',
   });
 
+  // Escuchar en Railway / Vercel
   await app.listen(process.env.PORT || 8080, '0.0.0.0');
 }
 bootstrap();
