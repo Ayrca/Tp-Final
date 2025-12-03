@@ -24,7 +24,7 @@ exports.ImagenModule = ImagenModule = __decorate([
     (0, common_1.Module)({
         imports: [
             platform_express_1.MulterModule.register({
-                dest: './client/public/assets/imagenesUsuariosProfesionales',
+                dest: './src/upload/imagenesUsuariosProfesionales',
                 fileFilter: (req, file, cb) => {
                     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
                     if (allowedMimeTypes.includes(file.mimetype)) {

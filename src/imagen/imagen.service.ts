@@ -37,16 +37,30 @@ async guardarImagen(file: any, idProfesional: number): Promise<any> {
   if (!idProfesional) {
     throw new BadRequestException('El idProfesional es requerido');
   }
-  const filename = file.originalname;
-  const filePath = `client/public/assets/imagenesUsuariosProfesionales/${filename}`;
-  fs.renameSync(file.path, filePath);
+
+  // Generar nombre único
+  const filename = `${Date.now()}-${file.originalname}`;
+
+  // Ruta donde se guardará en producción: dist/upload/imagenesUsuariosProfesionales
+  const uploadPath = join(__dirname, '..', 'upload', 'imagenesUsuariosProfesionales');
+
+  // Crear carpeta si no existe
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+  }
+
+  // Mover archivo
+  const finalPath = join(uploadPath, filename);
+  fs.renameSync(file.path, finalPath);
+
+  // Guardar solo el nombre en la base
   const imagen = new Imagen();
   imagen.url = filename;
   imagen.idProfesional = idProfesional;
   await this.imagenRepository.save(imagen);
+
   return { message: 'Imagen guardada con éxito' };
 }
-
 
 
 async findById(id: number): Promise<Imagen[]> {
@@ -57,7 +71,7 @@ async findById(id: number): Promise<Imagen[]> {
 
 async obtenerImagen(filename: string): Promise<Buffer> {
   try {
-    const uploadPath = path.join(__dirname, '..', 'imagenesUsuariosProfesionales');
+    const uploadPath = path.join(__dirname, '..', 'upload', 'imagenesUsuariosProfesionales');
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath);
     }

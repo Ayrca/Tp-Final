@@ -71,8 +71,9 @@ let ImagenController = class ImagenController {
         if (!imagenes || imagenes.length === 0) {
             return [];
         }
+        const BASE_URL = process.env.BASE_URL || 'https://tp-final-production.up.railway.app';
         return imagenes.map((imagen) => ({
-            url: `/assets/imagenesUsuariosProfesionales/${imagen.url}`,
+            url: `${BASE_URL}/upload/imagenesUsuariosProfesionales/${imagen.url}`,
         }));
     }
     async cambiarAvatar(file, idUsuario, tipoUsuario) {

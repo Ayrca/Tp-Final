@@ -1,5 +1,3 @@
-
-
 import { Module } from '@nestjs/common';
 import { ImagenController } from './imagen.controller';
 import { ImagenService } from './imagen.service';
@@ -14,7 +12,7 @@ import { ProfesionalModule } from '../profesional/profesional.module';
 @Module({
   imports: [
     MulterModule.register({
-      dest: './client/public/assets/imagenesUsuariosProfesionales',
+    dest: './src/upload/imagenesUsuariosProfesionales',
       fileFilter: (req, file, cb) => {
         const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (allowedMimeTypes.includes(file.mimetype)) {
