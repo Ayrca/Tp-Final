@@ -70,7 +70,7 @@
 .tabla-oficios img {
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  object-fit: fit;
   border-radius: 5px;
 }
 
