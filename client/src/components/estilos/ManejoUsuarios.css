@@ -96,3 +96,31 @@
 .bloqueado {
   color: red;
 }
+
+/* Botón Banear */
+.btn-baneo {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.btn-baneo:hover {
+  background-color: #c0392b;
+}
+
+/* Botón Desbloquear */
+.btn-desbloqueo {
+  background-color: #2f89c8;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.btn-desbloqueo:hover {
+  background-color: #2980b9;
+}

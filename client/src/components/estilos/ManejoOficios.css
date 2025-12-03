@@ -71,3 +71,41 @@
   object-fit: cover;
   border-radius: 5px;
 }
+
+/* Botón Editar */
+.btn-editar {
+  background-color: #2f89c8;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.btn-editar:hover {
+  background-color: #2980b9;
+}
+
+/* Botón Borrar */
+.btn-borrar {
+  background-color: #e74c3c;
+}
+.btn-borrar:hover {
+  background-color: #c0392b;
+}
+
+/* Botón Guardar */
+.btn-guardar {
+  background-color: #2f89c8;
+}
+.btn-guardar:hover {
+  background-color: #2980b9;
+}
+
+/* Botón Cancelar */
+.btn-cancelar {
+  background-color: #7f8c8d;
+}
+.btn-cancelar:hover {
+  background-color: #606060;
+}
