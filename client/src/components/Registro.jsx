@@ -217,7 +217,7 @@ const Registro = () => {
           avatar: '',
           tipo: tipoUsuario,
           empresa: tipoUsuario === 'profesional' ? empresa : null,
-          rubros: tipoUsuario === 'profesional' ? [{ id: oficioSeleccionado }] : null,
+          oficio: tipoUsuario === 'profesional' ? Number(oficioSeleccionado) : null,
           disponible: true,
         };
 
