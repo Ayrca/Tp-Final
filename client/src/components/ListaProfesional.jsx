@@ -48,8 +48,6 @@ const ListaProfesional = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const centroRef = useRef(null);
   const [alturaCarrusel, setAlturaCarrusel] = useState(0);
-  const [nombreOficio, setNombreOficio] = useState('');
-
 
   // Obtener oficio de un profesional
   const obtenerOficio = async (idProfesional) => {
@@ -61,15 +59,6 @@ const ListaProfesional = () => {
       return null;
     }
   };
-
-  //titulo del oficio seleccionado
-      useEffect(() => {
-      if (!id) return;
-
-      axios.get(`${BASE_URL}/oficios/${id}`)
-        .then(res => setNombreOficio(res.data.nombre))
-        .catch(err => console.error("Error al obtener oficio:", err));
-    }, [id]);
 
   // Lista de profesionales (o por oficio)
   useEffect(() => {
@@ -161,7 +150,7 @@ const ListaProfesional = () => {
     try {
       const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
       const usuarioLogueado = response.data;
-      const mensaje = `Hola ${profesional.nombre}, ,mi nombre es ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
+      const mensaje = `Hola ${profesional.nombre}. Mi nombre es ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
       const url = `https://wa.me/${profesional.telefono}?text=${encodeURIComponent(mensaje)}`;
       window.open(url, '_blank');
     } catch (error) {
@@ -197,9 +186,6 @@ const ListaProfesional = () => {
             <p>No hay profesionales disponibles</p>
           ) : (
             <>
-                    {nombreOficio && (
-          <h1 className="titulo-oficio">Profesionales de {nombreOficio}</h1>
-        )}
               <div className="grid-profesionales">
                 {currentProfesionales.map((profesional, index) => (
                   <article key={index} className="profesional-item compact">
