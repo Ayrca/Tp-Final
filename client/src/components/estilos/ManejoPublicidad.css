@@ -1,4 +1,4 @@
-.manejo-publicidad {
+/*.manejo-publicidad {
   width: 80%;
   margin: 40px auto;
   padding: 20px;
@@ -18,7 +18,7 @@
 
 .manejo-publicidad button:hover {
   background-color: #2980b9;
-}
+}*/
 
 .manejo-publicidad form {
   margin-top: 20px;
@@ -70,6 +70,21 @@
   height: 100px;
   object-fit: cover;
   border-radius: 5px;
+}
+
+/* Botón agregar */
+.btn-agregar-publicidad {
+  background-color: #2f89c8;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-agregar-publicidad:hover {
+  background-color: #2980b9;
 }
 
 /* Botón Editar */
