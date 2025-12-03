@@ -62,7 +62,7 @@ img {
 }
 
 /* Botón Banear */
-.btn-baneo {
+.btn-baneo-oficios {
   background-color: #e74c3c;
   color: white;
   border: none;
@@ -71,12 +71,12 @@ img {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-.btn-baneo:hover {
+.btn-baneo-oficios:hover {
   background-color: #c0392b;
 }
 
 /* Botón Desbloquear */
-.btn-desbloqueo {
+.btn-desbloqueo-oficios {
   background-color: #2f89c8;
   color: white;
   border: none;
@@ -85,6 +85,6 @@ img {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-.btn-desbloqueo:hover {
+.btn-desbloqueo-oficios:hover {
   background-color: #2980b9;
 }

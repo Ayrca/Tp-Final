@@ -103,9 +103,9 @@ const ManejoProfesionales = () => {
               <td className={profesional.estadoCuenta ? 'activo' : 'bloqueado'}>{profesional.estadoCuenta ? 'Activo' : 'Bloqueado'}</td>
               <td>
                 {profesional.estadoCuenta ? (
-                  <button className="btn-baneo" onClick={() => handleBaneo(profesional.idusuarioProfesional)}>Banear</button>
+                  <button className="btn-baneo-prof" onClick={() => handleBaneo(profesional.idusuarioProfesional)}>Banear</button>
                 ) : (
-                  <button className="btn-desbloqueo" onClick={() => handleDesbloqueo(profesional.idusuarioProfesional)}>Desbloquear</button>
+                  <button className="btn-desbloqueo-prof" onClick={() => handleDesbloqueo(profesional.idusuarioProfesional)}>Desbloquear</button>
                 )}
               </td>
             </tr>

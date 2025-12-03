@@ -73,7 +73,7 @@
 }
 
 /* Botón Editar */
-.btn-editar {
+.btn-editar-oficios {
   background-color: #2f89c8;
   color: white;
   border: none;
@@ -82,30 +82,30 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-.btn-editar:hover {
+.btn-editar-oficios:hover {
   background-color: #2980b9;
 }
 
 /* Botón Borrar */
-.btn-borrar {
+.btn-borrar-oficios {
   background-color: #e74c3c;
 }
-.btn-borrar:hover {
+.btn-borrar-oficios:hover {
   background-color: #c0392b;
 }
 
 /* Botón Guardar */
-.btn-guardar {
+.btn-guardar-oficios {
   background-color: #2f89c8;
 }
-.btn-guardar:hover {
+.btn-guardar-oficios:hover {
   background-color: #2980b9;
 }
 
 /* Botón Cancelar */
-.btn-cancelar {
+.btn-cancelar-oficios {
   background-color: #7f8c8d;
 }
-.btn-cancelar:hover {
+.btn-cancelar-oficios:hover {
   background-color: #606060;
 }

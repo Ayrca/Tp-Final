@@ -199,13 +199,13 @@ const handleGuardar = (oficio) => {
               <td>
                 {editarOficio && editarOficio.idOficios === oficio.idOficios ? (
                   <div>
-                    <button className="btn-guardar" onClick={() => handleGuardar(oficio)}>Guardar</button>
-                    <button className="btn-cancelar" onClick={() => setEditarOficio(null)}>Cancelar</button>
+                    <button className="btn-guardar-oficios" onClick={() => handleGuardar(oficio)}>Guardar</button>
+                    <button className="btn-cancelar-oficios" onClick={() => setEditarOficio(null)}>Cancelar</button>
                   </div>
                 ) : (
                   <div>
-                    <button className="btn-editar" onClick={() => handleEditar(oficio)}>Editar</button>
-                    <button className="btn-borrar" onClick={() => handleBorrar(oficio)}>Borrar</button>
+                    <button className="btn-editar-oficios" onClick={() => handleEditar(oficio)}>Editar</button>
+                    <button className="btn-borrar-oficios" onClick={() => handleBorrar(oficio)}>Borrar</button>
                   </div>
                 )}
               </td>
