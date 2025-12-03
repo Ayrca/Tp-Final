@@ -52,7 +52,6 @@ const path = __importStar(require("path"));
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const imagen_entity_1 = require("./imagen.entity");
-const path_1 = require("path");
 const usuario_entity_1 = require("../usuario/usuario.entity");
 const profesional_entity_1 = require("../profesional/profesional.entity");
 let ImagenService = class ImagenService {
@@ -68,13 +67,9 @@ let ImagenService = class ImagenService {
         if (!idProfesional) {
             throw new common_1.BadRequestException('El idProfesional es requerido');
         }
-        const filename = `${Date.now()}-${file.originalname}`;
-        const uploadPath = (0, path_1.join)(__dirname, '..', 'upload', 'imagenesUsuariosProfesionales');
-        if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-        }
-        const finalPath = (0, path_1.join)(uploadPath, filename);
-        fs.renameSync(file.path, finalPath);
+        const filename = file.originalname;
+        const filePath = `client/public/assets/imagenesUsuariosProfesionales/${filename}`;
+        fs.renameSync(file.path, filePath);
         const imagen = new imagen_entity_1.Imagen();
         imagen.url = filename;
         imagen.idProfesional = idProfesional;
@@ -86,7 +81,7 @@ let ImagenService = class ImagenService {
     }
     async obtenerImagen(filename) {
         try {
-            const uploadPath = path.join(__dirname, '..', 'upload', 'imagenesUsuariosProfesionales');
+            const uploadPath = path.join(__dirname, '..', 'imagenesUsuariosProfesionales');
             if (!fs.existsSync(uploadPath)) {
                 fs.mkdirSync(uploadPath);
             }
