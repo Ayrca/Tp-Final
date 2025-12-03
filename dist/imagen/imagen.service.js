@@ -58,7 +58,7 @@ let ImagenService = class ImagenService {
     imagenRepository;
     usuarioComunRepository;
     usuarioProfesionalRepository;
-    uploadPath = path.join(__dirname, '..', '..', 'assets', 'imagenesUsuariosProfesionales');
+    uploadPath = path.join(__dirname, '..', '..', 'client', 'public', 'assets', 'imagenesUsuariosProfesionales');
     constructor(imagenRepository, usuarioComunRepository, usuarioProfesionalRepository) {
         this.imagenRepository = imagenRepository;
         this.usuarioComunRepository = usuarioComunRepository;
@@ -75,7 +75,7 @@ let ImagenService = class ImagenService {
         const filePath = path.join(this.uploadPath, filename);
         fs.renameSync(file.path, filePath);
         const imagen = new imagen_entity_1.Imagen();
-        imagen.url = `${process.env.BACKEND_URL}/assets/imagenesUsuariosProfesionales/${filename}`;
+        imagen.url = `/assets/imagenesUsuariosProfesionales/${filename}`;
         imagen.idProfesional = idProfesional;
         await this.imagenRepository.save(imagen);
         return { message: 'Imagen guardada con éxito' };

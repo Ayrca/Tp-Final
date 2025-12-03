@@ -10,7 +10,15 @@ import { Profesional } from '../profesional/profesional.entity';
 @Injectable()
 export class ImagenService {
 
-  private uploadPath = path.join(__dirname, '..', '..', 'assets', 'imagenesUsuariosProfesionales');
+private uploadPath = path.join(
+  __dirname,
+  '..',
+  '..',
+  'client',
+  'public',
+  'assets',
+  'imagenesUsuariosProfesionales'
+);
 
   constructor(
     @InjectRepository(Imagen)
@@ -39,7 +47,7 @@ export class ImagenService {
 
     // Guardar URL completa
     const imagen = new Imagen();
-    imagen.url = `${process.env.BACKEND_URL}/assets/imagenesUsuariosProfesionales/${filename}`;
+    imagen.url = `/assets/imagenesUsuariosProfesionales/${filename}`;
     imagen.idProfesional = idProfesional;
 
     await this.imagenRepository.save(imagen);
