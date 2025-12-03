@@ -226,15 +226,15 @@ axios.post(`${BASE_URL}/imagenPropaganda`, formData)
               </td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
-                  <div>
-                    <button onClick={() => handleGuardar(editarPublicidad)}>Guardar</button>
-                    <button onClick={handleCancelar}>Cancelar</button>
-                  </div>
+                <div>
+                  <button className="btn-guardar" onClick={() => handleGuardar(editarPublicidad)}>Guardar</button>
+                  <button className="btn-cancelar" onClick={handleCancelar}>Cancelar</button>
+                </div>
                 ) : (
-                  <div>
-                    <button onClick={() => handleEditar(item)}>Editar</button>
-                    <button onClick={() => handleBorrar(item)}>Borrar</button>
-                  </div>
+              <div>
+                <button className="btn-editar" onClick={() => handleEditar(item)}>Editar</button>
+                <button className="btn-borrar" onClick={() => handleBorrar(item)}>Borrar</button>
+              </div>
                 )}
               </td>
             </tr>
