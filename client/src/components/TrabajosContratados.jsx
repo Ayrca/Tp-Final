@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import CarruselVertical from '../components/CarruselVertical';
 import Carrusel from '../components/Carrusel';
 import Swal from 'sweetalert2';
@@ -150,7 +150,7 @@ const ListaProfesional = () => {
     try {
       const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
       const usuarioLogueado = response.data;
-      const mensaje = `Hola ${profesional.nombre}, soy ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
+      const mensaje = `Hola ${profesional.nombre}, mi nombre es ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
       const url = `https://wa.me/${profesional.telefono}?text=${encodeURIComponent(mensaje)}`;
       window.open(url, '_blank');
     } catch (error) {
@@ -231,7 +231,7 @@ const ListaProfesional = () => {
                                 Swal.fire({
                                   icon: 'warning',
                                   title: 'Profesional no disponible',
-                                  text: 'Este profesional se encuentra de vacaciones o no disponible. Por favor intenta con otro profesional.',
+                                  text: 'Este profesional no se encuentra disponible. Por favor intenta con otro profesional.',
                                 });
                                 return;
                               }
@@ -249,7 +249,7 @@ const ListaProfesional = () => {
                                 Swal.fire({
                                   icon: 'warning',
                                   title: 'Profesional no disponible',
-                                  text: 'Este profesional se encuentra de vacaciones o no disponible. Por favor intenta con otro profesional.',
+                                  text: 'Este profesional no se encuentra disponible. Por favor intenta con otro profesional.',
                                 });
                                 return;
                               }
