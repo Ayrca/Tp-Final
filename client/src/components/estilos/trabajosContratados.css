@@ -106,7 +106,7 @@
 }
 
 .swal2-textarea {
-  width: 100% !important;
+  width: 90% !important;
   min-height: 120px !important;
   resize: vertical;
   font-size: 1rem;
