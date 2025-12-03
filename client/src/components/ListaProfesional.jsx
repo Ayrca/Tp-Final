@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import CarruselVertical from '../components/CarruselVertical';
 import Carrusel from '../components/Carrusel';
 import Swal from 'sweetalert2';
@@ -13,7 +13,6 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 const getIdUsuarioLogueado = () => {
   const token = localStorage.getItem('token');
   if (!token) return null;
-
   const decodedToken = jwtDecode(token);
   return decodedToken.sub;
 };
@@ -48,6 +47,7 @@ const ListaProfesional = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const centroRef = useRef(null);
   const [alturaCarrusel, setAlturaCarrusel] = useState(0);
+  const [nombreOficio, setNombreOficio] = useState('');
 
   // Obtener oficio de un profesional
   const obtenerOficio = async (idProfesional) => {
@@ -60,6 +60,29 @@ const ListaProfesional = () => {
     }
   };
 
+  // Obtener valoración promedio de un profesional
+  const obtenerValoracionPromedio = async (idProfesional) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+      const trabajos = response.data || [];
+      const trabajosValorados = trabajos.filter(t => t.valoracion && t.valoracion > 0);
+      if (trabajosValorados.length === 0) return 0;
+      const suma = trabajosValorados.reduce((acc, t) => acc + t.valoracion, 0);
+      return suma / trabajosValorados.length;
+    } catch (error) {
+      console.error('Error al obtener valoración:', error);
+      return 0;
+    }
+  };
+
+  // Título del oficio seleccionado
+  useEffect(() => {
+    if (!id) return;
+    axios.get(`${BASE_URL}/oficios/${id}`)
+      .then(res => setNombreOficio(res.data.nombre))
+      .catch(err => console.error("Error al obtener oficio:", err));
+  }, [id]);
+
   // Lista de profesionales (o por oficio)
   useEffect(() => {
     let url = `${BASE_URL}/profesional`;
@@ -67,9 +90,20 @@ const ListaProfesional = () => {
       url += `/oficio/${id}`;
       setIdOficios(id);
     }
+
     axios.get(url)
-      .then((response) => {
-        setProfesionales(response.data);
+      .then(async (response) => {
+        const profs = response.data || [];
+
+        // Calcular valoración promedio para cada profesional
+        const profsConValoracion = await Promise.all(
+          profs.map(async (prof) => {
+            const valoracionPromedio = await obtenerValoracionPromedio(prof.idusuarioProfesional);
+            return { ...prof, valoracionPromedio };
+          })
+        );
+
+        setProfesionales(profsConValoracion);
         setCargando(false);
       })
       .catch((error) => {
@@ -150,7 +184,7 @@ const ListaProfesional = () => {
     try {
       const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
       const usuarioLogueado = response.data;
-      const mensaje = `Hola ${profesional.nombre}, ,mi nombre es ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
+      const mensaje = `Hola ${profesional.nombre}, mi nombre es ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
       const url = `https://wa.me/${profesional.telefono}?text=${encodeURIComponent(mensaje)}`;
       window.open(url, '_blank');
     } catch (error) {
@@ -186,6 +220,9 @@ const ListaProfesional = () => {
             <p>No hay profesionales disponibles</p>
           ) : (
             <>
+              {nombreOficio && (
+                <h1 className="titulo-oficio">Profesionales de {nombreOficio}</h1>
+              )}
               <div className="grid-profesionales">
                 {currentProfesionales.map((profesional, index) => (
                   <article key={index} className="profesional-item compact">
@@ -215,7 +252,7 @@ const ListaProfesional = () => {
                           <p>Dirección: {profesional.direccion}</p>
                           <div>
                             <label>Valoración:</label>
-                            <Estrellas valoracion={profesional.valoracion} />
+                            <Estrellas valoracion={profesional.valoracionPromedio || profesional.valoracion} />
                           </div>
                         </div>
 

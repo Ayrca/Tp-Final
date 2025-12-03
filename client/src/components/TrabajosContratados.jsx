@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/trabajosContratados.css';
 import Swal from 'sweetalert2';
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from 'jwt-decode';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -27,37 +27,52 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     setTrabajos(trabajosOrdenados);
   };
 
-useEffect(() => {
-  const fetchTrabajos = async () => {
-    try {
-      let response;
-      if (idProfesional) {
-        response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
-      } else if (idusuarioComun) {
-        response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-      } else return;
-
-      if (response && Array.isArray(response.data)) {
-        console.log("Trabajos recibidos:", response.data);
-        const trabajosOrdenados = response.data.sort(
-          (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
-        );
-        setTrabajos(trabajosOrdenados);
-        setError(null);
-      } else {
-        setTrabajos([]);
-        setError('No se pudo obtener los trabajos correctamente');
-      }
-    } catch (err) {
-      setTrabajos([]);
-      setError('Error al conectar con la API');
-      console.error(err);
-    }
+  // Calcular valoración promedio de un profesional
+  const calcularValoracionPromedio = (trabajos) => {
+    const trabajosValorados = trabajos.filter(t => t.valoracion && t.valoracion > 0);
+    if (trabajosValorados.length === 0) return 0;
+    const suma = trabajosValorados.reduce((acc, t) => acc + t.valoracion, 0);
+    return suma / trabajosValorados.length;
   };
 
-  fetchTrabajos();
-}, [idProfesional, idusuarioComun]);
+  useEffect(() => {
+    const fetchTrabajos = async () => {
+      try {
+        let response;
+        if (idProfesional) {
+          response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+        } else if (idusuarioComun) {
+          response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+        } else return;
 
+        if (response && Array.isArray(response.data)) {
+          console.log("Trabajos recibidos:", response.data);
+          const trabajosOrdenados = response.data.sort(
+            (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
+          );
+
+          // Calcular valoración promedio si es profesional
+          if (idProfesional) {
+            const valoracionPromedio = calcularValoracionPromedio(trabajosOrdenados);
+            setTrabajos(trabajosOrdenados.map(t => ({ ...t, valoracionPromedio })));
+          } else {
+            setTrabajos(trabajosOrdenados);
+          }
+
+          setError(null);
+        } else {
+          setTrabajos([]);
+          setError('No se pudo obtener los trabajos correctamente');
+        }
+      } catch (err) {
+        setTrabajos([]);
+        setError('Error al conectar con la API');
+        console.error(err);
+      }
+    };
+
+    fetchTrabajos();
+  }, [idProfesional, idusuarioComun]);
 
   // PAGINACIÓN
   const totalPaginasTrabajos = Math.ceil(trabajos.length / trabajosPorPagina);
@@ -85,14 +100,16 @@ useEffect(() => {
 
   const renderEstrellas = (valoracion) => {
     const maxEstrellas = 5;
-    return [...Array(maxEstrellas)].map((_, i) => (
-      <span key={i} className={i < valoracion ? "estrella llena" : "estrella vacia"}>
-        {i < valoracion ? "★" : "☆"}
-      </span>
-    ));
+    const estrellasCompletas = Math.floor(valoracion);
+    const tieneMediaEstrella = valoracion - estrellasCompletas >= 0.5;
+    return [...Array(maxEstrellas)].map((_, i) => {
+      if (i < estrellasCompletas) return <span key={i} className="estrella llena">★</span>;
+      if (i === estrellasCompletas && tieneMediaEstrella) return <span key={i} className="estrella media">★</span>;
+      return <span key={i} className="estrella vacia">☆</span>;
+    });
   };
 
-  // Funciones de finalizar/cancelar
+  // Funciones de finalizar/cancelar (idénticas a tu código original)
   const crearModalValoracion = async () => {
     return Swal.fire({
       title: 'Finalizar trabajo',
@@ -154,7 +171,6 @@ useEffect(() => {
   const handleFinalizar = async (idcontratacion) => {
     const formValues = await crearModalValoracion();
     if (!formValues?.value) return;
-
     const { comentario, valoracion } = formValues.value;
 
     try {
@@ -323,7 +339,7 @@ useEffect(() => {
               <p>
                 <span>Valoración:</span>
                 <span className="dato">
-                  {trabajo.valoracion ? renderEstrellas(trabajo.valoracion) : "Sin valoración"}
+                  {trabajo.valoracionPromedio || trabajo.valoracion ? renderEstrellas(trabajo.valoracionPromedio || trabajo.valoracion) : "Sin valoración"}
                 </span>
               </p>
               <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
