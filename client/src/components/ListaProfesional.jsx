@@ -150,7 +150,7 @@ const ListaProfesional = () => {
     try {
       const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
       const usuarioLogueado = response.data;
-      const mensaje = `Hola ${profesional.nombre}, soy ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
+      const mensaje = `Hola ${profesional.nombre}, ,mi nombre es ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
       const url = `https://wa.me/${profesional.telefono}?text=${encodeURIComponent(mensaje)}`;
       window.open(url, '_blank');
     } catch (error) {

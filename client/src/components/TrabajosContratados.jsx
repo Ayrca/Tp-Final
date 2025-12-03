@@ -1,295 +1,385 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import CarruselVertical from '../components/CarruselVertical';
-import Carrusel from '../components/Carrusel';
+import './estilos/trabajosContratados.css';
 import Swal from 'sweetalert2';
-import './estilos/ListaProfesionales.css';
-import './estilos/ListaProfesionalesMobile.css';
+import { jwtDecode } from "jwt-decode";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const getIdUsuarioLogueado = () => {
+const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
+  const [trabajos, setTrabajos] = useState([]);
+  const [error, setError] = useState(null);
+
   const token = localStorage.getItem('token');
-  if (!token) return null;
+  const esProfesional = token ? jwtDecode(token).tipo === 'profesional' : false;
+  const idLogueado = esProfesional ? jwtDecode(token).sub : null;
 
-  const decodedToken = jwtDecode(token);
-  return decodedToken.sub;
-};
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [fadeTrabajos, setFadeTrabajos] = useState("fade-in");
+  const trabajosPorPagina = 9;
 
-const ITEMS_PER_PAGE = 8;
+  // Función auxiliar para ordenar trabajos
+  const actualizarTrabajos = (data) => {
+    const trabajosOrdenados = Array.isArray(data)
+      ? data.sort((a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion))
+      : [];
+    setTrabajos(trabajosOrdenados);
+  };
 
-// Componente Estrellas
-const Estrellas = ({ valoracion }) => {
-  const estrellasCompletas = Math.floor(valoracion);
-  const tieneMediaEstrella = valoracion - estrellasCompletas >= 0.5;
-  const totalEstrellas = 5;
+useEffect(() => {
+  const fetchTrabajos = async () => {
+    try {
+      let response;
+      if (idProfesional) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+      } else if (idusuarioComun) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      } else return;
+
+      if (response && Array.isArray(response.data)) {
+        console.log("Trabajos recibidos:", response.data);
+        const trabajosOrdenados = response.data.sort(
+          (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
+        );
+        setTrabajos(trabajosOrdenados);
+        setError(null);
+      } else {
+        setTrabajos([]);
+        setError('No se pudo obtener los trabajos correctamente');
+      }
+    } catch (err) {
+      setTrabajos([]);
+      setError('Error al conectar con la API');
+      console.error(err);
+    }
+  };
+
+  fetchTrabajos();
+}, [idProfesional, idusuarioComun]);
+
+
+  // PAGINACIÓN
+  const totalPaginasTrabajos = Math.ceil(trabajos.length / trabajosPorPagina);
+  const inicioTrabajos = (paginaActual - 1) * trabajosPorPagina;
+  const trabajosPagina = trabajos.slice(inicioTrabajos, inicioTrabajos + trabajosPorPagina);
+
+  const cambiarPaginaTrabajos = (nueva) => {
+    setFadeTrabajos("fade-out");
+    setTimeout(() => {
+      setPaginaActual(nueva);
+      setFadeTrabajos("fade-in");
+    }, 300);
+  };
+
+  // Funciones auxiliares
+  const traducirEstado = (estado) => {
+    switch (estado) {
+      case 'terminado': return 'Finalizado por Cliente';
+      case 'finalizado_profesional': return 'Finalizado por Profesional';
+      case 'cancelado': return 'Cancelado por Cliente';
+      case 'cancelado_profesional': return 'Cancelado por Profesional';
+      default: return estado;
+    }
+  };
+
+  const renderEstrellas = (valoracion) => {
+    const maxEstrellas = 5;
+    return [...Array(maxEstrellas)].map((_, i) => (
+      <span key={i} className={i < valoracion ? "estrella llena" : "estrella vacia"}>
+        {i < valoracion ? "★" : "☆"}
+      </span>
+    ));
+  };
+
+  // Funciones de finalizar/cancelar
+  const crearModalValoracion = async () => {
+    return Swal.fire({
+      title: 'Finalizar trabajo',
+      html: `
+        <textarea id="comentario" class="swal2-textarea" placeholder="Escribe un comentario..."></textarea>
+        <div class="star-container">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+        </div>
+        <input type="hidden" id="valoracion">
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Finalizar',
+      cancelButtonText: 'Volver',
+      didOpen: () => {
+        const estrellas = Swal.getPopup().querySelectorAll('.star');
+        const inputValoracion = Swal.getPopup().querySelector('#valoracion');
+        estrellas.forEach((star, idx) => {
+          star.addEventListener('click', () => {
+            const value = parseInt(star.dataset.value);
+            inputValoracion.value = value;
+            estrellas.forEach((s, i) => i < value ? s.classList.add('selected') : s.classList.remove('selected'));
+          });
+          star.addEventListener('mouseover', () => {
+            estrellas.forEach((s, i) => s.style.color = i <= idx ? '#ffa500' : '#ccc');
+          });
+          star.addEventListener('mouseout', () => {
+            estrellas.forEach((s, i) => s.style.color = i < parseInt(inputValoracion.value) ? 'gold' : '#ccc');
+          });
+        });
+      },
+      preConfirm: () => {
+        const valoracion = parseInt(document.getElementById('valoracion').value);
+        const comentario = document.getElementById('comentario').value.trim();
+
+        if (!comentario && (isNaN(valoracion) || valoracion < 1 || valoracion > 5)) {
+          Swal.showValidationMessage('Debes ingresar un comentario y seleccionar una valoración entre 1 y 5');
+          return false;
+        }
+
+        if (!comentario) {
+          Swal.showValidationMessage('Debes ingresar un comentario');
+          return false;
+        }
+
+        if (isNaN(valoracion) || valoracion < 1 || valoracion > 5) {
+          Swal.showValidationMessage('Debes seleccionar una valoración entre 1 y 5');
+          return false;
+        }
+
+        return { comentario, valoracion };
+      },
+    });
+  };
+
+  const handleFinalizar = async (idcontratacion) => {
+    const formValues = await crearModalValoracion();
+    if (!formValues?.value) return;
+
+    const { comentario, valoracion } = formValues.value;
+
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'terminado', comentario, valoracion });
+      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
+      );
+      actualizarTrabajos(resp.data);
+
+    } catch (error) {
+      console.error('Error al finalizar el trabajo:', error);
+    }
+  };
+
+  const handleCancelar = async (idcontratacion) => {
+    const { value: comentario } = await Swal.fire({
+      title: '¿Estás seguro de cancelar?',
+      input: 'textarea',
+      inputPlaceholder: 'Explica la razón de la cancelación',
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar',
+      cancelButtonText: 'Volver',
+      preConfirm: (value) => {
+        if (!value || value.trim() === '') {
+          Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+          return false;
+        }
+        return value;
+      }
+    });
+
+    if (!comentario) return;
+
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { estado: 'cancelado', comentario });
+      Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
+
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
+      );
+      actualizarTrabajos(resp.data);
+
+    } catch (error) {
+      console.error('Error al cancelar el trabajo:', error);
+    }
+  };
+
+  const handleFinalizarProfesional = async (idcontratacion) => {
+    const { value: comentario } = await Swal.fire({
+      title: 'Finalizar trabajo',
+      input: 'textarea',
+      inputPlaceholder: 'Deja un comentario sobre el trabajo realizado',
+      showCancelButton: true,
+      confirmButtonText: 'Finalizar',
+      cancelButtonText: 'Volver',
+      preConfirm: (value) => {
+        if (!value || value.trim() === '') {
+          Swal.showValidationMessage('Debes ingresar un comentario antes de finalizar');
+          return false;
+        }
+        return value.trim();
+      }
+    });
+
+    if (!comentario) return;
+
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, {
+        estado: 'finalizado_profesional',
+        comentario
+      });
+
+      Swal.fire('Trabajo finalizado', 'Se guardó correctamente', 'success');
+
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
+      );
+      actualizarTrabajos(resp.data);
+
+    } catch (error) {
+      console.error('Error al finalizar el trabajo:', error);
+      Swal.fire('Error', 'Ocurrió un error al finalizar el trabajo', 'error');
+    }
+  };
+
+  const handleCancelarProfesional = async (idcontratacion) => {
+    const formValues = await Swal.fire({
+      title: 'Cancelar trabajo',
+      input: 'textarea',
+      inputPlaceholder: 'Explica la razón de la cancelación',
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar trabajo',
+      cancelButtonText: 'Volver',
+      preConfirm: (value) => {
+        if (!value || value.trim() === '') {
+          Swal.showValidationMessage('Debes ingresar un comentario antes de cancelar');
+          return false;
+        }
+        return value.trim();
+      }
+    });
+
+    if (!formValues?.value) return;
+    const comentario = formValues.value;
+
+    try {
+      await axios.put(`${BASE_URL}/trabajoContratado/${idcontratacion}`, { 
+        estado: 'cancelado_profesional', 
+        comentario 
+      });
+
+      Swal.fire('Cancelado', 'Se guardó correctamente', 'success');
+
+      const resp = await axios.get(
+        esProfesional
+          ? `${BASE_URL}/trabajoContratado/${idLogueado}`
+          : `${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`
+      );
+      actualizarTrabajos(resp.data);
+
+    } catch (error) {
+      console.error('Error al cancelar el trabajo:', error);
+      Swal.fire('Error', 'Ocurrió un error al cancelar el trabajo', 'error');
+    }
+  };
 
   return (
-    <div className="estrellas">
-      {Array.from({ length: totalEstrellas }, (_, i) => {
-        if (i < estrellasCompletas) return <span key={i} className="estrella llena">★</span>;
-        if (i === estrellasCompletas && tieneMediaEstrella) return <span key={i} className="estrella media">★</span>;
-        return <span key={i} className="estrella vacia">☆</span>;
-      })}
+    <div className="trabajos-contratados">
+      <div className={`trabajos-grid gallery-grid ${fadeTrabajos}`}>
+        {trabajosPagina.length > 0 ? (
+          trabajosPagina.map((trabajo) => (
+            <div key={trabajo.idcontratacion} className="tarjeta-trabajo">
+            {idProfesional ? (
+              <p>
+                <span>Cliente:</span> 
+                <span className="dato">{trabajo.usuarioComun?.nombre} {trabajo.usuarioComun?.apellido}</span>
+              </p>
+            ) : (
+              <p>
+                <span>Profesional:</span> 
+                <span className="dato">{trabajo.profesional?.nombre} {trabajo.profesional?.apellido}</span>
+              </p>
+            )}
+              <p><span>Rubro:</span> <span className="dato">{trabajo.rubro}</span></p>
+              <p><span>Estado del Trabajo:</span> <span className="dato">{traducirEstado(trabajo.estado)}</span></p>
+              <p>
+                <span>Fecha de contratación:</span> 
+                <span className="dato">{new Date(trabajo.fechaContratacion).toLocaleString('es-AR', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                })}</span>
+              </p>
+              <p>
+                <span>Valoración:</span>
+                <span className="dato">
+                  {trabajo.valoracion ? renderEstrellas(trabajo.valoracion) : "Sin valoración"}
+                </span>
+              </p>
+              <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
+              <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> 
+                 <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
+              </p>
+
+              {!["terminado", "cancelado", "finalizado_profesional", "cancelado_profesional"].includes(trabajo.estado) && (
+                <div className="botones-trabajo">
+                  {idProfesional ? (
+                    <>
+                      <button className="finalizar-btn" onClick={() => handleFinalizarProfesional(trabajo.idcontratacion)}>Finalizar</button>
+                      <button className="cancelar-btn" onClick={() => handleCancelarProfesional(trabajo.idcontratacion)}>Cancelar</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="finalizar-btn" onClick={() => handleFinalizar(trabajo.idcontratacion)}>Finalizar</button>
+                      <button className="cancelar-btn" onClick={() => handleCancelar(trabajo.idcontratacion)}>Cancelar</button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>No hay trabajos contratados</p>
+        )}
+      </div>
+
+      {totalPaginasTrabajos > 1 && (
+        <div className="gallery-pagination-wrapper">
+          <div className="gallery-pagination">
+            <button
+              className="pag-btn"
+              disabled={paginaActual === 1}
+              onClick={() => cambiarPaginaTrabajos(paginaActual - 1)}
+            >
+              ◀
+            </button>
+
+            <span className="pag-indicator">{paginaActual} / {totalPaginasTrabajos}</span>
+
+            <button
+              className="pag-btn"
+              disabled={paginaActual === totalPaginasTrabajos}
+              onClick={() => cambiarPaginaTrabajos(paginaActual + 1)}
+            >
+              ▶
+            </button>
+          </div>
+        </div>
+      )}
+
+      {error && <p>Error: {error}</p>}
     </div>
   );
 };
 
-const ListaProfesional = () => {
-  const { id } = useParams();
-  const [profesionales, setProfesionales] = useState([]);
-  const [publicidad, setPublicidad] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
-  const idusuarioComun = getIdUsuarioLogueado();
-  const [idOficios, setIdOficios] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const centroRef = useRef(null);
-  const [alturaCarrusel, setAlturaCarrusel] = useState(0);
-
-  // Obtener oficio de un profesional
-  const obtenerOficio = async (idProfesional) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/profesional/${idProfesional}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error al obtener oficio:', error);
-      return null;
-    }
-  };
-
-  // Lista de profesionales (o por oficio)
-  useEffect(() => {
-    let url = `${BASE_URL}/profesional`;
-    if (id) {
-      url += `/oficio/${id}`;
-      setIdOficios(id);
-    }
-    axios.get(url)
-      .then((response) => {
-        setProfesionales(response.data);
-        setCargando(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setCargando(false);
-      });
-  }, [id]);
-
-  // Publicidad
-  useEffect(() => {
-    axios.get(`${BASE_URL}/publicidad`)
-      .then((res) => setPublicidad(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-
-  // Contratar profesional
-  const handleContratar = useCallback(async (profesional) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      Swal.fire({ title: 'Error', text: 'Debe estar logueado para contratar', icon: 'error' });
-      return;
-    }
-
-    const usuarioLogueado = jwtDecode(token);
-
-    if (usuarioLogueado.tipo === 'profesional') {
-      Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
-      return;
-    }
-
-    try {
-      const response = await axios.get(`${BASE_URL}/usuario/${usuarioLogueado.sub}`);
-      const usuario = response.data;
-
-      const oficio = await obtenerOficio(profesional.idusuarioProfesional);
-
-      const datosContratacion = {
-        usuarioComun: { idusuarioComun: usuario.idusuarioComun },
-        profesional: { idusuarioProfesional: profesional.idusuarioProfesional },
-        rubro: oficio?.oficio?.nombre || '',
-        telefonoProfesional: profesional.telefono,
-        telefonoCliente: usuario.telefono,
-        estado: "pendiente",
-        valoracion: 0,
-        comentario: '',
-        fechaContratacion: new Date(),
-      };
-
-      await axios.post(`${BASE_URL}/trabajoContratado`, datosContratacion);
-
-      Swal.fire({
-        title: 'Éxito',
-        text: 'La solicitud de contrato se ha enviado correctamente',
-        icon: 'success',
-      });
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error al procesar la solicitud',
-        icon: 'error',
-      });
-    }
-  }, [idOficios]);
-
-  // Conectar profesional (WhatsApp)
-  const handleConectar = async (profesional) => {
-    if (!idusuarioComun) {
-      Swal.fire({ title: 'Error', text: 'Debe estar logueado para contactar', icon: 'error' });
-      return;
-    }
-    const usuarioLogueadoToken = jwtDecode(localStorage.getItem('token'));
-    if (usuarioLogueadoToken.tipo === 'profesional') {
-      Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contactar a otros profesionales', icon: 'error' });
-      return;
-    }
-
-    try {
-      const response = await axios.get(`${BASE_URL}/usuario/${idusuarioComun}`);
-      const usuarioLogueado = response.data;
-      const mensaje = `Hola ${profesional.nombre}, mi nombre es ${usuarioLogueado.nombre} ${usuarioLogueado.apellido} estoy intentando comunicarme desde la app Tu Oficio para hacerte una consulta.`;
-      const url = `https://wa.me/${profesional.telefono}?text=${encodeURIComponent(mensaje)}`;
-      window.open(url, '_blank');
-    } catch (error) {
-      Swal.fire({ title: 'Error', text: 'Ocurrió un error al procesar la solicitud', icon: 'error' });
-    }
-  };
-
-  // Paginación
-  const totalPages = Math.ceil(profesionales.length / ITEMS_PER_PAGE);
-  const currentProfesionales = profesionales.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
-  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-  const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-
-  if (cargando) return <p>Cargando...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  return (
-    <>
-      {/* Wrapper principal para desktop */}
-      <div className="layout-profesionales-wrapper">
-        {/* Carrusel izquierdo */}
-        <div className="carrusel-desktop izquierda">
-          <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
-        </div>
-
-        {/* Center con cards */}
-        <div className="profesionales-center" ref={centroRef}>
-          {profesionales.length === 0 ? (
-            <p>No hay profesionales disponibles</p>
-          ) : (
-            <>
-              <div className="grid-profesionales">
-                {currentProfesionales.map((profesional, index) => (
-                  <article key={index} className="profesional-item compact">
-                    <div className="infoContainer">
-                      <img
-                        src={
-                          profesional.avatar
-                            ? profesional.avatar.startsWith('http')
-                              ? profesional.avatar
-                              : `${BASE_URL}${profesional.avatar}`
-                            : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png'
-                        }
-                        alt={profesional.nombre}
-                        className="avatar-profesional"
-                      />
-                      <div className="profesional-data">
-                        <div className="profesional-header">
-                          <h2>{profesional.nombre} {profesional.apellido}</h2>
-                          <label className={profesional.disponible ? 'disponible' : 'no-disponible'}>
-                            {profesional.disponible ? 'Disponible' : 'No Disponible'}
-                          </label>
-                        </div>
-                        <div className="datosContainer">
-                          <h2>{profesional.empresa}</h2>
-                          <p>Email: {profesional.email}</p>
-                          <p>Tel: {profesional.telefono}</p>
-                          <p>Dirección: {profesional.direccion}</p>
-                          <div>
-                            <label>Valoración:</label>
-                            <Estrellas valoracion={profesional.valoracion} />
-                          </div>
-                        </div>
-
-                        <div className="profesional-buttons">
-                          <Link to={`/profesional/perfil/${profesional.idusuarioProfesional}`} state={{ profesional }}>
-                            <button className="verMas">Ver Más</button>
-                          </Link>
-
-                          <button
-                            className="conectar"
-                            onClick={() => {
-                              if (!profesional.disponible) {
-                                Swal.fire({
-                                  icon: 'warning',
-                                  title: 'Profesional no disponible',
-                                  text: 'Este profesional no se encuentra disponible. Por favor intenta con otro profesional.',
-                                });
-                                return;
-                              }
-                              handleConectar(profesional);
-                            }}
-                            disabled={!profesional.disponible}
-                          >
-                            Conectar
-                          </button>
-
-                          <button
-                            className="contratar"
-                            onClick={() => {
-                              if (!profesional.disponible) {
-                                Swal.fire({
-                                  icon: 'warning',
-                                  title: 'Profesional no disponible',
-                                  text: 'Este profesional no se encuentra disponible. Por favor intenta con otro profesional.',
-                                });
-                                return;
-                              }
-                              handleContratar(profesional);
-                            }}
-                            disabled={!profesional.disponible}
-                          >
-                            Contratar
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-
-              {/* Paginación */}
-              {totalPages > 1 && (
-                <div className="pagination">
-                  <button onClick={prevPage} disabled={currentPage === 1}>◀</button>
-                  <span>{currentPage} / {totalPages}</span>
-                  <button onClick={nextPage} disabled={currentPage === totalPages}>▶</button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        {/* Carrusel derecho */}
-        <div className="carrusel-desktop derecha">
-          <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
-        </div>
-      </div>
-
-      {/* Carrusel horizontal solo para mobile */}
-      <div className="carrusel-mobile">
-        <Carrusel itemsPerView={1} altura={alturaCarrusel} />
-      </div>
-    </>
-  );
-};
-
-export default ListaProfesional;
+export default TrabajosContratados;
