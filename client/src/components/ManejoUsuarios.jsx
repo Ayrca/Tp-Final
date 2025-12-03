@@ -114,9 +114,9 @@ const ManejoUsuarios = () => {
                 </td>
                 <td>
                   {usuario.estadoCuenta ? (
-                    <button className="btn-baneo" onClick={() => handleBaneo(usuario.idusuarioComun)}>Banear</button>
+                    <button className="btn-baneo-usuarios" onClick={() => handleBaneo(usuario.idusuarioComun)}>Banear</button>
                   ) : (
-                    <button className="btn-desbloqueo" onClick={() => handleDesbloqueo(usuario.idusuarioComun)}>Desbloquear</button>
+                    <button className="btn-desbloqueo-usuarios" onClick={() => handleDesbloqueo(usuario.idusuarioComun)}>Desbloquear</button>
                   )}
                 </td>
               </tr>
