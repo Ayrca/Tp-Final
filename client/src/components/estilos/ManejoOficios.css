@@ -7,17 +7,19 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.manejo-oficios button {
-  padding: 10px 20px;
+.manejo-oficios > button {
+  background-color: #2f89c8;
+  color: white;
   border: none;
-  border-radius: 5px;
-  background-color: #4CAF50;
-  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
   cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.2s ease;
 }
 
-.manejo-oficios button:hover {
-  background-color: #3e8e41;
+.manejo-oficios > button:hover {
+  background-color: #2980b9;
 }
 
 .manejo-oficios form {

@@ -170,7 +170,9 @@ axios.post(`${BASE_URL}/imagenPropaganda`, formData)
 
   return (
     <div className="manejo-publicidad">
-      <button onClick={() => setMostrarFormulario(!mostrarFormulario)}>Agregar Publicidad</button>
+      <button className="btn-agregar-publicidad" onClick={() => setMostrarFormulario(!mostrarFormulario)}>
+        Agregar Publicidad
+      </button>
       {mostrarFormulario && (
         <form onSubmit={handleSubmit}>
           <label>Título:</label>
