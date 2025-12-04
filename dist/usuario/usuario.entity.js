@@ -61,8 +61,9 @@ let Usuario = class Usuario {
         return await bcrypt.compare(password, this.password);
     }
     async hashPassword() {
-        if (this.password) {
-            this.password = await bcrypt.hash(this.password, 10);
+        if (this.password && !this.password.startsWith('$2b$')) {
+            const salt = await bcrypt.genSalt(10);
+            this.password = await bcrypt.hash(this.password, salt);
         }
     }
 };
