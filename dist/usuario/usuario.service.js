@@ -48,10 +48,7 @@ let UsuarioService = class UsuarioService {
         return usuario;
     }
     async findOneByEmail(email) {
-        return this.usuarioRepository.findOne({
-            where: { email },
-            select: ['idusuarioComun', 'email', 'password', 'estadoCuenta']
-        });
+        return this.usuarioRepository.findOneBy({ email });
     }
     async create(usuario) {
         return this.usuarioRepository.save(usuario);

@@ -1,3 +1,4 @@
+
 import { Controller, Post, Body, HttpStatus, HttpException, Get, Req, UseGuards, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
@@ -14,13 +15,11 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() datos: any) {
-    try {
-      const resultado = await this.authService.login(datos.email, datos.password);
-      return { access_token: resultado.token };
-    } catch (error) {
-      // Esto captura también el caso de cuenta bloqueada
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    const resultado = await this.authService.login(datos.email, datos.password);
+    if (!resultado) {
+      throw new HttpException('Credenciales inválidas', HttpStatus.UNAUTHORIZED);
     }
+    return { access_token: resultado.token };
   }
 
   @Get('perfil')
@@ -30,15 +29,20 @@ export class AuthController {
     return usuario;
   }
 
-  @Post('forgot-password')
-  async forgotPassword(@Body('email') email: string) {
-    try {
-      const resultado = await this.authService.forgotPassword(email);
-      return resultado;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+@Post('forgot-password')
+async forgotPassword(@Body('email') email: string) {
+  console.log('Correo electrónico:', email);
+  try {
+    const resultado = await this.authService.forgotPassword(email);
+    return resultado;
+  } catch (error) {
+    console.log(error);
+    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   }
+}
+
+
+
 
   @Post('reset-password/:token')
   async resetPassword(@Body('password') password: string, @Param('token') token: string) {
@@ -50,13 +54,20 @@ export class AuthController {
     }
   }
 
-  @Get('usuario/:userId/:tipo')
-  async getUsuario(@Param('userId', ParseIntPipe) userId: number, @Param('tipo') tipo: string) {
-    try {
-      const usuario = await this.authService.getUsuario(userId, tipo);
-      return usuario;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+
+
+
+@Get('usuario/:userId/:tipo')
+async getUsuario(@Param('userId', ParseIntPipe) userId: number, @Param('tipo') tipo: string) {
+  try {
+    const usuario = await this.authService.getUsuario(userId, tipo);
+    return usuario;
+  } catch (error) {
+    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   }
+}
+
+
+
+  
 }

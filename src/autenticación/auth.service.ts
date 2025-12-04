@@ -1,8 +1,8 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsuarioService } from '../usuario/usuario.service';
 import { ProfesionalService } from '../profesional/profesional.service';
-import { AdministradorService } from '../administrador/administrador.service';
 import { JwtService } from '@nestjs/jwt';
+import { AdministradorService } from '../administrador/administrador.service';
 
 import * as brevo from '@getbrevo/brevo';
 
@@ -22,53 +22,46 @@ export class AuthService {
   // -------------------------------------------------------------
   async login(email: string, password: string) {
     console.log('Iniciando sesión con email:', email);
-
-    // Buscar en usuario/profesional/administrador
     const usuario = await this.usuarioService.findOneByEmail(email);
     const profesional = await this.profesionalService.findOneByEmail(email);
     const administrador = await this.administradorService.findOneByEmail(email);
 
-    let user: any;
-    let tipo: 'usuario' | 'profesional' | 'administrador' | null = null;
-
     if (usuario) {
-      user = usuario;
-      tipo = 'usuario';
+      const isValid = await usuario.comparePassword(password);
+      if (isValid) {
+        const token = await this.generateToken(usuario, 'usuario');
+        return { token, tipo: 'usuario' };
+      }
     } else if (profesional) {
-      user = profesional;
-      tipo = 'profesional';
+      const isValid = await profesional.comparePassword(password);
+      if (isValid) {
+        const token = await this.generateToken(profesional, 'profesional');
+        return { token, tipo: 'profesional' };
+      }
     } else if (administrador) {
-      user = administrador;
-      tipo = 'administrador';
+      const isValid = await administrador.comparePassword(password);
+      if (isValid) {
+        const token = await this.generateToken(administrador, 'administrador');
+        return { token, tipo: 'administrador' };
+      }
     } else {
       console.log('Usuario, profesional o administrador no encontrado');
-      throw new HttpException('Credenciales inválidas', HttpStatus.UNAUTHORIZED);
+      return null;
     }
 
-    const isValid = await user.comparePassword(password);
-    if (!isValid) {
-      console.log('Contraseña incorrecta');
-      throw new HttpException('Credenciales inválidas', HttpStatus.UNAUTHORIZED);
-    }
-
-    // --- CHEQUEO DE ESTADO DE CUENTA ---
-  if (user.estadoCuenta === false) {
-    throw new HttpException(
-      'Su cuenta se encuentra bloqueada. Contactese al mail proyectoafip29@gmail.com',
-      HttpStatus.UNAUTHORIZED,
-    );
+    console.log('Contraseña incorrecta');
+    return null;
   }
 
-    // Generar token
-    const token = await this.generateToken(user, tipo);
-    return { token, tipo, estadoCuenta: user.estadoCuenta ?? 1 }; // por defecto activo
+  async validarPassword(usuario: any, password: string) {
+    return await usuario.comparePassword(password);
   }
 
   // -------------------------------------------------------------
   // GENERAR TOKEN
   // -------------------------------------------------------------
   async generateToken(usuario: any, tipo: string) {
-    let payload: any;
+    let payload;
 
     if (tipo === 'usuario') {
       payload = { sub: usuario.idusuarioComun, tipo };
@@ -99,14 +92,16 @@ export class AuthService {
   // -------------------------------------------------------------
   private async sendResetEmail(email: string, url: string) {
     const apiInstance = new brevo.TransactionalEmailsApi();
+
     apiInstance.setApiKey(
       brevo.TransactionalEmailsApiApiKeys.apiKey,
       process.env.BREVO_API_KEY!,
     );
 
+
     const sendEmail = {
       to: [{ email }],
-      sender: { name: "Mi App", email: "proyectoafip29@gmail.com" },
+      sender: { name: "Mi App", email: "proyectoafip29@gmail.com" }, // Correo verificado en Brevo
       subject: "Cambio de contraseña",
       textContent: `Haz clic en este enlace para cambiar tu contraseña: ${url}`,
     };
@@ -123,60 +118,60 @@ export class AuthService {
   // -------------------------------------------------------------
   // FORGOT PASSWORD
   // -------------------------------------------------------------
-  async forgotPassword(email: string) {
-    try {
-      const usuario = await this.usuarioService.findOneByEmail(email);
-      const profesional = await this.profesionalService.findOneByEmail(email);
-      const administrador = await this.administradorService.findOneByEmail(email);
+async forgotPassword(email: string) {
+  try {
+    const usuario = await this.usuarioService.findOneByEmail(email);
+    const profesional = await this.profesionalService.findOneByEmail(email);
+    const administrador = await this.administradorService.findOneByEmail(email);
 
-      let user: any;
-      let tipo: 'usuario' | 'profesional' | 'administrador' | null = null;
+    let user;
+    let tipo: 'usuario' | 'profesional' | 'administrador' | null = null;
 
-      if (usuario) {
-        user = usuario;
-        tipo = 'usuario';
-      } else if (profesional) {
-        user = profesional;
-        tipo = 'profesional';
-      } else if (administrador) {
-        user = administrador;
-        tipo = 'administrador';
-      }
-
-      if (!user) {
-        throw new Error('No existe una cuenta registrada con ese email');
-      }
-
-      const token = this.jwtService.sign(
-        {
-          userId:
-            user.idusuarioProfesional ||
-            user.idusuarioComun ||
-            user.idusuarioAdm,
-          tipo,
-        },
-        { expiresIn: '1h' }
-      );
-
-      const url = `${FRONTEND_URL}/ResetPassword/${token}`;
-
-      await this.sendResetEmail(email, url);
-
-      return { message: 'Email enviado', token };
-
-    } catch (error) {
-      console.log(error);
-      throw new Error('Error al enviar el correo electrónico');
+    if (usuario) {
+      user = usuario;
+      tipo = 'usuario';
+    } else if (profesional) {
+      user = profesional;
+      tipo = 'profesional';
+    } else if (administrador) {
+      user = administrador;
+      tipo = 'administrador';
     }
+
+    if (!user) {
+      throw new Error('No existe una cuenta registrada con ese email');
+    }
+
+    const token = this.jwtService.sign(
+      {
+        userId:
+          user.idusuarioProfesional ||
+          user.idusuarioComun ||
+          user.idusuarioAdm,
+        tipo,
+      },
+      { expiresIn: '1h' }
+    );
+
+    const url = `${FRONTEND_URL}/ResetPassword/${token}`;
+
+    await this.sendResetEmail(email, url);
+
+    return { message: 'Email enviado', token };
+
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error al enviar el correo electrónico');
   }
+}
 
   // -------------------------------------------------------------
   // RESET PASSWORD
   // -------------------------------------------------------------
   async resetPassword(token: string, password: string) {
-    const decoded: any = this.jwtService.verify(token);
+    const decoded = this.jwtService.verify(token);
 
-    let user: any;
+    let user;
     if (decoded.tipo === 'profesional') {
       user = await this.profesionalService.findOne(decoded.userId);
     } else if (decoded.tipo === 'usuario') {
