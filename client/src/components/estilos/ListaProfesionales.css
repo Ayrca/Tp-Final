@@ -322,13 +322,23 @@
   color: #d1d5db; /* gris claro */
 }
 
-.estrella.media {
-  color: #facc15; /* amarillo dorado */
-  position: relative;
-}
-
 .estrella.llena {
   color: #facc15;
+}
+
+.estrella.media {
+  position: relative;
+  display: inline-block;
+  color: #d1d5db; 
+}
+
+.estrella.media::before {
+  content: '★';
+  color: #facc15;
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
 }
 
 /* Más responsive <600px */
