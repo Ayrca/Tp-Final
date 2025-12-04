@@ -355,123 +355,28 @@
 }
 
 /* ========================
-   Responsive avanzado ListaProfesional
+   Responsive general ListaProfesional
    ======================== */
-@media (max-width: 1000px) {
-  .grid-profesionales {
-    grid-template-columns: 1fr 1fr; /* 2 columnas en tablets grandes */
-    gap: 18px 20px;
-  }
-
-  .profesional-item {
+@media (max-width: 800px) {
+  /* Wrapper principal en columna */
+  .layout-profesionales-wrapper {
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    min-height: auto;
+    justify-content: flex-start;
   }
 
-  .profesional-item img {
-    width: 120px;
-    height: 120px;
+  /* Ocultar carruseles verticales */
+  .carrusel-desktop {
+    display: none;
   }
 
-  .profesional-data {
-    padding: 8px 0;
+  /* Mostrar carrusel horizontal */
+  .carrusel-mobile {
+    display: block;
   }
 
-  .profesional-buttons {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "verMas conectar"
-      "contratar contratar";
-    gap: 8px;
-  }
-
-  .profesional-buttons button {
-    width: 100%;
-    font-size: 13px;
-    height: 36px;
-  }
-
-  .titulo-oficio {
-    font-size: 1.6rem;
-  }
-}
-
-@media (max-width: 600px) {
+  /* Grid de profesionales a 1 columna */
   .grid-profesionales {
-    grid-template-columns: 1fr; /* 1 columna en móviles */
-    gap: 12px;
-  }
-
-  .profesional-item {
-    flex-direction: column;
-    align-items: center;
-    padding: 12px;
-  }
-
-  .profesional-item img {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 10px;
-  }
-
-  .profesional-data h2 {
-    font-size: 16px;
-  }
-
-  .profesional-data p {
-    font-size: 12px;
-  }
-
-  .profesional-buttons {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      "verMas"
-      "conectar"
-      "contratar";
-    gap: 6px;
-  }
-
-  .profesional-buttons button {
-    width: 100%;
-    height: 34px;
-    font-size: 12px;
-  }
-
-  .titulo-oficio {
-    font-size: 1.4rem;
-  }
-
-  .estrellas {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 400px) {
-  .profesional-item img {
-    width: 80px;
-    height: 80px;
-  }
-
-  .profesional-data h2 {
-    font-size: 14px;
-  }
-
-  .profesional-data p {
-    font-size: 11px;
-  }
-
-  .profesional-buttons button {
-    font-size: 11px;
-    height: 32px;
-  }
-
-  .titulo-oficio {
-    font-size: 1.2rem;
-  }
-
-  .estrellas {
-    font-size: 14px;
   }
 }
