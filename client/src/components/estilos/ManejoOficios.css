@@ -111,3 +111,67 @@
 .btn-cancelar-oficios:hover {
   background-color: #606060;
 }
+
+/* ========================
+   ManejoOficios Responsive
+   ======================== */
+@media (max-width: 768px) {
+
+  /* Contenedor principal */
+  .manejo-oficios {
+    width: 95%;
+    padding: 15px;
+    margin: 20px auto;
+  }
+
+  /* Botón agregar oficio */
+  .manejo-oficios > button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  /* Formulario */
+  .manejo-oficios form {
+    margin-top: 15px;
+  }
+
+  .manejo-oficios input[type="text"],
+  .manejo-oficios input[type="file"] {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .manejo-oficios form button {
+    width: 48%;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+
+  /* Tabla */
+  .tabla-oficios {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .tabla-oficios th, 
+  .tabla-oficios td {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .tabla-oficios img {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* Botones en tabla */
+  .btn-editar-oficios,
+  .btn-borrar-oficios,
+  .btn-guardar-oficios,
+  .btn-cancelar-oficios {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+  }
+}
