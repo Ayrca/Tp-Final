@@ -23,24 +23,24 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async login(datos) {
-        try {
-            const resultado = await this.authService.login(datos.email, datos.password);
-            return { access_token: resultado.token };
+        const resultado = await this.authService.login(datos.email, datos.password);
+        if (!resultado) {
+            throw new common_1.HttpException('Credenciales inválidas', common_1.HttpStatus.UNAUTHORIZED);
         }
-        catch (error) {
-            throw new common_1.HttpException(error.message, common_1.HttpStatus.UNAUTHORIZED);
-        }
+        return { access_token: resultado.token };
     }
     async getPerfil(req) {
         const usuario = await this.authService.getUsuario(req.user.sub, req.user.tipo);
         return usuario;
     }
     async forgotPassword(email) {
+        console.log('Correo electrónico:', email);
         try {
             const resultado = await this.authService.forgotPassword(email);
             return resultado;
         }
         catch (error) {
+            console.log(error);
             throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
     }

@@ -52,12 +52,9 @@ export class ProfesionalService {
     return this.ProfesionalRepository.find({ where: { oficio: { idOficios: id } } });
   }
 
-async findOneByEmail(email: string) {
-  return this.ProfesionalRepository.findOne({
-    where: { email },
-    select: ['idusuarioProfesional', 'email', 'password', 'estadoCuenta']
-  });
-}
+  async findOneByEmail(email: string) {
+    return this.ProfesionalRepository.findOneBy({ email });
+  }
 
   async findByEmail(email: string): Promise<Profesional | null> {
     const profesional = await this.ProfesionalRepository.findOneBy({ email });
