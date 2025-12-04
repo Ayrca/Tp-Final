@@ -5,5 +5,6 @@ export declare class Administrador {
     tipo: string;
     email: string;
     password: string;
+    hashPassword(): Promise<void>;
     comparePassword(password: string): Promise<any>;
 }

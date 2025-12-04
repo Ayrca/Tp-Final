@@ -10,18 +10,31 @@ export class AvatarImagenController {
 
   @Post('subir/:idUsuario/:tipoUsuario')
   @UseInterceptors(FileInterceptor('avatar', {
-    storage: multer.memoryStorage(), // archivos en memoria
+    storage: diskStorage({
+      destination: './client/public/assets/imagenesDePerfilesUsuarios/',
+      filename: (req, file, cb) => {
+        const fileExtension = path.extname(file.originalname);
+        const fileName = Date.now() + fileExtension;
+        cb(null, fileName);
+      },
+    }),
+
     fileFilter: (req, file, cb) => {
-      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const allowedMimeTypes = [
+        'image/jpeg',  // JPG y JPEG
+        'image/png',
+        'image/gif',
+        'image/webp',  
+        'image/heic',
+        'image/heif', 
+      ];
       if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
       } else {
         cb(new Error('Tipo de archivo no permitido'), false);
       }
-    },
-    limits: {
-      fileSize: 1024 * 1024 * 5, // 5MB
-    },
+    }
+
   }))
   async subirAvatar(
     @UploadedFile() file?: Express.Multer.File,
