@@ -1,32 +1,46 @@
-import { Controller, Post, UploadedFile, UseInterceptors, Param, BadRequestException, Get } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Post, Get, UploadedFile, Param, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
 import { ImagenService } from './imagen.service';
-import { ProfesionalService } from '../profesional/profesional.service';
-import cloudinary from '../cloudinary.config';
+import { FileInterceptor } from '@nestjs/platform-express';
+import * as multer from 'multer';
+import type { Express } from 'express';
 
 @Controller('imagen')
 export class ImagenController {
-  constructor(
-    private readonly imagenService: ImagenService,
-    private readonly profesionalService: ProfesionalService,
-  ) {}
+  constructor(private readonly imagenService: ImagenService) {}
 
-  // Subir imagen de trabajos anteriores
-@Post('upload/:idProfesional')
-@UseInterceptors(FileInterceptor('file'))
-async uploadImage(
-  @UploadedFile() file: Express.Multer.File, 
-  @Param('idProfesional') idProfesional: number
-) {
-  if (!file) throw new BadRequestException('Archivo requerido');
-  return await this.imagenService.guardarImagen(file, idProfesional);
-}
+  // Subir imagen de trabajo
+  @Post('upload/:idProfesional')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: multer.memoryStorage(),
+    fileFilter: (req, file, cb) => {
+      const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (allowedMimeTypes.includes(file.mimetype)) cb(null, true);
+      else cb(new Error('Tipo de archivo no permitido'), false);
+    },
+    limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
+  }))
+  async uploadImagen(
+    @UploadedFile() file?: Express.Multer.File,
+    @Param('idProfesional') idProfesional?: number,
+  ) {
+    if (!file) {
+      throw new HttpException('No se ha proporcionado un archivo', HttpStatus.BAD_REQUEST);
+    }
+    if (!idProfesional) {
+      throw new HttpException('idProfesional es requerido', HttpStatus.BAD_REQUEST);
+    }
+
+    try {
+      return await this.imagenService.subirImagen(file, idProfesional);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Error al subir la imagen', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
   // Obtener todas las imágenes de un profesional
-  @Get(':id')
-  async getImage(@Param('id') id: number) {
-    const imagenes = await this.imagenService.findById(id);
-    if (!imagenes || imagenes.length === 0) return [];
-    return imagenes.map((imagen) => ({ url: imagen.url }));
+  @Get(':idProfesional')
+  async getImagenes(@Param('idProfesional') idProfesional: number) {
+    return this.imagenService.obtenerImagenes(idProfesional);
   }
 }

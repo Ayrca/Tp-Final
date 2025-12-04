@@ -3,7 +3,6 @@ import axios from 'axios';
 import './estilos/ImagenesProf.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const CLOUDINARY_URL = 'https://res.cloudinary.com/ddadtpm2o/image/upload/';
 
 const ImagenesProf = ({ idProfesional }) => {
   const [imagenes, setImagenes] = useState([]);
@@ -82,7 +81,7 @@ const ImagenesProf = ({ idProfesional }) => {
 
       <div className={`imagenes-container ${fadeImagenes}`}>
         {imagenesPagina.map((imagen, index) => (
-          <img key={index} src={imagen.url} alt="Imagen" />
+        <img key={index} src={imagen.url} alt="Imagen" />
         ))}
       </div>
 
