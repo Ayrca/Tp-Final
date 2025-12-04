@@ -34,11 +34,21 @@ export class OficiosService {
   // ------------------------
   async create(oficio: Oficio, file?: Express.Multer.File): Promise<Oficio> {
     if (file) {
-      const result = await cloudinary.uploader.upload(file.path, {
-        folder: `oficios/${oficio.nombre}`,
+      // Subida a Cloudinary desde buffer
+      const urlImagen = await new Promise<string>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: `oficios/${oficio.nombre}` },
+          (error, result) => {
+            if (error) return reject(error);
+            if (!result || !result.secure_url) return reject(new Error('No se obtuvo URL de Cloudinary'));
+            resolve(result.secure_url);
+          }
+        );
+        stream.end(file.buffer);
       });
-      oficio.urlImagen = result.secure_url;
+      oficio.urlImagen = urlImagen;
     }
+
     return this.oficioRepository.save(oficio);
   }
 
@@ -52,10 +62,18 @@ export class OficiosService {
     oficioToUpdate.nombre = oficio.nombre;
 
     if (file) {
-      const result = await cloudinary.uploader.upload(file.path, {
-        folder: `oficios/${oficio.nombre}`,
+      const urlImagen = await new Promise<string>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: `oficios/${oficio.nombre}` },
+          (error, result) => {
+            if (error) return reject(error);
+            if (!result || !result.secure_url) return reject(new Error('No se obtuvo URL de Cloudinary'));
+            resolve(result.secure_url);
+          }
+        );
+        stream.end(file.buffer);
       });
-      oficioToUpdate.urlImagen = result.secure_url;
+      oficioToUpdate.urlImagen = urlImagen;
     } else if (oficio.urlImagen) {
       // Mantener la URL existente si no se sube archivo
       oficioToUpdate.urlImagen = oficio.urlImagen;

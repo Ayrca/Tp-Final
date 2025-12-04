@@ -38,10 +38,17 @@ let OficiosService = class OficiosService {
     }
     async create(oficio, file) {
         if (file) {
-            const result = await cloudinary_config_1.default.uploader.upload(file.path, {
-                folder: `oficios/${oficio.nombre}`,
+            const urlImagen = await new Promise((resolve, reject) => {
+                const stream = cloudinary_config_1.default.uploader.upload_stream({ folder: `oficios/${oficio.nombre}` }, (error, result) => {
+                    if (error)
+                        return reject(error);
+                    if (!result || !result.secure_url)
+                        return reject(new Error('No se obtuvo URL de Cloudinary'));
+                    resolve(result.secure_url);
+                });
+                stream.end(file.buffer);
             });
-            oficio.urlImagen = result.secure_url;
+            oficio.urlImagen = urlImagen;
         }
         return this.oficioRepository.save(oficio);
     }
@@ -51,10 +58,17 @@ let OficiosService = class OficiosService {
             throw new common_1.BadRequestException(`Oficio con id ${id} no encontrado`);
         oficioToUpdate.nombre = oficio.nombre;
         if (file) {
-            const result = await cloudinary_config_1.default.uploader.upload(file.path, {
-                folder: `oficios/${oficio.nombre}`,
+            const urlImagen = await new Promise((resolve, reject) => {
+                const stream = cloudinary_config_1.default.uploader.upload_stream({ folder: `oficios/${oficio.nombre}` }, (error, result) => {
+                    if (error)
+                        return reject(error);
+                    if (!result || !result.secure_url)
+                        return reject(new Error('No se obtuvo URL de Cloudinary'));
+                    resolve(result.secure_url);
+                });
+                stream.end(file.buffer);
             });
-            oficioToUpdate.urlImagen = result.secure_url;
+            oficioToUpdate.urlImagen = urlImagen;
         }
         else if (oficio.urlImagen) {
             oficioToUpdate.urlImagen = oficio.urlImagen;

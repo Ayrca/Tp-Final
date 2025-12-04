@@ -4,14 +4,13 @@ import Swal from 'sweetalert2';
 import './estilos/ManejoPublicidad.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const CLOUDINARY_URL = process.env.REACT_APP_CLOUDINARY_URL; // endpoint de Cloudinary
 
 const ManejoPublicidad = () => {
   const [publicidad, setPublicidad] = useState([]);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [titulo, setTitulo] = useState('');
   const [urlPagina, setUrlPagina] = useState('');
-  const [imagen, setImagen] = useState(null);
+  const [file, setFile] = useState(null); // ⚡ Archivo real
   const [editarPublicidad, setEditarPublicidad] = useState(null);
 
   useEffect(() => {
@@ -20,43 +19,51 @@ const ManejoPublicidad = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  // Subir imagen a Cloudinary y devolver la URL
-  const subirImagenCloudinary = async (file) => {
+  // Subir imagen al backend (igual que avatar o ImagenesProf)
+  const subirImagenBackend = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'publicidad'); // preset de Cloudinary
-    const response = await axios.post(CLOUDINARY_URL, formData);
-    return response.data.secure_url;
+
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No estás logueado');
+
+    const response = await axios.post(
+      `${BASE_URL}/publicidad/upload`, // ⚡ endpoint backend para subir imágenes
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    return response.data.url; // backend devuelve { url: 'https://...' }
   };
 
-  // Agregar nueva publicidad
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!imagen) {
+    if (!file) {
       Swal.fire('Error!', 'Debes seleccionar una imagen', 'error');
       return;
     }
 
     try {
-      const urlImagen = await subirImagenCloudinary(imagen);
+      const urlImagen = await subirImagenBackend(file);
 
-      const nuevaPublicidad = {
-        titulo,
-        urlPagina,
-        urlImagen,
-      };
+      const nuevaPublicidad = { titulo, urlPagina, urlImagen };
 
       const token = localStorage.getItem('token');
-
       const response = await axios.post(`${BASE_URL}/publicidad`, nuevaPublicidad, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       setPublicidad([...publicidad, response.data]);
       Swal.fire('Agregado!', 'La publicidad ha sido agregada', 'success');
+
       setTitulo('');
       setUrlPagina('');
-      setImagen(null);
+      setFile(null);
       setMostrarFormulario(false);
     } catch (error) {
       console.error(error);
@@ -64,56 +71,41 @@ const ManejoPublicidad = () => {
     }
   };
 
-  // Editar publicidad
-  const handleEditar = (item) => {
-    setEditarPublicidad(item);
-  };
+  const handleEditar = (item) => setEditarPublicidad(item);
+  const handleCancelar = () => { setEditarPublicidad(null); setFile(null); };
 
-  const handleCancelar = () => {
-    setEditarPublicidad(null);
-    setImagen(null);
-  };
-
-  const handleBorrar = (item) => {
-    Swal.fire({
+  const handleBorrar = async (item) => {
+    const result = await Swal.fire({
       title: '¿Estás seguro?',
       text: 'No podrás revertir este cambio',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, borrar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(`${BASE_URL}/publicidad/${item.idpublicidad}`);
-          setPublicidad(publicidad.filter((p) => p.idpublicidad !== item.idpublicidad));
-          Swal.fire('Borrado!', 'La publicidad ha sido borrada', 'success');
-        } catch (error) {
-          console.error('Error al borrar publicidad:', error);
-          Swal.fire('Error!', 'No se pudo borrar la publicidad', 'error');
-        }
-      }
     });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${BASE_URL}/publicidad/${item.idpublicidad}`);
+        setPublicidad(publicidad.filter(p => p.idpublicidad !== item.idpublicidad));
+        Swal.fire('Borrado!', 'La publicidad ha sido borrada', 'success');
+      } catch (error) {
+        console.error(error);
+        Swal.fire('Error!', 'No se pudo borrar la publicidad', 'error');
+      }
+    }
   };
 
-  // Guardar cambios en publicidad existente
   const handleGuardar = async (item) => {
     try {
       let urlImagen = item.urlImagen;
-      if (imagen) {
-        urlImagen = await subirImagenCloudinary(imagen);
-      }
+      if (file) urlImagen = await subirImagenBackend(file);
 
-      const dataActualizada = {
-        ...item,
-        urlImagen
-      };
-
+      const dataActualizada = { ...item, urlImagen };
       const response = await axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, dataActualizada);
-      setPublicidad(publicidad.map((p) => p.idpublicidad === item.idpublicidad ? response.data : p));
+      setPublicidad(publicidad.map(p => p.idpublicidad === item.idpublicidad ? response.data : p));
+
       setEditarPublicidad(null);
-      setImagen(null);
+      setFile(null);
       Swal.fire('Guardado!', 'La publicidad ha sido actualizada', 'success');
     } catch (error) {
       console.error(error);
@@ -126,58 +118,56 @@ const ManejoPublicidad = () => {
       <button className="btn-agregar-publicidad" onClick={() => setMostrarFormulario(!mostrarFormulario)}>
         Agregar Publicidad
       </button>
+
       {mostrarFormulario && (
         <form onSubmit={handleSubmit}>
           <label>Título:</label>
-          <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+          <input type="text" value={titulo} onChange={e => setTitulo(e.target.value)} />
           <br />
           <label>URL de la Página:</label>
-          <input type="text" value={urlPagina} onChange={(e) => setUrlPagina(e.target.value)} />
+          <input type="text" value={urlPagina} onChange={e => setUrlPagina(e.target.value)} />
           <br />
           <label>Imagen:</label>
-          <input type="file" onChange={(e) => setImagen(e.target.files[0])} />
+          <input type="file" onChange={e => setFile(e.target.files[0])} />
           <br />
           <button type="submit">Agregar Publicidad</button>
           <button type="button" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
         </form>
       )}
+
       <table className="tabla-publicidad">
         <thead>
           <tr>
             <th>ID</th>
-            <th>URL Imagen</th>
+            <th>Imagen</th>
             <th>URL Pagina</th>
             <th>Titulo</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {publicidad.map((item) => (
+          {publicidad.map(item => (
             <tr key={item.idpublicidad}>
               <td>{item.idpublicidad}</td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
                   <div>
-                    <input type="file" onChange={(e) => setImagen(e.target.files[0])} />
-                    {imagen && <p>Imagen seleccionada: {imagen.name}</p>}
+                    <input type="file" onChange={e => setFile(e.target.files[0])} />
+                    {file && <p>Imagen seleccionada: {file.name}</p>}
                   </div>
                 ) : (
-                  <img src={item.urlImagen} alt="Imagen de publicidad" width="100" height="100" />
+                  <img src={item.urlImagen} alt="Publicidad" width="100" height="100" />
                 )}
               </td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
-                  <input type="text" value={editarPublicidad.urlPagina} onChange={(e) => setEditarPublicidad({ ...editarPublicidad, urlPagina: e.target.value })} />
-                ) : (
-                  item.urlPagina
-                )}
+                  <input type="text" value={editarPublicidad.urlPagina} onChange={e => setEditarPublicidad({ ...editarPublicidad, urlPagina: e.target.value })} />
+                ) : item.urlPagina}
               </td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
-                  <input type="text" value={editarPublicidad.titulo} onChange={(e) => setEditarPublicidad({ ...editarPublicidad, titulo: e.target.value })} />
-                ) : (
-                  item.titulo
-                )}
+                  <input type="text" value={editarPublicidad.titulo} onChange={e => setEditarPublicidad({ ...editarPublicidad, titulo: e.target.value })} />
+                ) : item.titulo}
               </td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (

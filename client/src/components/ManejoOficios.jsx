@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './estilos/ManejoOficios.css';
 import Swal from 'sweetalert2';
+import './estilos/ManejoOficios.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const CLOUDINARY_URL = process.env.REACT_APP_CLOUDINARY_URL; // endpoint de Cloudinary
 
 const ManejoOficios = () => {
   const [oficios, setOficios] = useState([]);
@@ -19,15 +18,9 @@ const ManejoOficios = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  // Función para subir imagen a Cloudinary
-  const subirImagenCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'oficios'); // tu preset de Cloudinary
-    const response = await axios.post(CLOUDINARY_URL, formData);
-    return response.data.secure_url;
-  };
-
+  // -----------------------
+  // Agregar nuevo oficio
+  // -----------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!nombre) {
@@ -36,17 +29,16 @@ const ManejoOficios = () => {
     }
 
     try {
-      let urlImagen = null;
-      if (imagen) {
-        urlImagen = await subirImagenCloudinary(imagen);
-      }
-
       const formData = new FormData();
       formData.append('nombre', nombre);
-      if (urlImagen) formData.append('urlImagen', urlImagen);
+      if (imagen) formData.append('file', imagen); // archivo real
 
+      const token = localStorage.getItem('token');
       const response = await axios.post(`${BASE_URL}/oficios/upload`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       setOficios([...oficios, response.data]);
@@ -60,19 +52,31 @@ const ManejoOficios = () => {
     }
   };
 
+  // -----------------------
+  // Editar oficio
+  // -----------------------
+  const handleEditar = (oficio) => {
+    setEditarOficio(oficio);
+    setNombre(oficio.nombre);
+  };
+
+  const handleCancelar = () => {
+    setEditarOficio(null);
+    setImagen(null);
+  };
+
   const handleGuardar = async (oficio) => {
     try {
-      let urlImagen = oficio.urlImagen;
-      if (imagen) {
-        urlImagen = await subirImagenCloudinary(imagen);
-      }
-
       const formData = new FormData();
       formData.append('nombre', oficio.nombre);
-      if (urlImagen) formData.append('urlImagen', urlImagen);
+      if (imagen) formData.append('file', imagen); // archivo real
 
+      const token = localStorage.getItem('token');
       const response = await axios.put(`${BASE_URL}/oficios/upload/${oficio.idOficios}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       setOficios(oficios.map((o) =>
@@ -87,11 +91,9 @@ const ManejoOficios = () => {
     }
   };
 
-  const handleEditar = (oficio) => {
-    setEditarOficio(oficio);
-    setNombre(oficio.nombre);
-  };
-
+  // -----------------------
+  // Borrar oficio
+  // -----------------------
   const handleBorrar = (oficio) => {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -103,7 +105,10 @@ const ManejoOficios = () => {
       confirmButtonText: 'Sí, borrar'
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`${BASE_URL}/oficios/${oficio.idOficios}`)
+        const token = localStorage.getItem('token');
+        axios.delete(`${BASE_URL}/oficios/${oficio.idOficios}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
           .then(() => {
             setOficios(oficios.filter((o) => o.idOficios !== oficio.idOficios));
             Swal.fire('Borrado!', 'El oficio ha sido borrado', 'success');
@@ -118,7 +123,10 @@ const ManejoOficios = () => {
 
   return (
     <div className="manejo-oficios">
-      <button onClick={() => setMostrarFormulario(!mostrarFormulario)}>Agregar Oficio</button>
+      <button className="btn-agregar-oficio" onClick={() => setMostrarFormulario(!mostrarFormulario)}>
+        Agregar Oficio
+      </button>
+
       {mostrarFormulario && (
         <form onSubmit={handleSubmit}>
           <label>Nombre:</label>
@@ -176,7 +184,7 @@ const ManejoOficios = () => {
                 {editarOficio && editarOficio.idOficios === oficio.idOficios ? (
                   <div>
                     <button className="btn-guardar-oficios" onClick={() => handleGuardar(oficio)}>Guardar</button>
-                    <button className="btn-cancelar-oficios" onClick={() => setEditarOficio(null)}>Cancelar</button>
+                    <button className="btn-cancelar-oficios" onClick={handleCancelar}>Cancelar</button>
                   </div>
                 ) : (
                   <div>

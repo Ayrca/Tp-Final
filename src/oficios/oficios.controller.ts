@@ -1,5 +1,5 @@
 import { 
-  Controller, Get, Post, Put, Delete, Body, Param, Query, UploadedFile, UseInterceptors, BadRequestException 
+  Controller, Get, Post, Put, Delete, Body, Param, Query, UploadedFile, UseInterceptors, BadRequestException, HttpException, HttpStatus 
 } from '@nestjs/common';
 import { OficiosService } from './oficios.service';
 import { Oficio } from './oficios.entity';
@@ -25,33 +25,48 @@ export class OficiosController {
 
   // Crear oficio con imagen opcional
   @Post('upload')
-  @UseInterceptors(FileInterceptor('imagen'))
+  @UseInterceptors(FileInterceptor('file')) // ⚡ mismo que Avatar/ImagenesProf
   async create(
     @Body() oficio: { nombre: string },
-    @UploadedFile() imagen?: Express.Multer.File,
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<Oficio> {
     if (!oficio.nombre) throw new BadRequestException('El nombre del oficio es requerido');
 
-    const nuevoOficio = new Oficio();
-    nuevoOficio.nombre = oficio.nombre;
+    try {
+      const nuevoOficio = new Oficio();
+      nuevoOficio.nombre = oficio.nombre;
 
-    return this.oficiosService.create(nuevoOficio, imagen);
+      return await this.oficiosService.create(nuevoOficio, file);
+    } catch (error) {
+      console.error('Error al crear oficio:', error);
+      throw new HttpException('No se pudo crear el oficio', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // Actualizar oficio con imagen opcional
   @Put('upload/:id')
-  @UseInterceptors(FileInterceptor('imagen'))
+  @UseInterceptors(FileInterceptor('file')) // ⚡ mismo que Avatar/ImagenesProf
   async update(
     @Param('id') id: number,
     @Body() oficio: { nombre: string; urlImagen?: string },
-    @UploadedFile() imagen?: Express.Multer.File,
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<Oficio> {
-    return this.oficiosService.update(id, oficio as Oficio, imagen);
+    try {
+      return await this.oficiosService.update(id, oficio as Oficio, file);
+    } catch (error) {
+      console.error('Error al actualizar oficio:', error);
+      throw new HttpException('No se pudo actualizar el oficio', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // Eliminar oficio
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {
-    return this.oficiosService.delete(id);
+    try {
+      return await this.oficiosService.delete(id);
+    } catch (error) {
+      console.error('Error al borrar oficio:', error);
+      throw new HttpException('No se pudo borrar el oficio', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
