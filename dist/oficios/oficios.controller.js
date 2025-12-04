@@ -23,21 +23,12 @@ let OficiosController = class OficiosController {
         this.oficiosService = oficiosService;
     }
     async findAll(nombreLike) {
-        if (nombreLike) {
-            return this.oficiosService.findByNombreLike(nombreLike);
-        }
-        else {
-            return this.oficiosService.findAll();
-        }
+        return nombreLike
+            ? this.oficiosService.findByNombreLike(nombreLike)
+            : this.oficiosService.findAll();
     }
     async findOne(id) {
         return this.oficiosService.findOne(id);
-    }
-    async update(id, oficio, imagen) {
-        return this.oficiosService.update(id, oficio, imagen);
-    }
-    async delete(id) {
-        return this.oficiosService.delete(id);
     }
     async create(oficio, imagen) {
         if (!oficio.nombre)
@@ -45,6 +36,12 @@ let OficiosController = class OficiosController {
         const nuevoOficio = new oficios_entity_1.Oficio();
         nuevoOficio.nombre = oficio.nombre;
         return this.oficiosService.create(nuevoOficio, imagen);
+    }
+    async update(id, oficio, imagen) {
+        return this.oficiosService.update(id, oficio, imagen);
+    }
+    async delete(id) {
+        return this.oficiosService.delete(id);
     }
 };
 exports.OficiosController = OficiosController;
@@ -63,7 +60,16 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], OficiosController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Put)(':id'),
+    (0, common_1.Post)('upload'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('imagen')),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], OficiosController.prototype, "create", null);
+__decorate([
+    (0, common_1.Put)('upload/:id'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('imagen')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -79,15 +85,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], OficiosController.prototype, "delete", null);
-__decorate([
-    (0, common_1.Post)(),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('imagen')),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.UploadedFile)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], OficiosController.prototype, "create", null);
 exports.OficiosController = OficiosController = __decorate([
     (0, common_1.Controller)('oficios'),
     __metadata("design:paramtypes", [oficios_service_1.OficiosService])

@@ -3,6 +3,7 @@ import axios from 'axios';
 import './estilos/ImagenesProf.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CLOUDINARY_URL = 'https://res.cloudinary.com/ddadtpm2o/image/upload/';
 
 const ImagenesProf = ({ idProfesional }) => {
   const [imagenes, setImagenes] = useState([]);
@@ -28,7 +29,7 @@ const ImagenesProf = ({ idProfesional }) => {
       .catch((error) => console.error(error));
   }, [idProfesional, reload]);
 
-  // Subir imagen al backend
+  // Subir imagen al backend (igual que avatar)
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) return;
@@ -41,9 +42,9 @@ const ImagenesProf = ({ idProfesional }) => {
 
     try {
       const formData = new FormData();
-      formData.append('file', file); // ⚡ File real, no string
+      formData.append('file', file); // ⚡ File real
 
-      await axios.post(
+      const response = await axios.post(
         `${BASE_URL}/imagen/upload/${idProfesional}`,
         formData,
         {
@@ -54,11 +55,13 @@ const ImagenesProf = ({ idProfesional }) => {
         }
       );
 
+      // Backend devuelve la URL subida a Cloudinary
+      console.log('Imagen subida:', response.data);
+
       // Limpiar input y recargar imágenes
       setFile(null);
       document.getElementById('file-input').value = '';
       setReload(prev => !prev);
-
     } catch (error) {
       console.error('Error al subir imagen:', error);
       alert('Ocurrió un error al subir la imagen');

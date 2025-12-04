@@ -12,19 +12,15 @@ export class ImagenController {
   ) {}
 
   // Subir imagen de trabajos anteriores
-  @Post('upload/:idProfesional')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(
-    @UploadedFile() file: Express.Multer.File, 
-    @Param('idProfesional') idProfesional: number
-  ) {
-    if (!file) throw new BadRequestException('Archivo requerido');
-
-    // Usamos tu método existente guardarImagen
-    const imagen = await this.imagenService.guardarImagen(file, idProfesional);
-
-    return imagen; // retorna el objeto con la URL que guardó en la DB
-  }
+@Post('upload/:idProfesional')
+@UseInterceptors(FileInterceptor('file'))
+async uploadImage(
+  @UploadedFile() file: Express.Multer.File, 
+  @Param('idProfesional') idProfesional: number
+) {
+  if (!file) throw new BadRequestException('Archivo requerido');
+  return await this.imagenService.guardarImagen(file, idProfesional);
+}
 
   // Obtener todas las imágenes de un profesional
   @Get(':id')

@@ -7,7 +7,6 @@ import cloudinary from '../cloudinary.config';
 
 @Injectable()
 export class ImagenService {
-
   constructor(
     @InjectRepository(Imagen)
     private readonly imagenRepository: Repository<Imagen>,
@@ -15,8 +14,10 @@ export class ImagenService {
     private readonly usuarioProfesionalRepository: Repository<Profesional>,
   ) {}
 
-  // Guardar imagen subiéndola a Cloudinary
-  async guardarImagen(file: Express.Multer.File, idProfesional: number): Promise<any> {
+  // -----------------------------------
+  // Subir imagen y guardar URL en DB
+  // -----------------------------------
+  async guardarImagen(file: Express.Multer.File, idProfesional: number): Promise<{ url: string; message: string }> {
     if (!idProfesional) {
       throw new BadRequestException('El idProfesional es requerido');
     }
@@ -25,21 +26,25 @@ export class ImagenService {
       throw new BadRequestException('El archivo es requerido');
     }
 
-    // Subida a Cloudinary
+    // Subida a Cloudinary en la carpeta del profesional
     const result = await cloudinary.uploader.upload(file.path, {
       folder: `profesionales/${idProfesional}`,
     });
 
-    // Guardamos solo la URL en la base de datos
-    const imagen = new Imagen();
-    imagen.url = result.secure_url;
-    imagen.idProfesional = idProfesional;
+    // Guardamos la URL en la base de datos
+    const imagen = this.imagenRepository.create({
+      url: result.secure_url,
+      idProfesional: idProfesional,
+    });
     await this.imagenRepository.save(imagen);
 
-    return { message: 'Imagen guardada con éxito', url: result.secure_url };
+    // Devolvemos la URL al frontend
+    return { url: result.secure_url, message: 'Imagen guardada con éxito' };
   }
 
+  // -----------------------------------
   // Obtener todas las imágenes de un profesional
+  // -----------------------------------
   async findById(id: number): Promise<Imagen[]> {
     return this.imagenRepository.find({ where: { idProfesional: id } });
   }

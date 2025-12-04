@@ -39,11 +39,12 @@ let ImagenService = class ImagenService {
         const result = await cloudinary_config_1.default.uploader.upload(file.path, {
             folder: `profesionales/${idProfesional}`,
         });
-        const imagen = new imagen_entity_1.Imagen();
-        imagen.url = result.secure_url;
-        imagen.idProfesional = idProfesional;
+        const imagen = this.imagenRepository.create({
+            url: result.secure_url,
+            idProfesional: idProfesional,
+        });
         await this.imagenRepository.save(imagen);
-        return { message: 'Imagen guardada con éxito', url: result.secure_url };
+        return { url: result.secure_url, message: 'Imagen guardada con éxito' };
     }
     async findById(id) {
         return this.imagenRepository.find({ where: { idProfesional: id } });
