@@ -11,41 +11,41 @@ export class ImagenService {
     @InjectRepository(Imagen)
     private readonly imagenRepository: Repository<Imagen>,
     @InjectRepository(Profesional)
-    private readonly usuarioProfesionalRepository: Repository<Profesional>,
+    private readonly profesionalRepository: Repository<Profesional>,
   ) {}
 
-  // -----------------------------------
-  // Subir imagen y guardar URL en DB
-  // -----------------------------------
-  async guardarImagen(file: Express.Multer.File, idProfesional: number): Promise<{ url: string; message: string }> {
-    if (!idProfesional) {
-      throw new BadRequestException('El idProfesional es requerido');
+  // Subir imagen de trabajo a Cloudinary y guardar URL en DB
+  async subirImagen(file: Express.Multer.File, idProfesional: number) {
+    if (!file) throw new BadRequestException('No se recibió ninguna imagen');
+
+    try {
+      const urlImagen = await new Promise<string>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: `profesionales/${idProfesional}` },
+          (error, result) => {
+            if (error) return reject(error);
+            if (!result || !result.secure_url) return reject(new Error('No se obtuvo URL de Cloudinary'));
+            resolve(result.secure_url);
+          },
+        );
+        stream.end(file.buffer);
+      });
+
+      const imagen = new Imagen();
+      imagen.idProfesional = idProfesional;
+      imagen.url = urlImagen;
+
+      await this.imagenRepository.save(imagen);
+
+      return { message: 'Imagen subida con éxito', url: urlImagen };
+    } catch (error) {
+      console.error('Error al subir la imagen a Cloudinary:', error);
+      throw new BadRequestException('Error al subir la imagen');
     }
-
-    if (!file) {
-      throw new BadRequestException('El archivo es requerido');
-    }
-
-    // Subida a Cloudinary en la carpeta del profesional
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: `profesionales/${idProfesional}`,
-    });
-
-    // Guardamos la URL en la base de datos
-    const imagen = this.imagenRepository.create({
-      url: result.secure_url,
-      idProfesional: idProfesional,
-    });
-    await this.imagenRepository.save(imagen);
-
-    // Devolvemos la URL al frontend
-    return { url: result.secure_url, message: 'Imagen guardada con éxito' };
   }
 
-  // -----------------------------------
   // Obtener todas las imágenes de un profesional
-  // -----------------------------------
-  async findById(id: number): Promise<Imagen[]> {
-    return this.imagenRepository.find({ where: { idProfesional: id } });
+  async obtenerImagenes(idProfesional: number) {
+    return this.imagenRepository.find({ where: { idProfesional } });
   }
 }

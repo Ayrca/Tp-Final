@@ -3,11 +3,11 @@ import { Imagen } from './imagen.entity';
 import { Profesional } from '../profesional/profesional.entity';
 export declare class ImagenService {
     private readonly imagenRepository;
-    private readonly usuarioProfesionalRepository;
-    constructor(imagenRepository: Repository<Imagen>, usuarioProfesionalRepository: Repository<Profesional>);
-    guardarImagen(file: Express.Multer.File, idProfesional: number): Promise<{
-        url: string;
+    private readonly profesionalRepository;
+    constructor(imagenRepository: Repository<Imagen>, profesionalRepository: Repository<Profesional>);
+    subirImagen(file: Express.Multer.File, idProfesional: number): Promise<{
         message: string;
+        url: string;
     }>;
-    findById(id: number): Promise<Imagen[]>;
+    obtenerImagenes(idProfesional: number): Promise<Imagen[]>;
 }

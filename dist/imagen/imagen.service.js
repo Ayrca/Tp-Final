@@ -24,30 +24,38 @@ const profesional_entity_1 = require("../profesional/profesional.entity");
 const cloudinary_config_1 = __importDefault(require("../cloudinary.config"));
 let ImagenService = class ImagenService {
     imagenRepository;
-    usuarioProfesionalRepository;
-    constructor(imagenRepository, usuarioProfesionalRepository) {
+    profesionalRepository;
+    constructor(imagenRepository, profesionalRepository) {
         this.imagenRepository = imagenRepository;
-        this.usuarioProfesionalRepository = usuarioProfesionalRepository;
+        this.profesionalRepository = profesionalRepository;
     }
-    async guardarImagen(file, idProfesional) {
-        if (!idProfesional) {
-            throw new common_1.BadRequestException('El idProfesional es requerido');
+    async subirImagen(file, idProfesional) {
+        if (!file)
+            throw new common_1.BadRequestException('No se recibió ninguna imagen');
+        try {
+            const urlImagen = await new Promise((resolve, reject) => {
+                const stream = cloudinary_config_1.default.uploader.upload_stream({ folder: `profesionales/${idProfesional}` }, (error, result) => {
+                    if (error)
+                        return reject(error);
+                    if (!result || !result.secure_url)
+                        return reject(new Error('No se obtuvo URL de Cloudinary'));
+                    resolve(result.secure_url);
+                });
+                stream.end(file.buffer);
+            });
+            const imagen = new imagen_entity_1.Imagen();
+            imagen.idProfesional = idProfesional;
+            imagen.url = urlImagen;
+            await this.imagenRepository.save(imagen);
+            return { message: 'Imagen subida con éxito', url: urlImagen };
         }
-        if (!file) {
-            throw new common_1.BadRequestException('El archivo es requerido');
+        catch (error) {
+            console.error('Error al subir la imagen a Cloudinary:', error);
+            throw new common_1.BadRequestException('Error al subir la imagen');
         }
-        const result = await cloudinary_config_1.default.uploader.upload(file.path, {
-            folder: `profesionales/${idProfesional}`,
-        });
-        const imagen = this.imagenRepository.create({
-            url: result.secure_url,
-            idProfesional: idProfesional,
-        });
-        await this.imagenRepository.save(imagen);
-        return { url: result.secure_url, message: 'Imagen guardada con éxito' };
     }
-    async findById(id) {
-        return this.imagenRepository.find({ where: { idProfesional: id } });
+    async obtenerImagenes(idProfesional) {
+        return this.imagenRepository.find({ where: { idProfesional } });
     }
 };
 exports.ImagenService = ImagenService;
