@@ -90,8 +90,21 @@ const HeaderPrime = () => {
         </div>
 
         <div className={`navbar-menu ${menuOpen ? 'open' : ''}`}>
-          <Link to="/" className="header-link-btn">Inicio</Link>
-          <Link to="/oficios" className="header-link-btn">Oficios</Link>
+          <Link 
+            to="/" 
+            className="header-link-btn"
+            onClick={() => setMenuOpen(false)} // <--- Cierra el menú
+          >
+            Inicio
+          </Link>
+
+          <Link 
+            to="/oficios" 
+            className="header-link-btn"
+            onClick={() => setMenuOpen(false)} // <--- Cierra el menú
+          >
+            Oficios
+          </Link>
 
           {isLoggedIn ? (
             <div className="dropdown" ref={dropdownRef}>
@@ -101,15 +114,41 @@ const HeaderPrime = () => {
 
               {dropdownOpen && (
                 <div className="dropdown-menu">
-                  <Link className="dropdown-item" to="/usuario/perfil" onClick={() => setDropdownOpen(false)}>Perfil</Link>
-                  <button className="dropdown-item" onClick={handleLogout}>Cerrar sesión</button>
+                  <Link 
+                    className="dropdown-item" 
+                    to="/usuario/perfil" 
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    Perfil
+                  </Link>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      handleLogout();
+                      setMenuOpen(false);
+                    }}
+                  >
+                    Cerrar sesión
+                  </button>
                 </div>
               )}
             </div>
           ) : (
-            <button className="header-login-btn" onClick={() => setShowModal(true)}>Iniciar Sesión</button>
+            <button 
+              className="header-login-btn" 
+              onClick={() => {
+                setShowModal(true);
+                setMenuOpen(false);
+              }}
+            >
+              Iniciar Sesión
+            </button>
           )}
         </div>
+
 
         <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
           <span className="bar"></span>

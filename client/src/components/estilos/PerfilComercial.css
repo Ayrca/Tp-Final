@@ -136,3 +136,94 @@
 .estrella.vacia {
   color: #ccc;   /* gris claro */
 }
+
+/* ======================
+   RESPONSIVE PERFIL COMERCIAL
+   ====================== */
+@media (max-width: 1000px) {
+  /* Header: vertical y centrado */
+  .perfil-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  /* Avatar más pequeño */
+  .avatar-comercial {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Texto perfil centrado */
+  .perfil-info {
+    align-items: center;
+  }
+
+  .perfil-info h2 {
+    font-size: 24px;
+  }
+
+  .descripcion {
+    font-size: 14px;
+  }
+
+  /* Grids: 2 columnas */
+  .imagenes-comercial-container,
+  .trabajos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Header centrado completo */
+  .perfil-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  /* Avatar más pequeño */
+  .avatar-comercial {
+    width: 100px;
+    height: 100px;
+  }
+
+  /* Texto perfil más compacto */
+  .perfil-info h2 {
+    font-size: 20px;
+  }
+
+  .descripcion {
+    font-size: 13px;
+  }
+
+  /* Grids: 1 columna */
+  .imagenes-comercial-container,
+  .trabajos-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Estrellas más pequeñas */
+  .estrella {
+    font-size: 22px;
+  }
+
+  /* Paginación más compacta */
+  .gallery-pagination {
+    gap: 8px;
+  }
+
+  .pag-btn {
+    padding: 4px 10px;
+    font-size: 16px;
+  }
+
+  .pag-indicator {
+    font-size: 13px;
+  }
+}

@@ -30,3 +30,32 @@
 .boton-admin:hover {
   background-color: #2980b9;
 }
+
+/* Responsive PerfilAdmin */
+@media (max-width: 768px) {
+  .perfil-admin-container {
+    width: 95%;
+    padding: 15px;
+    margin: 20px auto;
+  }
+
+  .botones-admin {
+    flex-direction: column; 
+    gap: 12px;               
+    align-items: stretch;   
+  }
+
+  .boton-admin {
+    width: 100%;            
+    padding: 12px 0;
+    font-size: 1rem;
+  }
+
+  .datosAdmin p {
+    font-size: 0.95rem;      
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
