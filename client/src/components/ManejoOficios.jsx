@@ -4,6 +4,7 @@ import './estilos/ManejoOficios.css';
 import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CLOUDINARY_URL = process.env.REACT_APP_CLOUDINARY_URL; // endpoint de Cloudinary
 
 const ManejoOficios = () => {
   const [oficios, setOficios] = useState([]);
@@ -18,42 +19,71 @@ const ManejoOficios = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Función para subir imagen a Cloudinary
+  const subirImagenCloudinary = async (file) => {
     const formData = new FormData();
-    formData.append('nombre', nombre);
-    if (imagen) formData.append('imagen', imagen);
+    formData.append('file', file);
+    formData.append('upload_preset', 'oficios'); // tu preset de Cloudinary
+    const response = await axios.post(CLOUDINARY_URL, formData);
+    return response.data.secure_url;
+  };
 
-    if (editarOficio) {
-      axios.put(`${BASE_URL}/oficios/${editarOficio.idOficios}`, formData)
-        .then((response) => {
-          const nuevosOficios = oficios.map((o) =>
-            o.idOficios === editarOficio.idOficios ? response.data : o
-          );
-          setOficios(nuevosOficios);
-          setEditarOficio(null);
-          setNombre('');
-          setImagen(null);
-          setMostrarFormulario(false);
-          Swal.fire('Guardado!', 'El oficio ha sido guardado', 'success');
-        })
-        .catch((error) => {
-          console.error(error);
-          Swal.fire('Error!', 'No se pudo guardar el oficio', 'error');
-        });
-    } else {
-      axios.post(`${BASE_URL}/oficios`, formData)
-        .then((response) => {
-          setOficios([...oficios, response.data]);
-          setNombre('');
-          setImagen(null);
-          setMostrarFormulario(false);
-          Swal.fire('Agregado!', 'El oficio ha sido agregado', 'success');
-        })
-        .catch((error) => {
-          console.error(error);
-          Swal.fire('Error!', 'No se pudo agregar el oficio', 'error');
-        });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!nombre) {
+      Swal.fire('Error!', 'Debes ingresar un nombre', 'error');
+      return;
+    }
+
+    try {
+      let urlImagen = null;
+      if (imagen) {
+        urlImagen = await subirImagenCloudinary(imagen);
+      }
+
+      const formData = new FormData();
+      formData.append('nombre', nombre);
+      if (urlImagen) formData.append('urlImagen', urlImagen);
+
+      const response = await axios.post(`${BASE_URL}/oficios/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setOficios([...oficios, response.data]);
+      setNombre('');
+      setImagen(null);
+      setMostrarFormulario(false);
+      Swal.fire('Agregado!', 'El oficio ha sido agregado', 'success');
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error!', 'No se pudo agregar el oficio', 'error');
+    }
+  };
+
+  const handleGuardar = async (oficio) => {
+    try {
+      let urlImagen = oficio.urlImagen;
+      if (imagen) {
+        urlImagen = await subirImagenCloudinary(imagen);
+      }
+
+      const formData = new FormData();
+      formData.append('nombre', oficio.nombre);
+      if (urlImagen) formData.append('urlImagen', urlImagen);
+
+      const response = await axios.put(`${BASE_URL}/oficios/upload/${oficio.idOficios}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setOficios(oficios.map((o) =>
+        o.idOficios === oficio.idOficios ? response.data : o
+      ));
+      setEditarOficio(null);
+      setImagen(null);
+      Swal.fire('Guardado!', 'El oficio ha sido actualizado', 'success');
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error!', 'No se pudo actualizar el oficio', 'error');
     }
   };
 
@@ -86,27 +116,6 @@ const ManejoOficios = () => {
     });
   };
 
-  const handleGuardar = (oficio) => {
-    const formData = new FormData();
-    formData.append('nombre', oficio.nombre);
-    if (imagen) formData.append('imagen', imagen);
-
-    axios.put(`${BASE_URL}/oficios/${oficio.idOficios}`, formData)
-      .then((response) => {
-        const nuevosOficios = oficios.map((o) =>
-          o.idOficios === oficio.idOficios ? response.data : o
-        );
-        setOficios(nuevosOficios);
-        setEditarOficio(null);
-        setImagen(null);
-        Swal.fire('Guardado!', 'El oficio ha sido guardado', 'success');
-      })
-      .catch((error) => {
-        console.error(error);
-        Swal.fire('Error!', 'No se pudo guardar el oficio', 'error');
-      });
-  };
-
   return (
     <div className="manejo-oficios">
       <button onClick={() => setMostrarFormulario(!mostrarFormulario)}>Agregar Oficio</button>
@@ -122,6 +131,7 @@ const ManejoOficios = () => {
           <button type="button" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
         </form>
       )}
+
       <table className="tabla-oficios">
         <thead>
           <tr>

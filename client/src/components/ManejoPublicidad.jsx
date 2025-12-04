@@ -32,27 +32,39 @@ const ManejoPublicidad = () => {
     return response.data.secure_url;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!imagen) {
-      Swal.fire('Error!', 'Debes seleccionar una imagen', 'error');
-      return;
-    }
-    try {
-      const urlImagen = await subirImagenCloudinary(imagen);
-      const nuevaPublicidad = { titulo, urlPagina, urlImagen };
-      const response = await axios.post(`${BASE_URL}/publicidad`, nuevaPublicidad);
-      setPublicidad([...publicidad, response.data]);
-      Swal.fire('Agregado!', 'La publicidad ha sido agregada', 'success');
-      setTitulo('');
-      setUrlPagina('');
-      setImagen(null);
-      setMostrarFormulario(false);
-    } catch (error) {
-      console.error(error);
-      Swal.fire('Error!', 'No se pudo agregar la publicidad', 'error');
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!imagen) {
+    Swal.fire('Error!', 'Debes seleccionar una imagen', 'error');
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('file', imagen);
+    formData.append('titulo', titulo);
+    formData.append('urlPagina', urlPagina);
+
+    const token = localStorage.getItem('token');
+
+    const response = await axios.post(`${BASE_URL}/publicidad/upload`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    setPublicidad([...publicidad, response.data]);
+    Swal.fire('Agregado!', 'La publicidad ha sido agregada', 'success');
+    setTitulo('');
+    setUrlPagina('');
+    setImagen(null);
+    setMostrarFormulario(false);
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error!', 'No se pudo agregar la publicidad', 'error');
+  }
+};
 
   const handleEditar = (item) => {
     setEditarPublicidad(item);
