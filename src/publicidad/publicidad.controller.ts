@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { 
+  Controller, Get, Post, Put, Delete, Body, Param, Query, UploadedFile, UseInterceptors, BadRequestException 
+} from '@nestjs/common';
 import { PublicidadService } from './publicidad.service';
 import { Publicidad } from './publicidad.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -9,12 +11,10 @@ export class PublicidadController {
   constructor(private readonly publicidadService: PublicidadService) {}
 
   @Get()
-  async findAll(@Query('nombre_like') tituloLike: string): Promise<Publicidad[]> {
-    if (tituloLike) {
-      return this.publicidadService.findByNombreLike(tituloLike);
-    } else {
-      return this.publicidadService.findAll();
-    }
+  async findAll(@Query('titulo_like') tituloLike: string): Promise<Publicidad[]> {
+    return tituloLike
+      ? this.publicidadService.findByTituloLike(tituloLike)
+      : this.publicidadService.findAll();
   }
 
   @Get(':id')
@@ -27,34 +27,35 @@ export class PublicidadController {
     return this.publicidadService.delete(id);
   }
 
-  // -----------------------------------
+  // ------------------------
   // Crear publicidad con imagen
-  // -----------------------------------
+  // ------------------------
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async createWithImage(
-    @UploadedFile() file: Express.Multer.File,
-    @Body('titulo') titulo: string,
-    @Body('urlPagina') urlPagina: string,
+    @UploadedFile() file?: Express.Multer.File,
+    @Body('titulo') titulo?: string,
+    @Body('urlPagina') urlPagina?: string,
   ): Promise<Publicidad> {
-    if (!file) throw new Error('Archivo requerido');
-    
-    // Subida a Cloudinary
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: 'publicidad',
-    });
+    if (!titulo) throw new BadRequestException('El título es requerido');
 
-    // Guardar en DB
     const nuevaPublicidad = new Publicidad();
-    nuevaPublicidad.titulo = titulo;
-    nuevaPublicidad.urlPagina = urlPagina;
-    nuevaPublicidad.urlImagen = result.secure_url;
+    nuevaPublicidad.titulo = titulo || '';
+    nuevaPublicidad.urlPagina = urlPagina || '';
 
-    return this.publicidadService.create(nuevaPublicidad);
+    return this.publicidadService.create(nuevaPublicidad, file);
   }
 
+  // ------------------------
+  // Actualizar publicidad con imagen opcional
+  // ------------------------
   @Put(':id')
-  async update(@Param('id') id: number, @Body() publicidad: Publicidad): Promise<Publicidad> {
-    return this.publicidadService.update(id, publicidad);
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
+    @Param('id') id: number,
+    @Body() publicidad: Publicidad,
+    @UploadedFile() file?: Express.Multer.File,
+  ): Promise<Publicidad> {
+    return this.publicidadService.update(id, publicidad, file);
   }
 }
