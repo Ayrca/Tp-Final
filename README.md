@@ -3,7 +3,7 @@
 AFIP es una plataforma web que permite a usuarios encontrar, contactar y contratar profesionales de diversos oficios, mientras que los profesionales pueden gestionar sus trabajos, su perfil y su disponibilidad.  
 El sistema incluye también un panel administrativo completo para la gestión de usuarios, oficios y publicidades.
 
-Desarrollado por *Ignacio Amaya, **Paula Fernández* y *Francisco Arcidiácono*.
+Desarrollado por *Ignacio Amaya*, *Paula Fernández* y *Francisco Arcidiácono*.
 
 ---
 
