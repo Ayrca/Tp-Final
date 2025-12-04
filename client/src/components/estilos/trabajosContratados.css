@@ -182,3 +182,75 @@
   color: #555;
   font-weight: 500;
 }
+
+/* ------------------------------
+   RESPONSIVE: Tablets y móviles
+--------------------------------*/
+
+/* Tablets: ancho < 1024px */
+@media (max-width: 1024px) {
+  .trabajos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .tarjeta-trabajo {
+    width: 100%; /* ocupa todo el ancho disponible en la columna */
+    padding: 16px;
+  }
+
+  .trabajos-contratados p {
+    font-size: 0.9rem;
+  }
+
+  .botones-trabajo {
+    gap: 12px;
+  }
+
+  .botones-trabajo button {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Móviles: ancho < 600px */
+@media (max-width: 600px) {
+  .trabajos-grid {
+    grid-template-columns: 1fr; /* una columna */
+    gap: 12px;
+  }
+
+  .tarjeta-trabajo {
+    width: 95%; /* dejar un pequeño margen lateral */
+    padding: 14px;
+  }
+
+  .trabajos-contratados p {
+    font-size: 0.85rem;
+  }
+
+  .botones-trabajo {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .botones-trabajo button {
+    width: 100%;
+    padding: 8px 0;
+    font-size: 0.9rem;
+  }
+
+  .gallery-pagination {
+    gap: 8px;
+  }
+
+  .pag-btn {
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+
+  .pag-indicator {
+    font-size: 14px;
+  }
+}
