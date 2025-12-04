@@ -63,7 +63,7 @@ El sistema está dividido en tres capas:
 - Agregar descripción de su servicio.
 - Ver trabajos pendientes, finalizados y cancelados.
 - Finalizar o cancelar trabajos (sin dejar valoración).
-- Cambiar su estado a *Disponible* o *No Disponible*  
+- Cambiar su estado a **Disponible** o **No Disponible**  
   (si está No Disponible no puede ser contratado).
 
 ---
