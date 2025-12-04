@@ -4,7 +4,7 @@ import axios from 'axios';
 import './estilos/PerfilComercial.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const CLOUDINARY_URL = 'https://res.cloudinary.com/<tu-cuenta>/image/upload/';
+const CLOUDINARY_URL = 'https://res.cloudinary.com/ddadtpm2o/image/upload/';
 
 const PerfilComercial = () => {
   const location = useLocation();

@@ -8,7 +8,7 @@ import PerfilAdmin from './PerfilAdmin';
 import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const CLOUDINARY_URL = 'https://res.cloudinary.com/<tu-cuenta>/image/upload/';
+const CLOUDINARY_URL = 'https://res.cloudinary.com/ddadtpm2o/image/upload/';
 
 const PerfUsuario = () => {
   const [usuario, setUsuario] = useState({});
