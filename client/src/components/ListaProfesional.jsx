@@ -273,7 +273,7 @@ const ListaProfesional = () => {
                             }}
                             disabled={!profesional.disponible}
                           >
-                            Conectar
+                            Contactar
                           </button>
 
                           <button
