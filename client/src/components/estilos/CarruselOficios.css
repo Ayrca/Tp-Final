@@ -165,21 +165,14 @@
   }
 }
 
-/* Ajustes para notebooks pequeñas */
-@media (max-width: 1200px) {
-  .oficio-card {
-    width: 280px;
-    height: 380px;
+@media (max-width: 900px) {
+  .oficio-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .oficio-img-container {
-    height: 250px;
-  }
-}
-
-/* Ajustes para monitores medianos */
-@media (max-width: 1600px) {
   .oficio-card {
-    width: 320px;
+    scroll-snap-align: start;
   }
 }
