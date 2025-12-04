@@ -6,11 +6,11 @@ export declare class ImagenController {
     private readonly usuarioService;
     private readonly profesionalService;
     constructor(imagenService: ImagenService, usuarioService: UsuarioService, profesionalService: ProfesionalService);
-    uploadImage(file: any, idProfesional: number): Promise<any>;
+    uploadImage(file: Express.Multer.File, idProfesional: number): Promise<any>;
     getImage(id: number): Promise<{
         url: string;
     }[]>;
-    cambiarAvatar(file: any, idUsuario: number, tipoUsuario: 'comun' | 'profesional'): Promise<{
+    cambiarAvatar(file: Express.Multer.File, idUsuario: number, tipoUsuario: 'comun' | 'profesional'): Promise<{
         avatar: string;
     }>;
 }

@@ -19,7 +19,14 @@ const CarruselOficios = () => {
   useEffect(() => {
     axios
       .get(`${BASE_URL}/oficios`)
-      .then((response) => setOficios(response.data))
+      .then((response) => {
+        // Agregamos fallback a la url de cada oficio
+        const dataWithFallback = response.data.map((oficio) => ({
+          ...oficio,
+          urlImagen: oficio.urlImagen || "/assets/images/default-oficio.png",
+        }));
+        setOficios(dataWithFallback);
+      })
       .catch((error) => console.error(error));
   }, []);
 

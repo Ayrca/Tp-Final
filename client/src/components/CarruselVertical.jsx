@@ -17,8 +17,12 @@ const CarruselVertical = ({ imagenes }) => {
         baseList = [...baseList, ...imagenes];
       }
 
-      // Para efecto infinito, triplicamos
-      const listaFinal = [...baseList, ...baseList, ...baseList];
+      // Para efecto infinito, triplicamos y agregamos fallback de imagen
+      const listaFinal = [...baseList, ...baseList, ...baseList].map((pub) => ({
+        ...pub,
+        urlImagen: pub.urlImagen || "/assets/images/default-publicidad.png", // fallback
+      }));
+
       setPublicidad(listaFinal);
     }
   }, [imagenes]);

@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { AvatarImagenController } from './avatarImagen.controller';
@@ -6,13 +5,13 @@ import { AvatarImagenService } from './avatarImagen.service';
 import { Usuario } from '../usuario/usuario.entity';
 import { Profesional } from '../profesional/profesional.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import * as multer from 'multer';
 
 @Module({
   imports: [
-     TypeOrmModule.forFeature([Usuario, Profesional]),
+    TypeOrmModule.forFeature([Usuario, Profesional]),
     MulterModule.register({
-      dest: './client/public/assets/imagenesDePerfilesUsuarios',
+      storage: multer.memoryStorage(), // archivos en memoria para subir a Cloudinary
       fileFilter: (req, file, cb) => {
         const allowedMimeTypes = [
           'image/jpeg',  // JPG y JPEG
@@ -32,10 +31,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         fileSize: 1024 * 1024 * 5, // 5MB
       },
     }),
-  
   ],
   controllers: [AvatarImagenController],
   providers: [AvatarImagenService],
 })
-
 export class AvatarImagenModule {}

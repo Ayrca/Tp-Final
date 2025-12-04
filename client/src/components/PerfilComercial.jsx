@@ -4,6 +4,7 @@ import axios from 'axios';
 import './estilos/PerfilComercial.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CLOUDINARY_URL = 'https://res.cloudinary.com/<tu-cuenta>/image/upload/';
 
 const PerfilComercial = () => {
   const location = useLocation();
@@ -37,13 +38,11 @@ const PerfilComercial = () => {
       axios.get(`${BASE_URL}/trabajoContratado/${profesional.idusuarioProfesional}`)
         .then((response) => {
           if (Array.isArray(response.data)) {
-            // Ordenar por fecha descendente
             const trabajosOrdenados = response.data.sort(
               (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
             );
             setTrabajos(trabajosOrdenados);
 
-            // Calcular valoración promedio
             const trabajosValorados = trabajosOrdenados.filter(t => t.valoracion && t.valoracion > 0);
             if (trabajosValorados.length > 0) {
               const suma = trabajosValorados.reduce((acc, t) => acc + t.valoracion, 0);
@@ -51,7 +50,6 @@ const PerfilComercial = () => {
             } else {
               setValoracionPromedio(0);
             }
-
           } else setError("La respuesta de la API no es un array");
         })
         .catch((error) => setError(error.message));
@@ -60,23 +58,20 @@ const PerfilComercial = () => {
 
   if (!profesional) return <div>No se encontró el perfil</div>;
 
-// Helper para renderizar estrellas (completo y media estrella)
   const renderEstrellas = (valoracion) => {
-    const totalEstrellas = 5;
+    const maxEstrellas = 5;
     const estrellasCompletas = Math.floor(valoracion);
     const decimal = valoracion - estrellasCompletas;
+    const tieneMediaEstrella = decimal >= 0.5 && decimal < 1;
 
-    const tieneMediaEstrella = decimal === 0.5;
-    const estrellasFinales = decimal > 0.5 ? estrellasCompletas + 1 : estrellasCompletas;
-
-    return Array.from({ length: totalEstrellas }, (_, i) => {
-      if (i < estrellasFinales) return <span key={i} className="estrella llena">★</span>;
+    return [...Array(maxEstrellas)].map((_, i) => {
+      if (i < estrellasCompletas) return <span key={i} className="estrella llena">★</span>;
       if (i === estrellasCompletas && tieneMediaEstrella) return <span key={i} className="estrella media">★</span>;
       return <span key={i} className="estrella vacia">☆</span>;
     });
   };
 
-  // CALCULO GALERÍA
+  // GALERÍA
   const totalPaginasGaleria = Math.ceil(imagenes.length / imagenesPorPagina);
   const inicioGaleria = (galeriaPagina - 1) * imagenesPorPagina;
   const imagenesPagina = imagenes.slice(inicioGaleria, inicioGaleria + imagenesPorPagina);
@@ -89,7 +84,7 @@ const PerfilComercial = () => {
     }, 300);
   };
 
-  // CALCULO TRABAJOS
+  // TRABAJOS
   const totalPaginasTrabajos = Math.ceil(trabajos.length / trabajosPorPagina);
   const inicioTrabajos = (paginaActual - 1) * trabajosPorPagina;
   const trabajosPagina = trabajos.slice(inicioTrabajos, inicioTrabajos + trabajosPorPagina);
@@ -122,7 +117,7 @@ const PerfilComercial = () => {
             profesional.avatar
               ? profesional.avatar.startsWith('http')
                 ? profesional.avatar
-                : `${BASE_URL}${profesional.avatar}`
+                : `${CLOUDINARY_URL}${profesional.avatar}`
               : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png'
           }
           alt={profesional.nombre}
@@ -145,7 +140,12 @@ const PerfilComercial = () => {
       <div className={`imagenes-comercial-container gallery-grid ${fadeGaleria}`}>
         {imagenesPagina.length > 0 ? (
           imagenesPagina.map((img, i) => (
-            <img key={i} src={img.url} alt="" className="gallery-img" />
+            <img
+              key={i}
+              src={img.url.startsWith('http') ? img.url : `${CLOUDINARY_URL}${img.url}`}
+              alt=""
+              className="gallery-img"
+            />
           ))
         ) : (
           <p>No hay imágenes disponibles</p>
@@ -211,7 +211,7 @@ const PerfilComercial = () => {
         )}
       </div>
 
-      {/* PAGINACION TRABAJOS */}
+      {/* PAGINACIÓN TRABAJOS */}
       {totalPaginasTrabajos > 1 && (
         <div className="gallery-pagination">
           <button

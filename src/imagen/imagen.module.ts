@@ -1,20 +1,20 @@
-
-
 import { Module } from '@nestjs/common';
 import { ImagenController } from './imagen.controller';
 import { ImagenService } from './imagen.service';
 import { MulterModule } from '@nestjs/platform-express';
-import { Imagen } from './imagen.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { extname } from 'path';
+import { Imagen } from './imagen.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { Profesional } from '../profesional/profesional.entity';
 import { UsuarioModule } from '../usuario/usuario.module';
 import { ProfesionalModule } from '../profesional/profesional.module';
+import * as multer from 'multer';
+
 @Module({
   imports: [
+    // Multer ahora en memoria, sin guardar archivos localmente
     MulterModule.register({
-      dest: './client/public/assets/imagenesUsuariosProfesionales',
+      storage: multer.memoryStorage(),
       fileFilter: (req, file, cb) => {
         const allowedMimeTypes = [
           'image/jpeg',  // JPG y JPEG

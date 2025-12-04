@@ -1,4 +1,4 @@
 export declare class ImagenPropagandaService {
-    subirImagen(imagen: any): Promise<string>;
-    borrarImagen(nombreImagen: string): Promise<void>;
+    subirImagen(imagen: Express.Multer.File): Promise<string>;
+    borrarImagen(publicId: string): Promise<void>;
 }

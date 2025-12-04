@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AvatarImagenService = void 0;
 const common_1 = require("@nestjs/common");
@@ -18,6 +21,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const usuario_entity_1 = require("../usuario/usuario.entity");
 const profesional_entity_1 = require("../profesional/profesional.entity");
+const cloudinary_config_1 = __importDefault(require("../cloudinary.config"));
 let AvatarImagenService = class AvatarImagenService {
     usuarioRepository;
     profesionalRepository;
@@ -26,18 +30,30 @@ let AvatarImagenService = class AvatarImagenService {
         this.profesionalRepository = profesionalRepository;
     }
     async subirAvatar(file, idUsuario, tipoUsuario) {
+        if (!file)
+            throw new common_1.BadRequestException('No se recibió ninguna imagen');
         try {
+            const urlImagen = await new Promise((resolve, reject) => {
+                const stream = cloudinary_config_1.default.uploader.upload_stream({ folder: 'avatars' }, (error, result) => {
+                    if (error)
+                        return reject(error);
+                    if (!result || !result.secure_url)
+                        return reject(new Error('No se obtuvo URL de Cloudinary'));
+                    resolve(result.secure_url);
+                });
+                stream.end(file.buffer);
+            });
             if (tipoUsuario === 'profesional') {
-                await this.profesionalRepository.update(idUsuario, { avatar: `/assets/imagenesDePerfilesUsuarios/${file.filename}` });
+                await this.profesionalRepository.update(idUsuario, { avatar: urlImagen });
             }
             else {
-                await this.usuarioRepository.update(idUsuario, { avatar: `/assets/imagenesDePerfilesUsuarios/${file.filename}` });
+                await this.usuarioRepository.update(idUsuario, { avatar: urlImagen });
             }
-            return { avatar: `/assets/imagenesDePerfilesUsuarios/${file.filename}` };
+            return { avatar: urlImagen };
         }
         catch (error) {
-            console.error('Error al subir la imagen:', error);
-            throw new Error('Error al subir el avatar');
+            console.error('Error al subir la imagen a Cloudinary:', error);
+            throw new common_1.BadRequestException('Error al subir el avatar');
         }
     }
     async obtenerUsuario(idUsuario, tipoUsuario) {
