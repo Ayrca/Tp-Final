@@ -22,7 +22,7 @@ const PreRegistro = () => {
               className="btn-opcion" 
               onClick={() => handleTipoCuenta('Cliente')}
             >
-              Usuario
+              Cliente
             </button>
 
             <button 

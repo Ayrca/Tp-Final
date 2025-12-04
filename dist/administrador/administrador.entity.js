@@ -52,6 +52,12 @@ let Administrador = class Administrador {
     tipo;
     email;
     password;
+    async hashPassword() {
+        if (this.password && !this.password.startsWith('$2b$')) {
+            const salt = await bcrypt.genSalt(10);
+            this.password = await bcrypt.hash(this.password, salt);
+        }
+    }
     async comparePassword(password) {
         return bcrypt.compare(password, this.password);
     }
@@ -81,6 +87,13 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Administrador.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.BeforeInsert)(),
+    (0, typeorm_1.BeforeUpdate)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Administrador.prototype, "hashPassword", null);
 exports.Administrador = Administrador = __decorate([
     (0, typeorm_1.Entity)('usuarioadm')
 ], Administrador);
