@@ -9,7 +9,7 @@ import './estilos/ListaProfesionales.css';
 import './estilos/ListaProfesionalesMobile.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-const CLOUDINARY_URL = 'https://res.cloudinary.com/<tu-cuenta>/image/upload/';
+const CLOUDINARY_URL = 'https://res.cloudinary.com/ddadtpm2o/image/upload/';
 const ITEMS_PER_PAGE = 8;
 
 const getIdUsuarioLogueado = () => {
