@@ -61,19 +61,20 @@ const PerfilComercial = () => {
   if (!profesional) return <div>No se encontró el perfil</div>;
 
 // Helper para renderizar estrellas (completo y media estrella)
-const renderEstrellas = (valoracion) => {
-  const maxEstrellas = 5;
-  const estrellasCompletas = Math.floor(valoracion);
-  const decimal = valoracion - estrellasCompletas;
-  const tieneMediaEstrella = decimal >= 0.5 && decimal < 1;
-  const estrellasFinales = decimal > 0.5 ? estrellasCompletas + 1 : estrellasCompletas;
+  const renderEstrellas = (valoracion) => {
+    const totalEstrellas = 5;
+    const estrellasCompletas = Math.floor(valoracion);
+    const decimal = valoracion - estrellasCompletas;
 
-  return [...Array(maxEstrellas)].map((_, i) => {
-    if (i < estrellasCompletas) return <span key={i} className="estrella llena">★</span>;
-    if (i === estrellasCompletas && tieneMediaEstrella) return <span key={i} className="estrella media">★</span>;
-    return <span key={i} className="estrella vacia">☆</span>;
-  });
-};
+    const tieneMediaEstrella = decimal === 0.5;
+    const estrellasFinales = decimal > 0.5 ? estrellasCompletas + 1 : estrellasCompletas;
+
+    return Array.from({ length: totalEstrellas }, (_, i) => {
+      if (i < estrellasFinales) return <span key={i} className="estrella llena">★</span>;
+      if (i === estrellasCompletas && tieneMediaEstrella) return <span key={i} className="estrella media">★</span>;
+      return <span key={i} className="estrella vacia">☆</span>;
+    });
+  };
 
   // CALCULO GALERÍA
   const totalPaginasGaleria = Math.ceil(imagenes.length / imagenesPorPagina);
