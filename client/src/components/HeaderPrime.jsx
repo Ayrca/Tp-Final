@@ -62,11 +62,9 @@ const HeaderPrime = () => {
       setDropdownOpen(false);
       Swal.fire('Éxito', 'Has iniciado sesión correctamente', 'success').then(() => navigate('/'));
     } catch (error) {
-      if (error.response?.data?.message) {
-        Swal.fire('Error', error.response.data.message, 'error');
-      } else {
-        console.error(error);
-      }
+      // Mostrar mensaje de error o baneo
+      const mensaje = error.response?.data?.message || 'Error al iniciar sesión';
+      Swal.fire('Error', mensaje, 'error');
     }
   };
 
@@ -75,11 +73,6 @@ const HeaderPrime = () => {
     setIsLoggedIn(false);
     setDropdownOpen(false);
     navigate('/');
-  };
-
-  const handleDropdownItemClick = (callback) => {
-    callback();
-    setDropdownOpen(false);
   };
 
   return (
@@ -129,68 +122,67 @@ const HeaderPrime = () => {
 
               <div className="modal-body">
                 <form className="login-form" onSubmit={handleSubmit}>
-              <div className="form-floating">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                />
-                <label>Email</label>
-              </div>
+                  <div className="form-floating">
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      required
+                    />
+                    <label>Email</label>
+                  </div>
 
-              <div className="form-floating password-wrapper">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Contraseña"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                />
-                <label>Contraseña</label>
-                <button
-                  type="button"
-                  className="toggle-password"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <img
-                    src={showPassword ? "../assets/images/eye-open.png" : "../assets/images/eye-closed.png"}
-                    alt="Toggle password"
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                </button>
-              </div>
+                  <div className="form-floating password-wrapper">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Contraseña"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      required
+                    />
+                    <label>Contraseña</label>
+                    <button
+                      type="button"
+                      className="toggle-password"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      <img
+                        src={showPassword ? "../assets/images/eye-open.png" : "../assets/images/eye-closed.png"}
+                        alt="Toggle password"
+                        style={{ width: '20px', height: '20px' }}
+                      />
+                    </button>
+                  </div>
 
-              <div className="form-check">
-                <input type="checkbox" id="rememberMe" />
-                <label htmlFor="rememberMe">Recordarme</label>
-              </div>
+                  <div className="form-check">
+                    <input type="checkbox" id="rememberMe" />
+                    <label htmlFor="rememberMe">Recordarme</label>
+                  </div>
 
-              <div className="forgot-password">
-                <Link
-                  to="/RecuperoPassword"
-                  onClick={() => setShowModal(false)}
-                >
-                  Recuperar contraseña
-                </Link>
-              </div>
+                  <div className="forgot-password">
+                    <Link
+                      to="/RecuperoPassword"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Recuperar contraseña
+                    </Link>
+                  </div>
 
-              <div className="login-actions">
-                <button type="submit" className="btn btn-primary">Ingresar</button>
-                <button
-                  type="button"
-                  className="btn btn-dark"
-                  onClick={() => {
-                    setShowModal(false);
-                    navigate("/pre-registro");
-                  }}
-                >
-                  Registrarse
-                </button>                  
-              </div>
-            </form>
-
+                  <div className="login-actions">
+                    <button type="submit" className="btn btn-primary">Ingresar</button>
+                    <button
+                      type="button"
+                      className="btn btn-dark"
+                      onClick={() => {
+                        setShowModal(false);
+                        navigate("/pre-registro");
+                      }}
+                    >
+                      Registrarse
+                    </button>                  
+                  </div>
+                </form>
               </div>
             </div>
           </div>
