@@ -11,28 +11,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PublicidadController = void 0;
 const common_1 = require("@nestjs/common");
 const publicidad_service_1 = require("./publicidad.service");
 const publicidad_entity_1 = require("./publicidad.entity");
 const platform_express_1 = require("@nestjs/platform-express");
-const cloudinary_config_1 = __importDefault(require("../cloudinary.config"));
 let PublicidadController = class PublicidadController {
     publicidadService;
     constructor(publicidadService) {
         this.publicidadService = publicidadService;
     }
     async findAll(tituloLike) {
-        if (tituloLike) {
-            return this.publicidadService.findByNombreLike(tituloLike);
-        }
-        else {
-            return this.publicidadService.findAll();
-        }
+        return tituloLike
+            ? this.publicidadService.findByTituloLike(tituloLike)
+            : this.publicidadService.findAll();
     }
     async findOne(id) {
         return this.publicidadService.findOne(id);
@@ -41,25 +34,21 @@ let PublicidadController = class PublicidadController {
         return this.publicidadService.delete(id);
     }
     async createWithImage(file, titulo, urlPagina) {
-        if (!file)
-            throw new Error('Archivo requerido');
-        const result = await cloudinary_config_1.default.uploader.upload(file.path, {
-            folder: 'publicidad',
-        });
+        if (!titulo)
+            throw new common_1.BadRequestException('El título es requerido');
         const nuevaPublicidad = new publicidad_entity_1.Publicidad();
-        nuevaPublicidad.titulo = titulo;
-        nuevaPublicidad.urlPagina = urlPagina;
-        nuevaPublicidad.urlImagen = result.secure_url;
-        return this.publicidadService.create(nuevaPublicidad);
+        nuevaPublicidad.titulo = titulo || '';
+        nuevaPublicidad.urlPagina = urlPagina || '';
+        return this.publicidadService.create(nuevaPublicidad, file);
     }
-    async update(id, publicidad) {
-        return this.publicidadService.update(id, publicidad);
+    async update(id, publicidad, file) {
+        return this.publicidadService.update(id, publicidad, file);
     }
 };
 exports.PublicidadController = PublicidadController;
 __decorate([
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)('nombre_like')),
+    __param(0, (0, common_1.Query)('titulo_like')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
@@ -90,10 +79,12 @@ __decorate([
 ], PublicidadController.prototype, "createWithImage", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, publicidad_entity_1.Publicidad]),
+    __metadata("design:paramtypes", [Number, publicidad_entity_1.Publicidad, Object]),
     __metadata("design:returntype", Promise)
 ], PublicidadController.prototype, "update", null);
 exports.PublicidadController = PublicidadController = __decorate([

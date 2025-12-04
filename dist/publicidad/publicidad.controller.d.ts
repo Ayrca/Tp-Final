@@ -6,6 +6,6 @@ export declare class PublicidadController {
     findAll(tituloLike: string): Promise<Publicidad[]>;
     findOne(id: number): Promise<Publicidad>;
     delete(id: number): Promise<void>;
-    createWithImage(file: Express.Multer.File, titulo: string, urlPagina: string): Promise<Publicidad>;
-    update(id: number, publicidad: Publicidad): Promise<Publicidad>;
+    createWithImage(file?: Express.Multer.File, titulo?: string, urlPagina?: string): Promise<Publicidad>;
+    update(id: number, publicidad: Publicidad, file?: Express.Multer.File): Promise<Publicidad>;
 }

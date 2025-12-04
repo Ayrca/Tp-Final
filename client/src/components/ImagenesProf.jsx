@@ -1,125 +1,182 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './estilos/ImagenesProf.css';
+import Swal from 'sweetalert2';
+import './estilos/ManejoPublicidad.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const ImagenesProf = ({ idProfesional }) => {
-  const [imagenes, setImagenes] = useState([]);
-  const [file, setFile] = useState(null);
-  const [reload, setReload] = useState(false);
+const ManejoPublicidad = () => {
+  const [publicidad, setPublicidad] = useState([]);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [titulo, setTitulo] = useState('');
+  const [urlPagina, setUrlPagina] = useState('');
+  const [file, setFile] = useState(null); // ⚡ Archivo real
+  const [editarPublicidad, setEditarPublicidad] = useState(null);
 
-  // PAGINACIÓN
-  const [paginaActual, setPaginaActual] = useState(1);
-  const [fadeImagenes, setFadeImagenes] = useState("fade-in");
-  const imagenesPorPagina = 9;
-
-  const indexUltima = paginaActual * imagenesPorPagina;
-  const indexPrimera = indexUltima - imagenesPorPagina;
-  const imagenesPagina = imagenes.slice(indexPrimera, indexUltima);
-  const totalPaginas = Math.ceil(imagenes.length / imagenesPorPagina);
-
-  // Obtener imágenes del backend
   useEffect(() => {
-    if (!idProfesional) return;
+    axios.get(`${BASE_URL}/publicidad`)
+      .then((res) => setPublicidad(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
-    axios.get(`${BASE_URL}/imagen/${idProfesional}`)
-      .then((response) => setImagenes(response.data.reverse()))
-      .catch((error) => console.error(error));
-  }, [idProfesional, reload]);
-
-  // Subir imagen al backend (igual que avatar)
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!file) return;
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Debes estar logueado para subir imágenes');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) {
+      Swal.fire('Error!', 'Debes seleccionar una imagen', 'error');
       return;
     }
 
     try {
       const formData = new FormData();
-      formData.append('file', file); // ⚡ File real
+      formData.append('file', file);
+      formData.append('titulo', titulo);
+      formData.append('urlPagina', urlPagina);
 
-      const response = await axios.post(
-        `${BASE_URL}/imagen/upload/${idProfesional}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      const token = localStorage.getItem('token');
 
-      // Backend devuelve la URL subida a Cloudinary
-      console.log('Imagen subida:', response.data);
+      const response = await axios.post(`${BASE_URL}/publicidad/upload`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-      // Limpiar input y recargar imágenes
+      setPublicidad([response.data, ...publicidad]);
+      Swal.fire('Agregado!', 'La publicidad ha sido agregada', 'success');
+
+      setTitulo('');
+      setUrlPagina('');
       setFile(null);
-      document.getElementById('file-input').value = '';
-      setReload(prev => !prev);
+      setMostrarFormulario(false);
     } catch (error) {
-      console.error('Error al subir imagen:', error);
-      alert('Ocurrió un error al subir la imagen');
+      console.error(error);
+      Swal.fire('Error!', 'No se pudo agregar la publicidad', 'error');
     }
   };
 
-  const cambiarPagina = (nueva) => {
-    setFadeImagenes("fade-out"); 
-    setTimeout(() => {
-      setPaginaActual(nueva);     
-      setFadeImagenes("fade-in"); 
-    }, 300);
+  const handleEditar = (item) => setEditarPublicidad(item);
+  const handleCancelar = () => { setEditarPublicidad(null); setFile(null); };
+
+  const handleGuardar = async (item) => {
+    try {
+      const formData = new FormData();
+      formData.append('titulo', item.titulo);
+      formData.append('urlPagina', item.urlPagina);
+      if (file) formData.append('file', file);
+
+      const token = localStorage.getItem('token');
+
+      const response = await axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setPublicidad(publicidad.map(p => p.idpublicidad === item.idpublicidad ? response.data : p));
+      setEditarPublicidad(null);
+      setFile(null);
+      Swal.fire('Guardado!', 'La publicidad ha sido actualizada', 'success');
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error!', 'No se pudo actualizar la publicidad', 'error');
+    }
+  };
+
+  const handleBorrar = async (item) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir este cambio',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, borrar'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${BASE_URL}/publicidad/${item.idpublicidad}`);
+        setPublicidad(publicidad.filter(p => p.idpublicidad !== item.idpublicidad));
+        Swal.fire('Borrado!', 'La publicidad ha sido borrada', 'success');
+      } catch (error) {
+        console.error(error);
+        Swal.fire('Error!', 'No se pudo borrar la publicidad', 'error');
+      }
+    }
   };
 
   return (
-    <div className='cajaImagenes'>
-      <h3>Imágenes de Trabajos anteriores</h3>
+    <div className="manejo-publicidad">
+      <button onClick={() => setMostrarFormulario(!mostrarFormulario)}>Agregar Publicidad</button>
 
-      <div className={`imagenes-container ${fadeImagenes}`}>
-        {imagenesPagina.map((imagen, index) => (
-        <img key={index} src={imagen.url} alt="Imagen" />
-        ))}
-      </div>
-
-      {totalPaginas > 1 && (
-        <div className="gallery-pagination">
-          <button
-            className="pag-btn"
-            disabled={paginaActual === 1}
-            onClick={() => cambiarPagina(paginaActual - 1)}
-          >
-            ◀
-          </button>
-
-          <span className="pag-indicator">
-            {paginaActual} / {totalPaginas}
-          </span>
-
-          <button
-            className="pag-btn"
-            disabled={paginaActual === totalPaginas}
-            onClick={() => cambiarPagina(paginaActual + 1)}
-          >
-            ▶
-          </button>
-        </div>
+      {mostrarFormulario && (
+        <form onSubmit={handleSubmit}>
+          <label>Título:</label>
+          <input type="text" value={titulo} onChange={e => setTitulo(e.target.value)} />
+          <br />
+          <label>URL de la Página:</label>
+          <input type="text" value={urlPagina} onChange={e => setUrlPagina(e.target.value)} />
+          <br />
+          <label>Imagen:</label>
+          <input type="file" onChange={e => setFile(e.target.files[0])} />
+          <br />
+          <button type="submit">Agregar Publicidad</button>
+          <button type="button" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+        </form>
       )}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="file"
-          id="file-input"
-          accept="image/*"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-        <button type="submit" id="agregar-imagen">Agregar imagen</button>
-      </form>
+      <table className="tabla-publicidad">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Imagen</th>
+            <th>URL Pagina</th>
+            <th>Titulo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {publicidad.map(item => (
+            <tr key={item.idpublicidad}>
+              <td>{item.idpublicidad}</td>
+              <td>
+                {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
+                  <div>
+                    <input type="file" onChange={e => setFile(e.target.files[0])} />
+                    {file && <p>Imagen seleccionada: {file.name}</p>}
+                  </div>
+                ) : (
+                  <img src={item.urlImagen} alt="Publicidad" width="100" height="100" />
+                )}
+              </td>
+              <td>
+                {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
+                  <input type="text" value={editarPublicidad.urlPagina} onChange={e => setEditarPublicidad({ ...editarPublicidad, urlPagina: e.target.value })} />
+                ) : item.urlPagina}
+              </td>
+              <td>
+                {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
+                  <input type="text" value={editarPublicidad.titulo} onChange={e => setEditarPublicidad({ ...editarPublicidad, titulo: e.target.value })} />
+                ) : item.titulo}
+              </td>
+              <td>
+                {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
+                  <div>
+                    <button onClick={() => handleGuardar(editarPublicidad)}>Guardar</button>
+                    <button onClick={handleCancelar}>Cancelar</button>
+                  </div>
+                ) : (
+                  <div>
+                    <button onClick={() => handleEditar(item)}>Editar</button>
+                    <button onClick={() => handleBorrar(item)}>Borrar</button>
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
 
-export default ImagenesProf;
+export default ManejoPublicidad;
