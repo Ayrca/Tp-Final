@@ -28,7 +28,7 @@ const ManejoPublicidad = () => {
     if (!token) throw new Error('No estás logueado');
 
     const response = await axios.post(
-      `${BASE_URL}/publicidad/upload`, // ⚡ endpoint backend para subir imágenes
+      `${BASE_URL}/publicidad/upload`,
       formData,
       {
         headers: {
@@ -38,7 +38,7 @@ const ManejoPublicidad = () => {
       }
     );
 
-    return response.data.url; // backend devuelve { url: 'https://...' }
+    return response.data.url;
   };
 
 const handleSubmit = async (e) => {
