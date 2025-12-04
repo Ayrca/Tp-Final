@@ -3,7 +3,7 @@
 AFIP es una plataforma web que permite a usuarios encontrar, contactar y contratar profesionales de diversos oficios, mientras que los profesionales pueden gestionar sus trabajos, su perfil y su disponibilidad.  
 El sistema incluye también un panel administrativo completo para la gestión de usuarios, oficios y publicidades.
 
-Desarrollado por **Francisco Arcidiacono**, **Paula Fernández** e **Ignacio Amaya**.
+Desarrollado por *Ignacio Amaya, **Paula Fernández* y *Francisco Arcidiácono*.
 
 ---
 
@@ -14,14 +14,15 @@ Desarrollado por **Francisco Arcidiacono**, **Paula Fernández** e **Ignacio Ama
 - Axios  
 - SweetAlert2  
 - CSS  
-- Deploy: **Vercel**
+- Deploy: *Vercel*
+- Almacenamiento de imágenes: Cloudinary
 
 ### Backend
 - NestJS  
 - JWT Authentication  
 - Bcrypt  
 - TypeORM  
-- Deploy: **Railway**
+- Deploy: *Railway*
 
 ### Base de Datos
 - MySQL (Railway)
@@ -31,13 +32,14 @@ Desarrollado por **Francisco Arcidiacono**, **Paula Fernández** e **Ignacio Ama
 ## 🔧 Arquitectura
 El sistema está dividido en tres capas:
 
-1. **Frontend (React)**:  
+1. *Frontend (React)*:  
    Interfaz para clientes, profesionales y administradores.
+   Las imágenes de trabajos y perfiles se gestionan a través de Cloudinary.
 
-2. **Backend (NestJS)**:  
+2. *Backend (NestJS)*:  
    API REST responsable de autenticación, lógica de negocio, validación, contratación, valoraciones y módulo de administración.
 
-3. **Base de datos (MySQL)**:  
+3. *Base de datos (MySQL)*:  
    Persistencia de usuarios, oficios, trabajos, valoraciones, fotos y publicidad.
 
 ---
