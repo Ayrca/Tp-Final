@@ -2,7 +2,6 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import { Publicidad } from './publicidad.entity';
-import cloudinary from '../cloudinary.config';
 
 @Injectable()
 export class PublicidadService {
@@ -12,67 +11,49 @@ export class PublicidadService {
   ) {}
 
   // ------------------------
-  // Obtener todas las publicidades
+  // Obtener todos los registros
   // ------------------------
   async findAll(): Promise<Publicidad[]> {
     return this.publicidadRepository.find();
   }
 
   // ------------------------
-  // Obtener publicidad por ID
+  // Obtener uno por ID
   // ------------------------
   async findOne(id: number): Promise<Publicidad> {
-    const publicidad = await this.publicidadRepository.findOneBy({ idpublicidad: id });
-    if (!publicidad) throw new BadRequestException(`Publicidad con id ${id} no encontrada`);
-    return publicidad;
+    const pub = await this.publicidadRepository.findOneBy({ idpublicidad: id });
+    if (!pub) throw new BadRequestException(`Publicidad con id ${id} no encontrada`);
+    return pub;
   }
 
   // ------------------------
-  // Crear nueva publicidad con imagen opcional
+  // Crear registro
   // ------------------------
-  async create(publicidad: Publicidad, file?: Express.Multer.File): Promise<Publicidad> {
-    if (file) {
-      const result = await cloudinary.uploader.upload(file.path, {
-        folder: `publicidad/${publicidad.titulo}`,
-      });
-      publicidad.urlImagen = result.secure_url;
-    }
+  async create(publicidad: Publicidad): Promise<Publicidad> {
     return this.publicidadRepository.save(publicidad);
   }
 
   // ------------------------
-  // Actualizar publicidad existente
+  // Actualizar registro
   // ------------------------
-  async update(id: number, publicidad: Publicidad, file?: Express.Multer.File): Promise<Publicidad> {
-    const publicidadToUpdate = await this.publicidadRepository.findOneBy({ idpublicidad: id });
-    if (!publicidadToUpdate) throw new BadRequestException(`Publicidad con id ${id} no encontrada`);
-
-    publicidadToUpdate.titulo = publicidad.titulo;
-    publicidadToUpdate.urlPagina = publicidad.urlPagina;
-
-    if (file) {
-      const result = await cloudinary.uploader.upload(file.path, {
-        folder: `publicidad/${publicidad.titulo}`,
-      });
-      publicidadToUpdate.urlImagen = result.secure_url;
-    } else if (publicidad.urlImagen) {
-      publicidadToUpdate.urlImagen = publicidad.urlImagen;
-    }
-
-    return this.publicidadRepository.save(publicidadToUpdate);
+  async update(id: number, publicidad: Publicidad): Promise<Publicidad> {
+    const existing = await this.findOne(id); // valida existencia
+    const updated = { ...existing, ...publicidad };
+    return this.publicidadRepository.save(updated);
   }
 
   // ------------------------
-  // Eliminar publicidad
+  // Eliminar registro
   // ------------------------
   async delete(id: number): Promise<void> {
-    await this.publicidadRepository.delete(id);
+    const existing = await this.findOne(id);
+    await this.publicidadRepository.remove(existing);
   }
 
   // ------------------------
   // Buscar por título parcial
   // ------------------------
-  async findByTituloLike(tituloLike: string): Promise<Publicidad[]> {
+  async findByNombreLike(tituloLike: string): Promise<Publicidad[]> {
     return this.publicidadRepository.find({
       where: { titulo: Like(`%${tituloLike}%`) },
     });

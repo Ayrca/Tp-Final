@@ -11,16 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PublicidadService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const publicidad_entity_1 = require("./publicidad.entity");
-const cloudinary_config_1 = __importDefault(require("../cloudinary.config"));
 let PublicidadService = class PublicidadService {
     publicidadRepository;
     constructor(publicidadRepository) {
@@ -30,41 +26,24 @@ let PublicidadService = class PublicidadService {
         return this.publicidadRepository.find();
     }
     async findOne(id) {
-        const publicidad = await this.publicidadRepository.findOneBy({ idpublicidad: id });
-        if (!publicidad)
+        const pub = await this.publicidadRepository.findOneBy({ idpublicidad: id });
+        if (!pub)
             throw new common_1.BadRequestException(`Publicidad con id ${id} no encontrada`);
-        return publicidad;
+        return pub;
     }
-    async create(publicidad, file) {
-        if (file) {
-            const result = await cloudinary_config_1.default.uploader.upload(file.path, {
-                folder: `publicidad/${publicidad.titulo}`,
-            });
-            publicidad.urlImagen = result.secure_url;
-        }
+    async create(publicidad) {
         return this.publicidadRepository.save(publicidad);
     }
-    async update(id, publicidad, file) {
-        const publicidadToUpdate = await this.publicidadRepository.findOneBy({ idpublicidad: id });
-        if (!publicidadToUpdate)
-            throw new common_1.BadRequestException(`Publicidad con id ${id} no encontrada`);
-        publicidadToUpdate.titulo = publicidad.titulo;
-        publicidadToUpdate.urlPagina = publicidad.urlPagina;
-        if (file) {
-            const result = await cloudinary_config_1.default.uploader.upload(file.path, {
-                folder: `publicidad/${publicidad.titulo}`,
-            });
-            publicidadToUpdate.urlImagen = result.secure_url;
-        }
-        else if (publicidad.urlImagen) {
-            publicidadToUpdate.urlImagen = publicidad.urlImagen;
-        }
-        return this.publicidadRepository.save(publicidadToUpdate);
+    async update(id, publicidad) {
+        const existing = await this.findOne(id);
+        const updated = { ...existing, ...publicidad };
+        return this.publicidadRepository.save(updated);
     }
     async delete(id) {
-        await this.publicidadRepository.delete(id);
+        const existing = await this.findOne(id);
+        await this.publicidadRepository.remove(existing);
     }
-    async findByTituloLike(tituloLike) {
+    async findByNombreLike(tituloLike) {
         return this.publicidadRepository.find({
             where: { titulo: (0, typeorm_2.Like)(`%${tituloLike}%`) },
         });
