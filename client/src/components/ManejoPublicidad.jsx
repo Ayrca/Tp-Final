@@ -16,14 +16,11 @@ const ManejoPublicidad = () => {
 
   useEffect(() => {
     axios.get(`${BASE_URL}/publicidad`)
-      .then((response) => {
-        setPublicidad(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      .then((response) => setPublicidad(response.data))
+      .catch((error) => console.error(error));
   }, []);
 
+  // Subir imagen a Cloudinary y devolver la URL
   const subirImagenCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -32,40 +29,42 @@ const ManejoPublicidad = () => {
     return response.data.secure_url;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!imagen) {
-    Swal.fire('Error!', 'Debes seleccionar una imagen', 'error');
-    return;
-  }
+  // Agregar nueva publicidad
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!imagen) {
+      Swal.fire('Error!', 'Debes seleccionar una imagen', 'error');
+      return;
+    }
 
-  try {
-    const formData = new FormData();
-    formData.append('file', imagen);
-    formData.append('titulo', titulo);
-    formData.append('urlPagina', urlPagina);
+    try {
+      const urlImagen = await subirImagenCloudinary(imagen);
 
-    const token = localStorage.getItem('token');
+      const nuevaPublicidad = {
+        titulo,
+        urlPagina,
+        urlImagen,
+      };
 
-    const response = await axios.post(`${BASE_URL}/publicidad/upload`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+      const token = localStorage.getItem('token');
 
-    setPublicidad([...publicidad, response.data]);
-    Swal.fire('Agregado!', 'La publicidad ha sido agregada', 'success');
-    setTitulo('');
-    setUrlPagina('');
-    setImagen(null);
-    setMostrarFormulario(false);
-  } catch (error) {
-    console.error(error);
-    Swal.fire('Error!', 'No se pudo agregar la publicidad', 'error');
-  }
-};
+      const response = await axios.post(`${BASE_URL}/publicidad`, nuevaPublicidad, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
+      setPublicidad([...publicidad, response.data]);
+      Swal.fire('Agregado!', 'La publicidad ha sido agregada', 'success');
+      setTitulo('');
+      setUrlPagina('');
+      setImagen(null);
+      setMostrarFormulario(false);
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error!', 'No se pudo agregar la publicidad', 'error');
+    }
+  };
+
+  // Editar publicidad
   const handleEditar = (item) => {
     setEditarPublicidad(item);
   };
@@ -98,13 +97,19 @@ const handleSubmit = async (e) => {
     });
   };
 
+  // Guardar cambios en publicidad existente
   const handleGuardar = async (item) => {
     try {
       let urlImagen = item.urlImagen;
       if (imagen) {
         urlImagen = await subirImagenCloudinary(imagen);
       }
-      const dataActualizada = { ...item, urlImagen };
+
+      const dataActualizada = {
+        ...item,
+        urlImagen
+      };
+
       const response = await axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, dataActualizada);
       setPublicidad(publicidad.map((p) => p.idpublicidad === item.idpublicidad ? response.data : p));
       setEditarPublicidad(null);
