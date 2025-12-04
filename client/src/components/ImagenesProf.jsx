@@ -3,6 +3,8 @@ import axios from 'axios';
 import './estilos/ImagenesProf.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CLOUDINARY_URL = process.env.REACT_APP_CLOUDINARY_URL; // endpoint de Cloudinary
+const CLOUDINARY_PRESET = 'profesionales'; // tu preset de Cloudinary
 
 const ImagenesProf = ({ idProfesional }) => {
   const [imagenes, setImagenes] = useState([]);
@@ -19,7 +21,7 @@ const ImagenesProf = ({ idProfesional }) => {
   const imagenesPagina = imagenes.slice(indexPrimera, indexUltima);
   const totalPaginas = Math.ceil(imagenes.length / imagenesPorPagina);
 
-  // Obtener imágenes
+  // Obtener imágenes del backend
   useEffect(() => {
     if (!idProfesional) return;
 
@@ -28,7 +30,16 @@ const ImagenesProf = ({ idProfesional }) => {
       .catch((error) => console.error(error));
   }, [idProfesional, reload]);
 
-  // Subir imagen al backend (que luego la manda a Cloudinary)
+  // Subir imagen a Cloudinary y devolver la URL
+  const subirImagenCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    const response = await axios.post(CLOUDINARY_URL, formData);
+    return response.data.secure_url;
+  };
+
+  // Subir imagen de trabajo
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) return;
@@ -40,18 +51,14 @@ const ImagenesProf = ({ idProfesional }) => {
     }
 
     try {
-      const formData = new FormData();
-      formData.append('file', file); // importante que coincida con FileInterceptor('file')
+      // 1️⃣ Subir a Cloudinary
+      const url = await subirImagenCloudinary(file);
 
+      // 2️⃣ Enviar al backend solo JSON con la URL y el idProfesional
       await axios.post(
-        `${BASE_URL}/imagen/upload/${idProfesional}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        `${BASE_URL}/imagen`,
+        { url, idProfesional },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       // Limpiar input y recargar imágenes
