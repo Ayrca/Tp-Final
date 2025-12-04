@@ -30,18 +30,36 @@ let OficiosController = class OficiosController {
     async findOne(id) {
         return this.oficiosService.findOne(id);
     }
-    async create(oficio, imagen) {
+    async create(oficio, file) {
         if (!oficio.nombre)
             throw new common_1.BadRequestException('El nombre del oficio es requerido');
-        const nuevoOficio = new oficios_entity_1.Oficio();
-        nuevoOficio.nombre = oficio.nombre;
-        return this.oficiosService.create(nuevoOficio, imagen);
+        try {
+            const nuevoOficio = new oficios_entity_1.Oficio();
+            nuevoOficio.nombre = oficio.nombre;
+            return await this.oficiosService.create(nuevoOficio, file);
+        }
+        catch (error) {
+            console.error('Error al crear oficio:', error);
+            throw new common_1.HttpException('No se pudo crear el oficio', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-    async update(id, oficio, imagen) {
-        return this.oficiosService.update(id, oficio, imagen);
+    async update(id, oficio, file) {
+        try {
+            return await this.oficiosService.update(id, oficio, file);
+        }
+        catch (error) {
+            console.error('Error al actualizar oficio:', error);
+            throw new common_1.HttpException('No se pudo actualizar el oficio', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     async delete(id) {
-        return this.oficiosService.delete(id);
+        try {
+            return await this.oficiosService.delete(id);
+        }
+        catch (error) {
+            console.error('Error al borrar oficio:', error);
+            throw new common_1.HttpException('No se pudo borrar el oficio', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 };
 exports.OficiosController = OficiosController;
@@ -61,7 +79,7 @@ __decorate([
 ], OficiosController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Post)('upload'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('imagen')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
@@ -70,7 +88,7 @@ __decorate([
 ], OficiosController.prototype, "create", null);
 __decorate([
     (0, common_1.Put)('upload/:id'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('imagen')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.UploadedFile)()),
