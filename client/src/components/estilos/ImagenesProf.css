@@ -96,3 +96,62 @@
   opacity: 0;
   transition: opacity 0.3s ease-out;
 }
+
+/* ============================
+   RESPONSIVE IMAGENES PROF
+============================ */
+
+/* Tablets / pantallas medianas */
+@media (max-width: 950px) {
+  .imagenes-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .imagenes-container img {
+    height: 250px !important;
+  }
+
+  #agregar-imagen {
+    padding: 7px 14px;
+  }
+
+  .pag-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  .pag-indicator {
+    font-size: 14px;
+  }
+}
+
+/* Celulares / pantallas pequeñas */
+@media (max-width: 480px) {
+  .imagenes-container {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .imagenes-container img {
+    height: 200px !important;
+  }
+
+  #agregar-imagen {
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  .pag-btn {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+
+  .pag-indicator {
+    font-size: 13px;
+  }
+
+  .cajaImagenes {
+    padding: 15px;
+  }
+}

@@ -142,3 +142,79 @@
 .btn-cancelar-publicidad:hover {
   background-color: #606060;
 }
+
+/* 📱 Responsive ManejoPublicidad */
+@media (max-width: 768px) {
+  .manejo-publicidad {
+    width: 95%;
+    padding: 15px;
+    margin: 20px auto;
+  }
+
+  /* Formulario */
+  .manejo-publicidad form {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .manejo-publicidad input[type="text"] {
+    height: 38px;
+    font-size: 0.9rem;
+  }
+
+  /* Tabla con scroll horizontal */
+  .tabla-publicidad {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .tabla-publicidad th,
+  .tabla-publicidad td {
+    font-size: 0.85rem;
+    padding: 8px;
+  }
+
+  /* Imágenes más chicas */
+  .tabla-publicidad img {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* Botones más compactos */
+  .btn-agregar-publicidad,
+  .btn-editar-publicidad,
+  .btn-borrar-publicidad,
+  .btn-guardar-publicidad,
+  .btn-cancelar-publicidad {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+/* celulares muy chicos */
+@media (max-width: 480px) {
+  .manejo-publicidad {
+    padding: 10px;
+  }
+
+  .tabla-publicidad th,
+  .tabla-publicidad td {
+    padding: 6px;
+    font-size: 0.75rem;
+  }
+
+  .tabla-publicidad img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .btn-agregar-publicidad,
+  .btn-editar-publicidad,
+  .btn-borrar-publicidad,
+  .btn-guardar-publicidad,
+  .btn-cancelar-publicidad {
+    padding: 5px 8px;
+    font-size: 0.7rem;
+  }
+}

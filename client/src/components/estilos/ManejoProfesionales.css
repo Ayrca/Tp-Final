@@ -88,3 +88,61 @@ img {
 .btn-desbloqueo-oficios:hover {
   background-color: #2980b9;
 }
+
+/* Responsive para ManejoProfesionales */
+@media (max-width: 768px) {
+  .manejo-profesionales {
+    width: 95%;
+    padding: 10px;
+    margin: 20px auto;
+    overflow-x: auto; 
+  }
+
+  /* Contenedor scroll para la tabla */
+  .tabla-profesionales {
+    display: block;
+    width: 100%;
+    overflow-x: auto; 
+    white-space: nowrap; 
+  }
+
+  .tabla-profesionales th,
+  .tabla-profesionales td {
+    padding: 8px;
+    font-size: 0.85rem; 
+  }
+
+  .btn-baneo-prof,
+  .btn-desbloqueo-prof {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .manejo-profesionales {
+    padding: 8px;
+  }
+
+  .tabla-profesionales th,
+  .tabla-profesionales td {
+    padding: 6px;
+    font-size: 0.75rem;
+  }
+
+  .btn-baneo-prof,
+  .btn-desbloqueo-prof {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+
+  img {
+    width: 35px;
+    height: 35px;
+  }
+}

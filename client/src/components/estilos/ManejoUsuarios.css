@@ -124,3 +124,59 @@
 .btn-desbloqueo-usuarios:hover {
   background-color: #2980b9;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .manejo-usuarios {
+    width: 95%;
+    padding: 15px;
+    margin: 20px auto;
+  }
+
+  .tabla-usuarios {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .tabla-usuarios th,
+  .tabla-usuarios td {
+    font-size: 0.85rem;
+    padding: 8px;
+  }
+
+  .tabla-usuarios img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .btn-baneo-usuarios,
+  .btn-desbloqueo-usuarios {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Celulares muy pequeños */
+@media (max-width: 480px) {
+  .manejo-usuarios {
+    padding: 10px;
+  }
+
+  .tabla-usuarios th,
+  .tabla-usuarios td {
+    padding: 6px;
+    font-size: 0.7rem;
+  }
+
+  .tabla-usuarios img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .btn-baneo-usuarios,
+  .btn-desbloqueo-usuarios {
+    padding: 4px 6px;
+    font-size: 0.65rem;
+  }
+}

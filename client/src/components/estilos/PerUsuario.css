@@ -93,17 +93,95 @@
   margin-bottom: 20px;
 }
 
-/* ============================
-   RESPONSIVE
-============================ */
-@media (max-width: 760px) {
-  .pu-grid {
-    grid-template-columns: repeat(2, 1fr);
+/* RESPONSIVE */
+
+/* Tablets / pantallas medianas */
+@media (max-width: 950px) {
+  .pu-card {
+    padding: 25px;
+  }
+
+  .pu-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .pu-avatar-box {
+    width: 120px;
+    height: 120px;
+  }
+
+  .pu-avatar-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+
+  .pu-title-box h2 {
+    font-size: 1.6rem;
+  }
+
+  .pu-type {
+    font-size: 1rem;
+  }
+
+  .pu-section {
+    padding: 20px;
+  }
+
+  .pu-section-title {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
   }
 }
 
+/* Celulares / pantallas pequeñas */
 @media (max-width: 480px) {
+  .pu-wrapper {
+    padding: 20px 10px;
+  }
+
+  .pu-card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .pu-avatar-box {
+    width: 100px;
+    height: 100px;
+  }
+
+  .pu-avatar-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+
+  .pu-title-box h2 {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .pu-type {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .pu-section {
+    padding: 15px;
+    margin-bottom: 25px;
+  }
+
+  .pu-section-title {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+
+  /* Si hay grids de imágenes o trabajos */
   .pu-grid {
+    display: grid;
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 }

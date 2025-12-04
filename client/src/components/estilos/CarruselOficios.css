@@ -100,35 +100,86 @@
   margin-top: 18px;
 }
 
-/* Resposive*/
+/* Ajustes generales para que el carrusel ocupe todo el ancho en móviles */
+@media (max-width: 600px) {
+  .carrusel-wrapper {
+    padding: 20px 10px;
+  }
 
-/* Monitores medianos: 3 cards cómodas */
-@media (max-width: 1600px) {
+  .carrusel-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .titulo-carrusel {
+    font-size: 1.6rem;
+  }
+
+  .btn-carrusel {
+    padding: 8px 14px;
+    font-size: 16px;
+  }
+
+  .oficio-viewport {
+    padding: 10px 0;
+  }
+
+  .oficio-slider {
+    gap: 16px;
+  }
+
   .oficio-card {
-    width: 330px;
+    width: 90%;
+    height: auto;
+    min-height: 320px;
+  }
+
+  .oficio-img-container {
+    height: 200px;
+  }
+
+  .oficio-nombre {
+    font-size: 1.2rem;
+    margin-top: 12px;
   }
 }
 
-/* Notebooks comunes: 2 cards */
+/* Ajustes para tablets */
+@media (max-width: 900px) {
+  .carrusel-header {
+    gap: 20px;
+  }
+
+  .oficio-card {
+    width: 220px;
+    height: 340px;
+  }
+
+  .oficio-img-container {
+    height: 180px;
+  }
+
+  .oficio-nombre {
+    font-size: 1.1rem;
+    margin-top: 10px;
+  }
+}
+
+/* Ajustes para notebooks pequeñas */
 @media (max-width: 1200px) {
   .oficio-card {
-    width: 300px;
-    height: 400px;
+    width: 280px;
+    height: 380px;
+  }
+
+  .oficio-img-container {
+    height: 250px;
   }
 }
 
-/* Tablets: 1–2 cards */
-@media (max-width: 900px) {
+/* Ajustes para monitores medianos */
+@media (max-width: 1600px) {
   .oficio-card {
-    width: 260px;
-    height: 360px;
-  }
-}
-
-/* Celulares */
-@media (max-width: 600px) {
-  .oficio-card {
-    width: 80%;
-    height: auto;
+    width: 320px;
   }
 }
