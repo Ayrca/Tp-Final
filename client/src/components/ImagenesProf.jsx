@@ -19,50 +19,48 @@ const ImagenesProf = ({ idProfesional }) => {
   const imagenesPagina = imagenes.slice(indexPrimera, indexUltima);
   const totalPaginas = Math.ceil(imagenes.length / imagenesPorPagina);
 
+  // Obtener imágenes
   useEffect(() => {
     if (!idProfesional) return;
 
     axios.get(`${BASE_URL}/imagen/${idProfesional}`)
-      .then((response) => {
-        setImagenes(response.data.reverse());
-      })
+      .then((response) => setImagenes(response.data.reverse()))
       .catch((error) => console.error(error));
   }, [idProfesional, reload]);
 
+  // Subir imagen al backend (que luego la manda a Cloudinary)
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) return;
 
     const token = localStorage.getItem('token');
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'ml_default'); // tu preset
-    formData.append('folder', `profesionales/${idProfesional}`); // opcional
+    if (!token) {
+      alert('Debes estar logueado para subir imágenes');
+      return;
+    }
 
     try {
-      // Subida a Cloudinary
-      const cloudRes = await axios.post(
-        'https://api.cloudinary.com/v1_1/ddadtpm2o/upload',
-        formData
-      );
+      const formData = new FormData();
+      formData.append('file', file); // importante que coincida con FileInterceptor('file')
 
-      const imageUrl = cloudRes.data.secure_url;
-
-      // Guardar la URL en tu backend
       await axios.post(
         `${BASE_URL}/imagen/upload/${idProfesional}`,
-        { url: imageUrl },
+        formData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
         }
       );
 
+      // Limpiar input y recargar imágenes
       setFile(null);
       document.getElementById('file-input').value = '';
       setReload(prev => !prev);
     } catch (error) {
       console.error('Error al subir imagen:', error);
+      alert('Ocurrió un error al subir la imagen');
     }
   };
 
@@ -84,7 +82,6 @@ const ImagenesProf = ({ idProfesional }) => {
         ))}
       </div>
 
-      {/* PAGINACIÓN */}
       {totalPaginas > 1 && (
         <div className="gallery-pagination">
           <button
