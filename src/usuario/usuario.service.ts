@@ -39,8 +39,11 @@ async findByEmail(email: string): Promise<Usuario | null> {
 }
 
 async findOneByEmail(email: string) {
-    return this.usuarioRepository.findOneBy({ email });
-  }
+  return this.usuarioRepository.findOne({
+    where: { email },
+    select: ['idusuarioComun', 'email', 'password', 'estadoCuenta']
+  });
+}
 
   async create(usuario: Usuario): Promise<Usuario> {
     return this.usuarioRepository.save(usuario);

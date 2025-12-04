@@ -52,13 +52,12 @@ export class AuthService {
     }
 
     // --- CHEQUEO DE ESTADO DE CUENTA ---
-    // Solo si el usuario/profesional tiene la propiedad estadoCuenta
-    if (user.estadoCuenta !== undefined && user.estadoCuenta === 0) {
-      throw new HttpException(
-        'Su cuenta se encuentra bloqueada. Contactese al mail proyectoafip29@gmail.com',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
+  if (user.estadoCuenta === false) {
+    throw new HttpException(
+      'Su cuenta se encuentra bloqueada. Contactese al mail proyectoafip29@gmail.com',
+      HttpStatus.UNAUTHORIZED,
+    );
+  }
 
     // Generar token
     const token = await this.generateToken(user, tipo);
