@@ -35,44 +35,43 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
     return suma / trabajosValorados.length;
   };
 
-  useEffect(() => {
-    const fetchTrabajos = async () => {
-      try {
-        let response;
-        if (idProfesional) {
-          response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
-        } else if (idusuarioComun) {
-          response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
-        } else return;
+useEffect(() => {
+  const fetchTrabajos = async () => {
+    try {
+      let response;
+      if (idProfesional) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
+      } else if (idusuarioComun) {
+        response = await axios.get(`${BASE_URL}/trabajoContratado/usuario/${idusuarioComun}`);
+      } else return;
 
-        if (response && Array.isArray(response.data)) {
-          console.log("Trabajos recibidos:", response.data);
-          const trabajosOrdenados = response.data.sort(
-            (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
-          );
+      if (response && Array.isArray(response.data)) {
+        const trabajosOrdenados = response.data.sort(
+          (a, b) => new Date(b.fechaContratacion) - new Date(a.fechaContratacion)
+        );
 
-          // Calcular valoración promedio si es profesional
-          if (idProfesional) {
-            const valoracionPromedio = calcularValoracionPromedio(trabajosOrdenados);
-            setTrabajos(trabajosOrdenados.map(t => ({ ...t, valoracionPromedio })));
-          } else {
-            setTrabajos(trabajosOrdenados);
-          }
+        // Filtramos trabajos que tengan valoración solo si están finalizados
+        const trabajosProcesados = trabajosOrdenados.map(t => {
+          // Solo mostrar estrellas si el trabajo fue finalizado por cliente o profesional
+          const mostrarValoracion = ["terminado", "finalizado_profesional"].includes(t.estado) && t.valoracion > 0;
+          return { ...t, mostrarValoracion };
+        });
 
-          setError(null);
-        } else {
-          setTrabajos([]);
-          setError('No se pudo obtener los trabajos correctamente');
-        }
-      } catch (err) {
+        setTrabajos(trabajosProcesados);
+        setError(null);
+      } else {
         setTrabajos([]);
-        setError('Error al conectar con la API');
-        console.error(err);
+        setError('No se pudo obtener los trabajos correctamente');
       }
-    };
+    } catch (err) {
+      setTrabajos([]);
+      setError('Error al conectar con la API');
+      console.error(err);
+    }
+  };
 
-    fetchTrabajos();
-  }, [idProfesional, idusuarioComun]);
+  fetchTrabajos();
+}, [idProfesional, idusuarioComun]);
 
   // PAGINACIÓN
   const totalPaginasTrabajos = Math.ceil(trabajos.length / trabajosPorPagina);
@@ -339,14 +338,15 @@ const TrabajosContratados = ({ idProfesional, idusuarioComun }) => {
               <p>
                 <span>Valoración:</span>
                 <span className="dato">
-                  {trabajo.valoracionPromedio || trabajo.valoracion ? renderEstrellas(trabajo.valoracionPromedio || trabajo.valoracion) : "Sin valoración"}
+                  {trabajo.mostrarValoracion
+                    ? renderEstrellas(trabajo.valoracion)
+                    : "Sin valoración"}
                 </span>
               </p>
               <p><span>Comentario:</span> <span className="dato">{trabajo.comentario}</span></p>
               <p><span>{esProfesional ? 'Telefono del Cliente:' : 'Telefono del Profesional:'}</span> 
                  <span className="dato">{esProfesional ? trabajo.telefonoCliente : trabajo.telefonoProfesional}</span>
               </p>
-
               {!["terminado", "cancelado", "finalizado_profesional", "cancelado_profesional"].includes(trabajo.estado) && (
                 <div className="botones-trabajo">
                   {idProfesional ? (
