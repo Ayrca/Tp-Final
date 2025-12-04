@@ -358,6 +358,11 @@
 
 .toggle-password img {
   object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.toggle-password:hover img {
+  transform: scale(1.1);
 }
 
 /* RESPONSIVE */
