@@ -90,7 +90,7 @@ const ResetPassword = () => {
           />
           <button 
             type="button" 
-            className="toggle-password" 
+            className="toggle-password-rp" 
             onClick={() => setShowPassword(!showPassword)}
           >
             <img
@@ -111,7 +111,7 @@ const ResetPassword = () => {
           />
           <button 
             type="button" 
-            className="toggle-password" 
+            className="toggle-password-rp" 
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
           >
             <img
