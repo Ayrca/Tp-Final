@@ -22,6 +22,9 @@ let ImagenOficiosController = class ImagenOficiosController {
         this.imagenOficiosService = imagenOficiosService;
     }
     async create(imagen) {
+        if (!imagen) {
+            throw new common_1.BadRequestException('No se recibió ninguna imagen');
+        }
         return this.imagenOficiosService.create(imagen);
     }
 };

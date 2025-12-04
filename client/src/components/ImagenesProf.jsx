@@ -24,32 +24,46 @@ const ImagenesProf = ({ idProfesional }) => {
 
     axios.get(`${BASE_URL}/imagen/${idProfesional}`)
       .then((response) => {
-        // invertimos para que la última imagen subida aparezca primero
         setImagenes(response.data.reverse());
       })
       .catch((error) => console.error(error));
   }, [idProfesional, reload]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) return;
 
     const token = localStorage.getItem('token');
+
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('upload_preset', 'ml_default'); // tu preset
+    formData.append('folder', `profesionales/${idProfesional}`); // opcional
 
-    axios.post(`${BASE_URL}/imagen/upload/${idProfesional}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${token}`,
-      }
-    })
-    .then(() => {
+    try {
+      // Subida a Cloudinary
+      const cloudRes = await axios.post(
+        'https://api.cloudinary.com/v1_1/ddadtpm2o/upload',
+        formData
+      );
+
+      const imageUrl = cloudRes.data.secure_url;
+
+      // Guardar la URL en tu backend
+      await axios.post(
+        `${BASE_URL}/imagen/upload/${idProfesional}`,
+        { url: imageUrl },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       setFile(null);
       document.getElementById('file-input').value = '';
       setReload(prev => !prev);
-    })
-    .catch((error) => console.error('Error al subir imagen:', error));
+    } catch (error) {
+      console.error('Error al subir imagen:', error);
+    }
   };
 
   const cambiarPagina = (nueva) => {

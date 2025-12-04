@@ -11,13 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OficiosService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const oficios_entity_1 = require("./oficios.entity");
-const typeorm_3 = require("typeorm");
+const cloudinary_config_1 = __importDefault(require("../cloudinary.config"));
 let OficiosService = class OficiosService {
     oficioRepository;
     constructor(oficioRepository) {
@@ -29,20 +32,33 @@ let OficiosService = class OficiosService {
     async findOne(id) {
         const oficio = await this.oficioRepository.findOneBy({ idOficios: id });
         if (!oficio) {
-            throw new Error(`Oficio con id ${id} no encontrado`);
+            throw new common_1.BadRequestException(`Oficio con id ${id} no encontrado`);
         }
         return oficio;
     }
-    async create(oficio) {
+    async create(oficio, file) {
+        if (file) {
+            const result = await cloudinary_config_1.default.uploader.upload(file.path, {
+                folder: `oficios/${oficio.nombre}`,
+            });
+            oficio.urlImagen = result.secure_url;
+        }
         return this.oficioRepository.save(oficio);
     }
-    async update(id, oficio) {
+    async update(id, oficio, file) {
         const oficioToUpdate = await this.oficioRepository.findOneBy({ idOficios: id });
-        if (!oficioToUpdate) {
-            throw new Error(`Oficio con id ${id} no encontrado`);
-        }
+        if (!oficioToUpdate)
+            throw new common_1.BadRequestException(`Oficio con id ${id} no encontrado`);
         oficioToUpdate.nombre = oficio.nombre;
-        oficioToUpdate.urlImagen = oficio.urlImagen;
+        if (file) {
+            const result = await cloudinary_config_1.default.uploader.upload(file.path, {
+                folder: `oficios/${oficio.nombre}`,
+            });
+            oficioToUpdate.urlImagen = result.secure_url;
+        }
+        else if (oficio.urlImagen) {
+            oficioToUpdate.urlImagen = oficio.urlImagen;
+        }
         return this.oficioRepository.save(oficioToUpdate);
     }
     async delete(id) {
@@ -50,9 +66,7 @@ let OficiosService = class OficiosService {
     }
     async findByNombreLike(nombreLike) {
         return this.oficioRepository.find({
-            where: {
-                nombre: (0, typeorm_3.Like)(`%${nombreLike}%`),
-            },
+            where: { nombre: (0, typeorm_2.Like)(`%${nombreLike}%`) },
         });
     }
 };

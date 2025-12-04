@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/ManejoUsuarios.css';
+import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -8,54 +9,62 @@ const ManejoUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    console.log('BASE_URL:', BASE_URL);
-
     axios.get(`${BASE_URL}/usuario`)
-      .then((response) => {
-        console.log('Respuesta API /usuario:', response);
-        console.log('response.data:', response.data);
-        setUsuarios(response.data);
-      })
-      .catch((error) => {
-        console.error('Error al traer usuarios:', error);
-      });
+      .then((response) => setUsuarios(response.data))
+      .catch((error) => console.error('Error al traer usuarios:', error));
   }, []);
 
   const handleBaneo = (id) => {
-    console.log('Banear usuario con id:', id);
-    axios.put(`${BASE_URL}/usuario/${id}/baneo`)
-      .then((response) => {
-        console.log('Respuesta baneo:', response);
-        setUsuarios(usuarios.map((usuario) => {
-          if (usuario.idusuarioComun === id) {
-            return { ...usuario, estadoCuenta: 0 };
-          }
-          return usuario;
-        }));
-      })
-      .catch((error) => {
-        console.error('Error al banear usuario:', error);
-      });
+    Swal.fire({
+      title: '¿Estás seguro de banear a este usuario?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, banear',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.put(`${BASE_URL}/usuario/${id}/baneo`)
+          .then(() => {
+            setUsuarios(usuarios.map((usuario) =>
+              usuario.idusuarioComun === id
+                ? { ...usuario, estadoCuenta: false }
+                : usuario
+            ));
+            Swal.fire('Usuario baneado', '', 'success');
+          })
+          .catch((error) => {
+            console.error('Error al banear usuario:', error);
+            Swal.fire('Error', 'No se pudo banear al usuario', 'error');
+          });
+      }
+    });
   };
 
   const handleDesbloqueo = (id) => {
-    console.log('Desbloquear usuario con id:', id);
-    axios.put(`${BASE_URL}/usuario/${id}/desbloqueo`)
-      .then((response) => {
-        console.log('Respuesta desbloqueo:', response);
-        setUsuarios(usuarios.map((usuario) => {
-          if (usuario.idusuarioComun === id) {
-            return { ...usuario, estadoCuenta: 1 };
-          }
-          return usuario;
-        }));
-      })
-      .catch((error) => {
-        console.error('Error al desbloquear usuario:', error);
-      });
+    Swal.fire({
+      title: '¿Estás seguro de desbloquear a este usuario?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, desbloquear',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.put(`${BASE_URL}/usuario/${id}/desbloqueo`)
+          .then(() => {
+            setUsuarios(usuarios.map((usuario) =>
+              usuario.idusuarioComun === id
+                ? { ...usuario, estadoCuenta: true }
+                : usuario
+            ));
+            Swal.fire('Usuario desbloqueado', '', 'success');
+          })
+          .catch((error) => {
+            console.error('Error al desbloquear usuario:', error);
+            Swal.fire('Error', 'No se pudo desbloquear al usuario', 'error');
+          });
+      }
+    });
   };
-
-  console.log('Usuarios en estado:', usuarios);
 
   return (
     <div className="manejo-usuarios">
@@ -76,7 +85,7 @@ const ManejoUsuarios = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(usuarios) && usuarios.length > 0 ? (
+          {usuarios.length > 0 ? (
             usuarios.map((usuario) => (
               <tr key={usuario.idusuarioComun}>
                 <td>{usuario.idusuarioComun}</td>
@@ -101,7 +110,7 @@ const ManejoUsuarios = () => {
                       usuario.avatar
                         ? usuario.avatar.startsWith('http')
                           ? usuario.avatar
-                          : `${BASE_URL}${usuario.avatar}` 
+                          : `/assets/images/avatar-de-usuario.png`
                         : '/assets/images/avatar-de-usuario.png'
                     }
                     alt="Avatar"
@@ -114,9 +123,13 @@ const ManejoUsuarios = () => {
                 </td>
                 <td>
                   {usuario.estadoCuenta ? (
-                    <button className="btn-baneo-usuarios" onClick={() => handleBaneo(usuario.idusuarioComun)}>Banear</button>
+                    <button className="btn-baneo-usuarios" onClick={() => handleBaneo(usuario.idusuarioComun)}>
+                      Banear
+                    </button>
                   ) : (
-                    <button className="btn-desbloqueo-usuarios" onClick={() => handleDesbloqueo(usuario.idusuarioComun)}>Desbloquear</button>
+                    <button className="btn-desbloqueo-usuarios" onClick={() => handleDesbloqueo(usuario.idusuarioComun)}>
+                      Desbloquear
+                    </button>
                   )}
                 </td>
               </tr>

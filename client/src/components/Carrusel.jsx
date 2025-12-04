@@ -17,7 +17,14 @@ const CarruselPropaganda = () => {
   useEffect(() => {
     axios
       .get(`${BASE_URL}/publicidad`)
-      .then((res) => setPublicidad(res.data))
+      .then((res) =>
+        setPublicidad(
+          res.data.map((item) => ({
+            ...item,
+            urlImagen: item.urlImagen || "/assets/images/default-publicidad.png", // fallback
+          }))
+        )
+      )
       .catch((err) => console.error(err));
   }, []);
 
@@ -121,7 +128,11 @@ const CarruselPropaganda = () => {
               }
             >
               <h2 className="propaganda-title">{item.titulo}</h2>
-              <img src={item.urlImagen} alt={item.titulo} className="propaganda-img" />
+              <img
+                src={item.urlImagen}
+                alt={item.titulo}
+                className="propaganda-img"
+              />
             </article>
           ))}
         </div>

@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import './estilos/ManejoPublicidad.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CLOUDINARY_URL = process.env.REACT_APP_CLOUDINARY_URL; // endpoint de Cloudinary
 
 const ManejoPublicidad = () => {
   const [publicidad, setPublicidad] = useState([]);
@@ -24,56 +24,35 @@ const ManejoPublicidad = () => {
       });
   }, []);
 
+  const subirImagenCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'publicidad'); // preset de Cloudinary
+    const response = await axios.post(CLOUDINARY_URL, formData);
+    return response.data.secure_url;
+  };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const formData = new FormData();
-  formData.append('imagen', imagen);
-
-  axios.post(`${BASE_URL}/imagenPropaganda`, formData)
-    .then((response) => {
-      const urlImagen = `/assets/images/patro/${response.data}`;
-      const nuevaPublicidad = {
-        titulo,
-        urlPagina,
-        urlImagen,
-      };
-
-      axios.post(`${BASE_URL}/publicidad`, nuevaPublicidad)
-        .then((response) => {
-          setPublicidad([...(publicidad || []), response.data]);
-      
-          console.log(response.data);
-          // Agregar la publicidad a la lista de publicidad
-          setPublicidad([...publicidad, response.data]);
-          Swal.fire(
-            'Agregado!',
-            'La publicidad ha sido agregada',
-            'success'
-          );
-          setTitulo('');
-          setUrlPagina('');
-          setImagen(null);
-          setMostrarFormulario(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          Swal.fire(
-            'Error!',
-            'No se pudo agregar la publicidad',
-            'error'
-          );
-        });
-    })
-    .catch((error) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!imagen) {
+      Swal.fire('Error!', 'Debes seleccionar una imagen', 'error');
+      return;
+    }
+    try {
+      const urlImagen = await subirImagenCloudinary(imagen);
+      const nuevaPublicidad = { titulo, urlPagina, urlImagen };
+      const response = await axios.post(`${BASE_URL}/publicidad`, nuevaPublicidad);
+      setPublicidad([...publicidad, response.data]);
+      Swal.fire('Agregado!', 'La publicidad ha sido agregada', 'success');
+      setTitulo('');
+      setUrlPagina('');
+      setImagen(null);
+      setMostrarFormulario(false);
+    } catch (error) {
       console.error(error);
-      Swal.fire(
-        'Error!',
-        'No se pudo subir la imagen',
-        'error'
-      );
-    });
-};
+      Swal.fire('Error!', 'No se pudo agregar la publicidad', 'error');
+    }
+  };
 
   const handleEditar = (item) => {
     setEditarPublicidad(item);
@@ -85,88 +64,45 @@ const handleSubmit = (e) => {
   };
 
   const handleBorrar = (item) => {
-  const nombreImagen = item.urlImagen.split('/').pop();
-
-  Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'No podrás revertir este cambio',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, borrar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      axios.delete(`${BASE_URL}/publicidad/${item.idpublicidad}`)
-        .then(() => {
-          axios.delete(`${BASE_URL}/imagenPropaganda/${nombreImagen}`)
-            .then(() => {
-              const nuevaPublicidad = publicidad.filter((p) => p.idpublicidad !== item.idpublicidad);
-              setPublicidad(nuevaPublicidad);
-              Swal.fire(
-                'Borrado!',
-                'La publicidad ha sido borrada',
-                'success'
-              );
-            })
-            .catch((error) => {
-              console.error('Error al borrar imagen:', error);
-              Swal.fire(
-                'Error!',
-                'No se pudo borrar la imagen',
-                'error'
-              );
-            });
-        })
-        .catch((error) => {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir este cambio',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, borrar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${BASE_URL}/publicidad/${item.idpublicidad}`);
+          setPublicidad(publicidad.filter((p) => p.idpublicidad !== item.idpublicidad));
+          Swal.fire('Borrado!', 'La publicidad ha sido borrada', 'success');
+        } catch (error) {
           console.error('Error al borrar publicidad:', error);
-          Swal.fire(
-            'Error!',
-            'No se pudo borrar la publicidad',
-            'error'
-          );
-        });
+          Swal.fire('Error!', 'No se pudo borrar la publicidad', 'error');
+        }
+      }
+    });
+  };
+
+  const handleGuardar = async (item) => {
+    try {
+      let urlImagen = item.urlImagen;
+      if (imagen) {
+        urlImagen = await subirImagenCloudinary(imagen);
+      }
+      const dataActualizada = { ...item, urlImagen };
+      const response = await axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, dataActualizada);
+      setPublicidad(publicidad.map((p) => p.idpublicidad === item.idpublicidad ? response.data : p));
+      setEditarPublicidad(null);
+      setImagen(null);
+      Swal.fire('Guardado!', 'La publicidad ha sido actualizada', 'success');
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error!', 'No se pudo actualizar la publicidad', 'error');
     }
-  });
-};
-
-const handleGuardar = (item) => {
-  if (imagen) {
-    const formData = new FormData();
-    formData.append('imagen', imagen);
-
-axios.post(`${BASE_URL}/imagenPropaganda`, formData)
-      .then((response) => {
-        console.log('Imagen subida:', response.data);
-        item.urlImagen = `/assets/images/patro/${response.data}`;
-        axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, item)
-          .then((response) => {
-            console.log('Publicidad actualizada:', response.data);
-            const nuevaPublicidad = publicidad.map((p) => p.idpublicidad === item.idpublicidad ? item : p);
-            setPublicidad(nuevaPublicidad);
-            setEditarPublicidad(null);
-            setImagen(null);
-          })
-          .catch((error) => {
-            console.error('Error al actualizar publicidad:', error);
-          });
-      })
-      .catch((error) => {
-        console.error('Error al subir imagen:', error);
-      });
-  } else {
-    axios.put(`${BASE_URL}/publicidad/${item.idpublicidad}`, item)
-      .then((response) => {
-        console.log('Publicidad actualizada:', response.data);
-        const nuevaPublicidad = publicidad.map((p) => p.idpublicidad === item.idpublicidad ? item : p);
-        setPublicidad(nuevaPublicidad);
-        setEditarPublicidad(null);
-      })
-      .catch((error) => {
-        console.error('Error al actualizar publicidad:', error);
-      });
-  }
-};
+  };
 
   return (
     <div className="manejo-publicidad">
@@ -188,7 +124,7 @@ axios.post(`${BASE_URL}/imagenPropaganda`, formData)
           <button type="button" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
         </form>
       )}
-     <table className="tabla-publicidad">
+      <table className="tabla-publicidad">
         <thead>
           <tr>
             <th>ID</th>
@@ -214,29 +150,29 @@ axios.post(`${BASE_URL}/imagenPropaganda`, formData)
               </td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
-                  <input type="text" name="urlPagina" value={editarPublicidad.urlPagina} onChange={(e) => setEditarPublicidad({ ...editarPublicidad, urlPagina: e.target.value })} />
+                  <input type="text" value={editarPublicidad.urlPagina} onChange={(e) => setEditarPublicidad({ ...editarPublicidad, urlPagina: e.target.value })} />
                 ) : (
                   item.urlPagina
                 )}
               </td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
-                  <input type="text" name="titulo" value={editarPublicidad.titulo} onChange={(e) => setEditarPublicidad({ ...editarPublicidad, titulo: e.target.value })} />
+                  <input type="text" value={editarPublicidad.titulo} onChange={(e) => setEditarPublicidad({ ...editarPublicidad, titulo: e.target.value })} />
                 ) : (
                   item.titulo
                 )}
               </td>
               <td>
                 {editarPublicidad && editarPublicidad.idpublicidad === item.idpublicidad ? (
-                <div>
-                  <button className="btn-guardar-publicidad" onClick={() => handleGuardar(editarPublicidad)}>Guardar</button>
-                  <button className="btn-cancelar-publicidad" onClick={handleCancelar}>Cancelar</button>
-                </div>
+                  <div>
+                    <button className="btn-guardar-publicidad" onClick={() => handleGuardar(editarPublicidad)}>Guardar</button>
+                    <button className="btn-cancelar-publicidad" onClick={handleCancelar}>Cancelar</button>
+                  </div>
                 ) : (
-              <div>
-                <button className="btn-editar-publicidad" onClick={() => handleEditar(item)}>Editar</button>
-                <button className="btn-borrar-publicidad" onClick={() => handleBorrar(item)}>Borrar</button>
-              </div>
+                  <div>
+                    <button className="btn-editar-publicidad" onClick={() => handleEditar(item)}>Editar</button>
+                    <button className="btn-borrar-publicidad" onClick={() => handleBorrar(item)}>Borrar</button>
+                  </div>
                 )}
               </td>
             </tr>
@@ -246,6 +182,5 @@ axios.post(`${BASE_URL}/imagenPropaganda`, formData)
     </div>
   );
 };
-
 
 export default ManejoPublicidad;

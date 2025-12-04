@@ -9,6 +9,7 @@ import './estilos/ListaProfesionales.css';
 import './estilos/ListaProfesionalesMobile.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CLOUDINARY_URL = 'https://res.cloudinary.com/<tu-cuenta>/image/upload/';
 const ITEMS_PER_PAGE = 8;
 
 const getIdUsuarioLogueado = () => {
@@ -21,11 +22,9 @@ const getIdUsuarioLogueado = () => {
 // Componente Estrellas
 const Estrellas = ({ valoracion }) => {
   const totalEstrellas = 5;
-
-  const estrellasCompletas = Math.floor(valoracion); // parte entera
+  const estrellasCompletas = Math.floor(valoracion);
   const decimal = valoracion - estrellasCompletas;
-
-  const tieneMediaEstrella = decimal === 0.5; // solo media si es 0.5 exacto
+  const tieneMediaEstrella = decimal === 0.5;
   const estrellasFinales = decimal > 0.5 ? estrellasCompletas + 1 : estrellasCompletas;
 
   return (
@@ -52,7 +51,6 @@ const ListaProfesional = () => {
   const centroRef = useRef(null);
   const idusuarioComun = getIdUsuarioLogueado();
 
-  // Obtener oficio de un profesional
   const obtenerOficio = async (idProfesional) => {
     try {
       const response = await axios.get(`${BASE_URL}/profesional/${idProfesional}`);
@@ -63,7 +61,6 @@ const ListaProfesional = () => {
     }
   };
 
-  // Obtener valoración promedio y cantidad de valoraciones
   const obtenerValoracionPromedio = async (idProfesional) => {
     try {
       const response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
@@ -78,7 +75,6 @@ const ListaProfesional = () => {
     }
   };
 
-  // Título del oficio
   useEffect(() => {
     if (!id) return;
     axios.get(`${BASE_URL}/oficios/${id}`)
@@ -86,7 +82,6 @@ const ListaProfesional = () => {
       .catch(err => console.error("Error al obtener oficio:", err));
   }, [id]);
 
-  // Lista de profesionales
   useEffect(() => {
     let url = `${BASE_URL}/profesional`;
     if (id) {
@@ -106,7 +101,6 @@ const ListaProfesional = () => {
           })
         );
 
-        // Ordenar por cantidad de valoraciones y promedio
         profsConValoracion.sort((a, b) => {
           if (b.cantidadValoraciones === a.cantidadValoraciones) {
             return b.valoracionPromedio - a.valoracionPromedio;
@@ -126,14 +120,12 @@ const ListaProfesional = () => {
     fetchProfesionales();
   }, [id]);
 
-  // Publicidad
   useEffect(() => {
     axios.get(`${BASE_URL}/publicidad`)
       .then(res => setPublicidad(res.data))
       .catch(err => console.error(err));
   }, []);
 
-  // Contratar profesional
   const handleContratar = useCallback(async (profesional) => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -181,7 +173,6 @@ const ListaProfesional = () => {
     }
   }, [idOficios]);
 
-  // Conectar profesional
   const handleConectar = async (profesional) => {
     if (!idusuarioComun) {
       Swal.fire({ title: 'Error', text: 'Debe estar logueado para contactar', icon: 'error' });
@@ -204,7 +195,6 @@ const ListaProfesional = () => {
     }
   };
 
-  // Paginación
   const totalPages = Math.ceil(profesionales.length / ITEMS_PER_PAGE);
   const currentProfesionales = profesionales.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -239,7 +229,7 @@ const ListaProfesional = () => {
                           profesional.avatar
                             ? profesional.avatar.startsWith('http')
                               ? profesional.avatar
-                              : `${BASE_URL}${profesional.avatar}`
+                              : `${CLOUDINARY_URL}${profesional.avatar}`
                             : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png'
                         }
                         alt={profesional.nombre}

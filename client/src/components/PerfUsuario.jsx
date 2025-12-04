@@ -8,6 +8,7 @@ import PerfilAdmin from './PerfilAdmin';
 import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const CLOUDINARY_URL = 'https://res.cloudinary.com/<tu-cuenta>/image/upload/';
 
 const PerfUsuario = () => {
   const [usuario, setUsuario] = useState({});
@@ -95,9 +96,11 @@ const PerfUsuario = () => {
 
       setUsuario({
         ...usuario,
-        avatar: response.data.avatar.startsWith('http')
-          ? response.data.avatar
-          : `${BASE_URL}${response.data.avatar}`,
+        avatar: response.data.avatar
+          ? response.data.avatar.startsWith('http')
+            ? response.data.avatar
+            : `${CLOUDINARY_URL}${response.data.avatar}`
+          : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png',
       });
     } catch (error) {
       Swal.fire({
@@ -122,7 +125,7 @@ const PerfUsuario = () => {
                 usuario.avatar
                   ? usuario.avatar.startsWith('http')
                     ? usuario.avatar
-                    : `${BASE_URL}${usuario.avatar}`
+                    : `${CLOUDINARY_URL}${usuario.avatar}`
                   : process.env.PUBLIC_URL + '/assets/images/avatar-de-usuario.png'
               }
               alt="Avatar"
