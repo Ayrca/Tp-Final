@@ -60,19 +60,20 @@ const PerfilComercial = () => {
 
   if (!profesional) return <div>No se encontró el perfil</div>;
 
-  // Helper para renderizar estrellas
-  const renderEstrellas = (valoracion) => {
-    const maxEstrellas = 5;
-    const estrellas = [];
-    for (let i = 1; i <= maxEstrellas; i++) {
-      estrellas.push(
-        <span key={i} className={i <= valoracion ? "estrella llena" : "estrella vacia"}>
-          {i <= valoracion ? "★" : "☆"}
-        </span>
-      );
-    }
-    return estrellas;
-  };
+// Helper para renderizar estrellas (completo y media estrella)
+const renderEstrellas = (valoracion) => {
+  const maxEstrellas = 5;
+  const estrellasCompletas = Math.floor(valoracion);
+  const decimal = valoracion - estrellasCompletas;
+  const tieneMediaEstrella = decimal >= 0.5 && decimal < 1;
+  const estrellasFinales = decimal > 0.5 ? estrellasCompletas + 1 : estrellasCompletas;
+
+  return [...Array(maxEstrellas)].map((_, i) => {
+    if (i < estrellasCompletas) return <span key={i} className="estrella llena">★</span>;
+    if (i === estrellasCompletas && tieneMediaEstrella) return <span key={i} className="estrella media">★</span>;
+    return <span key={i} className="estrella vacia">☆</span>;
+  });
+};
 
   // CALCULO GALERÍA
   const totalPaginasGaleria = Math.ceil(imagenes.length / imagenesPorPagina);
@@ -196,7 +197,12 @@ const PerfilComercial = () => {
               </p>
               <p><strong>Cliente:</strong> {trabajo.usuarioComun.nombre} {trabajo.usuarioComun.apellido}</p>
               <p><strong>Comentario:</strong> {trabajo.comentario}</p>
-              <p><strong>Valoración:</strong> {renderEstrellas(trabajo.valoracion)}</p>
+              <p>
+                <strong>Valoración:</strong> 
+                {["terminado", "finalizado_profesional"].includes(trabajo.estado) && trabajo.valoracion > 0
+                  ? renderEstrellas(trabajo.valoracion)
+                  : "Sin valoración"}
+              </p>
             </div>
           ))
         ) : (
