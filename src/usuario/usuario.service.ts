@@ -89,10 +89,14 @@ async desbloquearUsuario(id: number): Promise<Usuario> {
 
 async updatePassword(id: number, password: string): Promise<Usuario> {
   const usuario = await this.findOne(id);
+
   if (!usuario) {
     throw new Error(`Usuario con id ${id} no encontrado`);
   }
-  usuario.password = password;
-  return this.usuarioRepository.save(usuario);
+
+  usuario.password = password; // Se asigna la nueva contraseña
+
+  return this.usuarioRepository.save(usuario); 
 }
+
 }
