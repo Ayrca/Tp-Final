@@ -9,6 +9,7 @@ import './estilos/ListaProfesionales.css';
 import './estilos/ListaProfesionalesMobile.css';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+const ITEMS_PER_PAGE = 8;
 
 const getIdUsuarioLogueado = () => {
   const token = localStorage.getItem('token');
@@ -17,18 +18,20 @@ const getIdUsuarioLogueado = () => {
   return decodedToken.sub;
 };
 
-const ITEMS_PER_PAGE = 8;
-
 // Componente Estrellas
 const Estrellas = ({ valoracion }) => {
-  const estrellasCompletas = Math.floor(valoracion);
-  const tieneMediaEstrella = valoracion - estrellasCompletas >= 0.5;
   const totalEstrellas = 5;
+
+  const estrellasCompletas = Math.floor(valoracion); // parte entera
+  const decimal = valoracion - estrellasCompletas;
+
+  const tieneMediaEstrella = decimal === 0.5; // solo media si es 0.5 exacto
+  const estrellasFinales = decimal > 0.5 ? estrellasCompletas + 1 : estrellasCompletas;
 
   return (
     <div className="estrellas">
       {Array.from({ length: totalEstrellas }, (_, i) => {
-        if (i < estrellasCompletas) return <span key={i} className="estrella llena">★</span>;
+        if (i < estrellasFinales) return <span key={i} className="estrella llena">★</span>;
         if (i === estrellasCompletas && tieneMediaEstrella) return <span key={i} className="estrella media">★</span>;
         return <span key={i} className="estrella vacia">☆</span>;
       })}
@@ -42,12 +45,12 @@ const ListaProfesional = () => {
   const [publicidad, setPublicidad] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const idusuarioComun = getIdUsuarioLogueado();
   const [idOficios, setIdOficios] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const centroRef = useRef(null);
   const [alturaCarrusel, setAlturaCarrusel] = useState(0);
   const [nombreOficio, setNombreOficio] = useState('');
+  const centroRef = useRef(null);
+  const idusuarioComun = getIdUsuarioLogueado();
 
   // Obtener oficio de un profesional
   const obtenerOficio = async (idProfesional) => {
@@ -60,22 +63,22 @@ const ListaProfesional = () => {
     }
   };
 
-  // Obtener valoración promedio de un profesional
+  // Obtener valoración promedio y cantidad de valoraciones
   const obtenerValoracionPromedio = async (idProfesional) => {
     try {
       const response = await axios.get(`${BASE_URL}/trabajoContratado/${idProfesional}`);
       const trabajos = response.data || [];
       const trabajosValorados = trabajos.filter(t => t.valoracion && t.valoracion > 0);
-      if (trabajosValorados.length === 0) return 0;
+      if (trabajosValorados.length === 0) return { promedio: 0, cantidad: 0 };
       const suma = trabajosValorados.reduce((acc, t) => acc + t.valoracion, 0);
-      return suma / trabajosValorados.length;
+      return { promedio: suma / trabajosValorados.length, cantidad: trabajosValorados.length };
     } catch (error) {
       console.error('Error al obtener valoración:', error);
-      return 0;
+      return { promedio: 0, cantidad: 0 };
     }
   };
 
-  // Título del oficio seleccionado
+  // Título del oficio
   useEffect(() => {
     if (!id) return;
     axios.get(`${BASE_URL}/oficios/${id}`)
@@ -83,7 +86,7 @@ const ListaProfesional = () => {
       .catch(err => console.error("Error al obtener oficio:", err));
   }, [id]);
 
-  // Lista de profesionales (o por oficio)
+  // Lista de profesionales
   useEffect(() => {
     let url = `${BASE_URL}/profesional`;
     if (id) {
@@ -91,32 +94,43 @@ const ListaProfesional = () => {
       setIdOficios(id);
     }
 
-    axios.get(url)
-      .then(async (response) => {
+    const fetchProfesionales = async () => {
+      try {
+        const response = await axios.get(url);
         const profs = response.data || [];
 
-        // Calcular valoración promedio para cada profesional
         const profsConValoracion = await Promise.all(
           profs.map(async (prof) => {
-            const valoracionPromedio = await obtenerValoracionPromedio(prof.idusuarioProfesional);
-            return { ...prof, valoracionPromedio };
+            const { promedio, cantidad } = await obtenerValoracionPromedio(prof.idusuarioProfesional);
+            return { ...prof, valoracionPromedio: promedio, cantidadValoraciones: cantidad };
           })
         );
 
+        // Ordenar por cantidad de valoraciones y promedio
+        profsConValoracion.sort((a, b) => {
+          if (b.cantidadValoraciones === a.cantidadValoraciones) {
+            return b.valoracionPromedio - a.valoracionPromedio;
+          }
+          return b.cantidadValoraciones - a.cantidadValoraciones;
+        });
+
         setProfesionales(profsConValoracion);
         setCargando(false);
-      })
-      .catch((error) => {
+      } catch (error) {
+        console.error('Error al obtener profesionales:', error);
         setError(error);
         setCargando(false);
-      });
+      }
+    };
+
+    fetchProfesionales();
   }, [id]);
 
   // Publicidad
   useEffect(() => {
     axios.get(`${BASE_URL}/publicidad`)
-      .then((res) => setPublicidad(res.data))
-      .catch((err) => console.error(err));
+      .then(res => setPublicidad(res.data))
+      .catch(err => console.error(err));
   }, []);
 
   // Contratar profesional
@@ -128,7 +142,6 @@ const ListaProfesional = () => {
     }
 
     const usuarioLogueado = jwtDecode(token);
-
     if (usuarioLogueado.tipo === 'profesional') {
       Swal.fire({ title: 'Error', text: 'Los profesionales no pueden contratar', icon: 'error' });
       return;
@@ -137,7 +150,6 @@ const ListaProfesional = () => {
     try {
       const response = await axios.get(`${BASE_URL}/usuario/${usuarioLogueado.sub}`);
       const usuario = response.data;
-
       const oficio = await obtenerOficio(profesional.idusuarioProfesional);
 
       const datosContratacion = {
@@ -169,7 +181,7 @@ const ListaProfesional = () => {
     }
   }, [idOficios]);
 
-  // Conectar profesional (WhatsApp)
+  // Conectar profesional
   const handleConectar = async (profesional) => {
     if (!idusuarioComun) {
       Swal.fire({ title: 'Error', text: 'Debe estar logueado para contactar', icon: 'error' });
@@ -198,7 +210,6 @@ const ListaProfesional = () => {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
@@ -207,19 +218,13 @@ const ListaProfesional = () => {
 
   return (
     <>
-      {/* Wrapper principal para desktop */}
       <div className="layout-profesionales-wrapper">
-        {/* Carrusel izquierdo */}
         <div className="carrusel-desktop izquierda">
           <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
         </div>
 
-        {/* Center con cards */}
         <div className="profesionales-center" ref={centroRef}>
-          {/* Título siempre visible si nombreOficio existe */}
-          {nombreOficio && (
-            <h1 className="titulo-oficio">Profesionales de {nombreOficio}</h1>
-          )}
+          {nombreOficio && <h1 className="titulo-oficio">Profesionales de {nombreOficio}</h1>}
 
           {profesionales.length === 0 ? (
             <p>No hay profesionales disponibles</p>
@@ -305,7 +310,6 @@ const ListaProfesional = () => {
                 ))}
               </div>
 
-              {/* Paginación */}
               {totalPages > 1 && (
                 <div className="pagination">
                   <button onClick={prevPage} disabled={currentPage === 1}>◀</button>
@@ -317,13 +321,11 @@ const ListaProfesional = () => {
           )}
         </div>
 
-        {/* Carrusel derecho */}
         <div className="carrusel-desktop derecha">
           <CarruselVertical altura={alturaCarrusel} imagenes={publicidad} />
         </div>
       </div>
 
-      {/* Carrusel horizontal solo para mobile */}
       <div className="carrusel-mobile">
         <Carrusel itemsPerView={1} altura={alturaCarrusel} />
       </div>
