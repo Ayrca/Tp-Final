@@ -24,7 +24,14 @@ exports.AvatarImagenModule = AvatarImagenModule = __decorate([
             platform_express_1.MulterModule.register({
                 dest: './client/public/assets/imagenesDePerfilesUsuarios',
                 fileFilter: (req, file, cb) => {
-                    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                    const allowedMimeTypes = [
+                        'image/jpeg',
+                        'image/png',
+                        'image/gif',
+                        'image/webp',
+                        'image/heic',
+                        'image/heif',
+                    ];
                     if (allowedMimeTypes.includes(file.mimetype)) {
                         cb(null, true);
                     }

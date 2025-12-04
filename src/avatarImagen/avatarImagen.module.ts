@@ -14,7 +14,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     MulterModule.register({
       dest: './client/public/assets/imagenesDePerfilesUsuarios',
       fileFilter: (req, file, cb) => {
-        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const allowedMimeTypes = [
+          'image/jpeg',  // JPG y JPEG
+          'image/png',
+          'image/gif',
+          'image/webp',  
+          'image/heic',  
+          'image/heif', 
+        ];
         if (allowedMimeTypes.includes(file.mimetype)) {
           cb(null, true);
         } else {

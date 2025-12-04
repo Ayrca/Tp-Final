@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Administrador } from './administrador.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdministradorService {
@@ -36,16 +37,21 @@ async update(id: number, administrador: Administrador): Promise<Administrador | 
     await this.administradorRepository.delete(id);
   }
 
-    async updatePassword(id: number, password: string): Promise<Administrador> {
-      const administrador = await this.findOne(id);
+async updatePassword(id: number, password: string): Promise<Administrador> {
+  const administrador = await this.findOne(id);
 
-      if (!administrador) {
-        throw new Error(`Administrador con id ${id} no encontrado`);
-      }
+  if (!administrador) {
+    throw new Error(`Administrador con id ${id} no encontrado`);
+  }
 
-      administrador.password = password; // asignas la nueva contraseña
-      return this.administradorRepository.save(administrador); 
-      // save() dispara los hooks y se hashea automáticamente
-    }
+  // Hashear la contraseña ANTES de guardarla
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  administrador.password = hashedPassword;
+
+  return this.administradorRepository.save(administrador);
+}
+
 
 }
