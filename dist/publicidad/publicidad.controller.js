@@ -11,11 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PublicidadController = void 0;
 const common_1 = require("@nestjs/common");
 const publicidad_service_1 = require("./publicidad.service");
 const publicidad_entity_1 = require("./publicidad.entity");
+const platform_express_1 = require("@nestjs/platform-express");
+const cloudinary_config_1 = __importDefault(require("../cloudinary.config"));
 let PublicidadController = class PublicidadController {
     publicidadService;
     constructor(publicidadService) {
@@ -35,8 +40,17 @@ let PublicidadController = class PublicidadController {
     async delete(id) {
         return this.publicidadService.delete(id);
     }
-    async create(publicidad) {
-        return this.publicidadService.create(publicidad);
+    async createWithImage(file, titulo, urlPagina) {
+        if (!file)
+            throw new Error('Archivo requerido');
+        const result = await cloudinary_config_1.default.uploader.upload(file.path, {
+            folder: 'publicidad',
+        });
+        const nuevaPublicidad = new publicidad_entity_1.Publicidad();
+        nuevaPublicidad.titulo = titulo;
+        nuevaPublicidad.urlPagina = urlPagina;
+        nuevaPublicidad.urlImagen = result.secure_url;
+        return this.publicidadService.create(nuevaPublicidad);
     }
     async update(id, publicidad) {
         return this.publicidadService.update(id, publicidad);
@@ -65,12 +79,15 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PublicidadController.prototype, "delete", null);
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Post)('upload'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    __param(0, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.Body)('titulo')),
+    __param(2, (0, common_1.Body)('urlPagina')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [publicidad_entity_1.Publicidad]),
+    __metadata("design:paramtypes", [Object, String, String]),
     __metadata("design:returntype", Promise)
-], PublicidadController.prototype, "create", null);
+], PublicidadController.prototype, "createWithImage", null);
 __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
