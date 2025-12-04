@@ -46,8 +46,8 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const usuario_service_1 = require("../usuario/usuario.service");
 const profesional_service_1 = require("../profesional/profesional.service");
-const jwt_1 = require("@nestjs/jwt");
 const administrador_service_1 = require("../administrador/administrador.service");
+const jwt_1 = require("@nestjs/jwt");
 const brevo = __importStar(require("@getbrevo/brevo"));
 const FRONTEND_URL = process.env.FRONTEND_URL;
 let AuthService = class AuthService {
@@ -66,36 +66,34 @@ let AuthService = class AuthService {
         const usuario = await this.usuarioService.findOneByEmail(email);
         const profesional = await this.profesionalService.findOneByEmail(email);
         const administrador = await this.administradorService.findOneByEmail(email);
+        let user;
+        let tipo = null;
         if (usuario) {
-            const isValid = await usuario.comparePassword(password);
-            if (isValid) {
-                const token = await this.generateToken(usuario, 'usuario');
-                return { token, tipo: 'usuario' };
-            }
+            user = usuario;
+            tipo = 'usuario';
         }
         else if (profesional) {
-            const isValid = await profesional.comparePassword(password);
-            if (isValid) {
-                const token = await this.generateToken(profesional, 'profesional');
-                return { token, tipo: 'profesional' };
-            }
+            user = profesional;
+            tipo = 'profesional';
         }
         else if (administrador) {
-            const isValid = await administrador.comparePassword(password);
-            if (isValid) {
-                const token = await this.generateToken(administrador, 'administrador');
-                return { token, tipo: 'administrador' };
-            }
+            user = administrador;
+            tipo = 'administrador';
         }
         else {
             console.log('Usuario, profesional o administrador no encontrado');
-            return null;
+            throw new common_1.HttpException('Credenciales inválidas', common_1.HttpStatus.UNAUTHORIZED);
         }
-        console.log('Contraseña incorrecta');
-        return null;
-    }
-    async validarPassword(usuario, password) {
-        return await usuario.comparePassword(password);
+        const isValid = await user.comparePassword(password);
+        if (!isValid) {
+            console.log('Contraseña incorrecta');
+            throw new common_1.HttpException('Credenciales inválidas', common_1.HttpStatus.UNAUTHORIZED);
+        }
+        if (user.estadoCuenta === false) {
+            throw new common_1.HttpException('Su cuenta se encuentra bloqueada. Contactese al mail proyectoafip29@gmail.com', common_1.HttpStatus.UNAUTHORIZED);
+        }
+        const token = await this.generateToken(user, tipo);
+        return { token, tipo, estadoCuenta: user.estadoCuenta ?? 1 };
     }
     async generateToken(usuario, tipo) {
         let payload;
