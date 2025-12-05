@@ -110,12 +110,20 @@ const PerfilComercial = () => {
 
       const handleVerImagen = (url) => {
         Swal.fire({
-          html: `<img src="${url}" style="width: auto; max-width: 90vw; height: auto;">`,
+          html: `<img src="${url}" style="
+            display: block;
+            max-width: 90vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            margin: 0;
+          ">`,
           showConfirmButton: false,
           showCloseButton: true,
           background: 'transparent',
           padding: '0',
-          backdrop: 'rgba(0,0,0,0.5)' // opcional, solo para oscurecer ligeramente el fondo
+          backdrop: 'rgba(0,0,0,0.5)' // opcional
         });
       };
 
