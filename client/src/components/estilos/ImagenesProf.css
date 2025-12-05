@@ -21,18 +21,46 @@
 }
 
 /* IMÁGENES FIJAS — NO SE AGRANDAN */
-.imagenes-container img {
+.imagen-wrapper img {
   width: 100%;
   height: 300px !important;
   object-fit: cover;
   border-radius: 14px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
   transition: transform 0.3s;
-
 }
 
-.imagenes-container img:hover {
+.imagen-wrapper img:hover {
   transform: scale(1.05);
+}
+
+.imagen-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+}
+
+.btn-eliminar {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.8);
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-eliminar:hover {
+  background: rgba(255, 0, 0, 1);
 }
 
 /* PAGINACIÓN estilo consistente con otras secciones */

@@ -11,4 +11,6 @@ export class Imagen {
   @ManyToOne(() => Profesional)
   @JoinColumn({ name: 'idProfesional' })
   profesional: Profesional;
+  @Column({ nullable: true })
+  publicId?: string;
 }
