@@ -124,7 +124,9 @@ const handleEliminar = async (idImagen) => {
             showCloseButton: true,
             background: 'transparent',
             padding: '0',
-            backdrop: 'rgba(0,0,0,0.5)' // opcional
+            backdrop: 'rgba(0,0,0,0.5)',
+            width: 'auto',
+            grow: 'row', 
           });
         };
 
