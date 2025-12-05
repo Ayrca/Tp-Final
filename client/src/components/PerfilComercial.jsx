@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './estilos/PerfilComercial.css';
+import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 const CLOUDINARY_URL = 'https://res.cloudinary.com/ddadtpm2o/image/upload/';
@@ -107,6 +108,17 @@ const PerfilComercial = () => {
     }
   };
 
+        const handleVerImagen = (url) => {
+        Swal.fire({
+          imageUrl: url,
+          imageAlt: 'Imagen completa',
+          showConfirmButton: false,
+          showCloseButton: true,
+          width: '80%',
+          background: '#000',
+        });
+      };
+
   return (
     <div className="perfil-container">
 
@@ -141,11 +153,13 @@ const PerfilComercial = () => {
         {imagenesPagina.length > 0 ? (
           imagenesPagina.map((img, i) => (
             <img
-              key={i}
-              src={img.url.startsWith('http') ? img.url : `${CLOUDINARY_URL}${img.url}`}
-              alt=""
-              className="gallery-img"
-            />
+            key={i}
+            src={img.url.startsWith('http') ? img.url : `${CLOUDINARY_URL}${img.url}`}
+            alt=""
+            className="gallery-img"
+            onClick={() => handleVerImagen(img.url.startsWith('http') ? img.url : `${CLOUDINARY_URL}${img.url}`)}
+            style={{ cursor: 'pointer' }}
+          />
           ))
         ) : (
           <p>No hay imágenes disponibles</p>
