@@ -97,25 +97,25 @@
 }
 
 .pag-btn {
-  background: #3b82f6;       /* azul base */
+  background: #3b82f6;       
   border: 1px solid #dcdcdc;
   padding: 6px 12px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 18px;
-  color: white;               /* flechas blancas */
+  color: white;               
   transition: background .25s, transform .25s;
 }
 
 .pag-btn:hover:not(:disabled) {
-  background: #2563eb;       /* azul más oscuro */
-  transform: translateY(-2px); /* efecto sutil al pasar el mouse */
+  background: #2563eb;       
+  transform: translateY(-2px); 
 }
 
 .pag-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  background: #93c5fd;       /* azul más claro para deshabilitado */
+  background: #93c5fd;     
 }
 
 .pag-indicator {
@@ -135,6 +135,21 @@
 
 .estrella.vacia {
   color: #ccc;   /* gris claro */
+}
+
+/* Quita borde, fondo y sombras del popup */
+.no-popup-style {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Evita que SweetAlert fuerce scroll o limpie el contenido */
+.swal2-html-container {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
 }
 
 /* ======================
@@ -200,18 +215,6 @@
   .descripcion {
     font-size: 13px;
   }
-
-  /* Evitar que SweetAlert limite el ancho del contenido */
-.popup-img-full {
-  padding: 0 !important;
-  max-width: none !important;
-}
-
-/* Evitar scroll incorrecto */
-.swal2-html-container {
-  margin: 0 !important;
-  padding: 0 !important;
-}
 
   /* Grids: 1 columna */
   .imagenes-comercial-container,
