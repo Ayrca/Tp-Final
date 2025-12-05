@@ -73,6 +73,15 @@ let ImagenController = class ImagenController {
     async getImagenes(idProfesional) {
         return this.imagenService.obtenerImagenes(idProfesional);
     }
+    async deleteImagen(idImagen) {
+        try {
+            return await this.imagenService.eliminarImagen(idImagen);
+        }
+        catch (error) {
+            console.error(error);
+            throw new common_1.HttpException('Error al eliminar la imagen', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 };
 exports.ImagenController = ImagenController;
 __decorate([
@@ -101,6 +110,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ImagenController.prototype, "getImagenes", null);
+__decorate([
+    (0, common_1.Delete)(':idImagen'),
+    __param(0, (0, common_1.Param)('idImagen')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ImagenController.prototype, "deleteImagen", null);
 exports.ImagenController = ImagenController = __decorate([
     (0, common_1.Controller)('imagen'),
     __metadata("design:paramtypes", [imagen_service_1.ImagenService])

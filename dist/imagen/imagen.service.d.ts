@@ -10,4 +10,7 @@ export declare class ImagenService {
         url: string;
     }>;
     obtenerImagenes(idProfesional: number): Promise<Imagen[]>;
+    eliminarImagen(idImagen: number): Promise<{
+        message: string;
+    }>;
 }
