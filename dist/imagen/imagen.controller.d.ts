@@ -7,4 +7,7 @@ export declare class ImagenController {
         url: string;
     }>;
     getImagenes(idProfesional: number): Promise<import("./imagen.entity").Imagen[]>;
+    eliminarImagen(idImagen: number): Promise<{
+        message: string;
+    }>;
 }

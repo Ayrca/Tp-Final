@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Imagen } from './imagen.entity';
@@ -47,5 +47,14 @@ export class ImagenService {
   // Obtener todas las imágenes de un profesional
   async obtenerImagenes(idProfesional: number) {
     return this.imagenRepository.find({ where: { idProfesional } });
+  }
+
+  // ⚡ Nuevo: eliminar imagen por id
+  async eliminarImagen(idImagen: number) {
+    const imagen = await this.imagenRepository.findOne({ where: { idImagen } });
+    if (!imagen) throw new NotFoundException('Imagen no encontrada');
+
+    await this.imagenRepository.delete({ idImagen });
+    return { message: 'Imagen eliminada con éxito' };
   }
 }
