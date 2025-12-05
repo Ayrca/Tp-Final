@@ -4,5 +4,4 @@ export declare class Imagen {
     url: string;
     idProfesional: number;
     profesional: Profesional;
-    publicId?: string;
 }

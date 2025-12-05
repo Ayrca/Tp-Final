@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, UploadedFile, Param, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, UploadedFile, Param, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
 import { ImagenService } from './imagen.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
@@ -8,7 +8,7 @@ import type { Express } from 'express';
 export class ImagenController {
   constructor(private readonly imagenService: ImagenService) {}
 
-  // Subir imagen
+  // Subir imagen de trabajo
   @Post('upload/:idProfesional')
   @UseInterceptors(FileInterceptor('file', {
     storage: multer.memoryStorage(),
@@ -17,14 +17,18 @@ export class ImagenController {
       if (allowedMimeTypes.includes(file.mimetype)) cb(null, true);
       else cb(new Error('Tipo de archivo no permitido'), false);
     },
-    limits: { fileSize: 1024 * 1024 * 5 },
+    limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
   }))
   async uploadImagen(
     @UploadedFile() file?: Express.Multer.File,
     @Param('idProfesional') idProfesional?: number,
   ) {
-    if (!file) throw new HttpException('No se ha proporcionado un archivo', HttpStatus.BAD_REQUEST);
-    if (!idProfesional) throw new HttpException('idProfesional es requerido', HttpStatus.BAD_REQUEST);
+    if (!file) {
+      throw new HttpException('No se ha proporcionado un archivo', HttpStatus.BAD_REQUEST);
+    }
+    if (!idProfesional) {
+      throw new HttpException('idProfesional es requerido', HttpStatus.BAD_REQUEST);
+    }
 
     try {
       return await this.imagenService.subirImagen(file, idProfesional);
@@ -34,20 +38,9 @@ export class ImagenController {
     }
   }
 
-  // Obtener imágenes
+  // Obtener todas las imágenes de un profesional
   @Get(':idProfesional')
   async getImagenes(@Param('idProfesional') idProfesional: number) {
     return this.imagenService.obtenerImagenes(idProfesional);
-  }
-
-  // Eliminar imagen
-  @Delete(':idImagen')
-  async deleteImagen(@Param('idImagen') idImagen: number) {
-    try {
-      return await this.imagenService.eliminarImagen(idImagen);
-    } catch (error) {
-      console.error(error);
-      throw new HttpException('Error al eliminar la imagen', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
   }
 }

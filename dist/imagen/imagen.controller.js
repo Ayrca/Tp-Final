@@ -56,10 +56,12 @@ let ImagenController = class ImagenController {
         this.imagenService = imagenService;
     }
     async uploadImagen(file, idProfesional) {
-        if (!file)
+        if (!file) {
             throw new common_1.HttpException('No se ha proporcionado un archivo', common_1.HttpStatus.BAD_REQUEST);
-        if (!idProfesional)
+        }
+        if (!idProfesional) {
             throw new common_1.HttpException('idProfesional es requerido', common_1.HttpStatus.BAD_REQUEST);
+        }
         try {
             return await this.imagenService.subirImagen(file, idProfesional);
         }
@@ -70,15 +72,6 @@ let ImagenController = class ImagenController {
     }
     async getImagenes(idProfesional) {
         return this.imagenService.obtenerImagenes(idProfesional);
-    }
-    async deleteImagen(idImagen) {
-        try {
-            return await this.imagenService.eliminarImagen(idImagen);
-        }
-        catch (error) {
-            console.error(error);
-            throw new common_1.HttpException('Error al eliminar la imagen', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 };
 exports.ImagenController = ImagenController;
@@ -108,13 +101,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ImagenController.prototype, "getImagenes", null);
-__decorate([
-    (0, common_1.Delete)(':idImagen'),
-    __param(0, (0, common_1.Param)('idImagen')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], ImagenController.prototype, "deleteImagen", null);
 exports.ImagenController = ImagenController = __decorate([
     (0, common_1.Controller)('imagen'),
     __metadata("design:paramtypes", [imagen_service_1.ImagenService])
