@@ -109,6 +109,17 @@ const handleEliminar = async (idImagen) => {
     }, 300);
   };
 
+        const handleVerImagen = (url) => {
+        Swal.fire({
+          imageUrl: url,
+          imageAlt: 'Imagen completa',
+          showConfirmButton: false,
+          showCloseButton: true,
+          width: '80%',
+          background: '#000',
+        });
+      };
+
   return (
     <div className='cajaImagenes'>
       <h3>Imágenes de Trabajos anteriores</h3>
@@ -116,7 +127,12 @@ const handleEliminar = async (idImagen) => {
       <div className={`imagenes-container ${fadeImagenes}`}>
         {imagenesPagina.map((imagen, index) => (
           <div className="imagen-wrapper" key={index}>
-            <img src={imagen.url} alt="Imagen" />
+          <img
+            src={imagen.url}
+            alt="Imagen"
+            onClick={() => handleVerImagen(imagen.url)}
+            style={{ cursor: 'pointer' }}
+            />
             <button
               className="btn-eliminar"
               onClick={() => handleEliminar(imagen.idImagen)}
