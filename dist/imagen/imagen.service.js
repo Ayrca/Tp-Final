@@ -57,6 +57,13 @@ let ImagenService = class ImagenService {
     async obtenerImagenes(idProfesional) {
         return this.imagenRepository.find({ where: { idProfesional } });
     }
+    async eliminarImagen(idImagen) {
+        const imagen = await this.imagenRepository.findOne({ where: { idImagen } });
+        if (!imagen)
+            throw new common_1.NotFoundException('Imagen no encontrada');
+        await this.imagenRepository.delete({ idImagen });
+        return { message: 'Imagen eliminada con éxito' };
+    }
 };
 exports.ImagenService = ImagenService;
 exports.ImagenService = ImagenService = __decorate([
