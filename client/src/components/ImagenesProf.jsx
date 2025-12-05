@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './estilos/ImagenesProf.css';
+import Swal from 'sweetalert2';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -65,25 +66,40 @@ const ImagenesProf = ({ idProfesional }) => {
   };
 
   // Eliminar imagen
-  const handleEliminar = async (idImagen) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Debes estar logueado para eliminar imágenes');
-      return;
-    }
+const handleEliminar = async (idImagen) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    Swal.fire('Error', 'Debes estar logueado para eliminar imágenes', 'error');
+    return;
+  }
 
-    if (!window.confirm('¿Deseas eliminar esta imagen?')) return;
+  // Confirmación con SweetAlert
+  const result = await Swal.fire({
+    title: '¿Deseas eliminar esta imagen?',
+    text: "¡Esta acción no se puede deshacer!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  });
 
-    try {
-      await axios.delete(`${BASE_URL}/imagen/${idImagen}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setReload(prev => !prev);
-    } catch (error) {
-      console.error('Error al eliminar imagen:', error);
-      alert('No se pudo eliminar la imagen');
-    }
-  };
+  if (!result.isConfirmed) return; 
+
+  try {
+    await axios.delete(`${BASE_URL}/imagen/${idImagen}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    setReload(prev => !prev);
+
+    Swal.fire('Eliminada', 'La imagen se eliminó correctamente', 'success');
+  } catch (error) {
+    console.error('Error al eliminar imagen:', error);
+    Swal.fire('Error', 'No se pudo eliminar la imagen', 'error');
+  }
+};
 
   const cambiarPagina = (nueva) => {
     setFadeImagenes("fade-out"); 
@@ -103,7 +119,7 @@ const ImagenesProf = ({ idProfesional }) => {
             <img src={imagen.url} alt="Imagen" />
             <button
               className="btn-eliminar"
-              onClick={() => handleEliminar(imagen.id)}
+              onClick={() => handleEliminar(imagen.idImagen)}
             >
               ×
             </button>
