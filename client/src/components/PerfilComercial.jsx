@@ -123,7 +123,9 @@ const PerfilComercial = () => {
           showCloseButton: true,
           background: 'transparent',
           padding: '0',
-          backdrop: 'rgba(0,0,0,0.5)' // opcional
+          backdrop: 'rgba(0,0,0,0.5)',
+          width: 'auto',
+          grow: 'row', 
         });
       };
 
@@ -160,13 +162,13 @@ const PerfilComercial = () => {
       <div className={`imagenes-comercial-container gallery-grid ${fadeGaleria}`}>
         {imagenesPagina.length > 0 ? (
           imagenesPagina.map((img, i) => (
-            <img
+          <img
             key={i}
             src={img.url.startsWith('http') ? img.url : `${CLOUDINARY_URL}${img.url}`}
             alt=""
             className="gallery-img"
             onClick={() => handleVerImagen(img.url.startsWith('http') ? img.url : `${CLOUDINARY_URL}${img.url}`)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', borderRadius: 0 }}
           />
           ))
         ) : (
