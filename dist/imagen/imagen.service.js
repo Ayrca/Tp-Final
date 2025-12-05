@@ -57,22 +57,6 @@ let ImagenService = class ImagenService {
     async obtenerImagenes(idProfesional) {
         return this.imagenRepository.find({ where: { idProfesional } });
     }
-    async eliminarImagen(idImagen) {
-        const imagen = await this.imagenRepository.findOne({ where: { idImagen } });
-        if (!imagen)
-            throw new common_1.BadRequestException('Imagen no encontrada');
-        try {
-            if (imagen.publicId) {
-                await cloudinary_config_1.default.uploader.destroy(imagen.publicId);
-            }
-            await this.imagenRepository.remove(imagen);
-            return { message: 'Imagen eliminada correctamente' };
-        }
-        catch (error) {
-            console.error('Error al eliminar la imagen:', error);
-            throw new common_1.BadRequestException('No se pudo eliminar la imagen');
-        }
-    }
 };
 exports.ImagenService = ImagenService;
 exports.ImagenService = ImagenService = __decorate([

@@ -17,7 +17,6 @@ let Imagen = class Imagen {
     url;
     idProfesional;
     profesional;
-    publicId;
 };
 exports.Imagen = Imagen;
 __decorate([
@@ -37,10 +36,6 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'idProfesional' }),
     __metadata("design:type", profesional_entity_1.Profesional)
 ], Imagen.prototype, "profesional", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Imagen.prototype, "publicId", void 0);
 exports.Imagen = Imagen = __decorate([
     (0, typeorm_1.Entity)()
 ], Imagen);
