@@ -108,14 +108,14 @@ const PerfilComercial = () => {
     }
   };
 
-        const handleVerImagen = (url) => {
+      const handleVerImagen = (url) => {
         Swal.fire({
-          imageUrl: url,
-          imageAlt: 'Imagen completa',
+          html: `<img src="${url}" style="width: auto; max-width: 90vw; height: auto;">`,
           showConfirmButton: false,
           showCloseButton: true,
-          width: '80%',
-          background: '#000',
+          background: 'transparent',
+          padding: '0',
+          backdrop: 'rgba(0,0,0,0.5)' // opcional, solo para oscurecer ligeramente el fondo
         });
       };
 
