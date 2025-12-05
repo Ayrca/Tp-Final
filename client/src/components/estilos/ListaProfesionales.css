@@ -378,5 +378,6 @@
   /* Grid de profesionales a 1 columna */
   .grid-profesionales {
     grid-template-columns: 1fr;
+    max-width: 90%;    
   }
 }
