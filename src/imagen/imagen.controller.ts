@@ -8,7 +8,7 @@ import type { Express } from 'express';
 export class ImagenController {
   constructor(private readonly imagenService: ImagenService) {}
 
-  // Subir imagen de trabajo
+  // Subir imagen
   @Post('upload/:idProfesional')
   @UseInterceptors(FileInterceptor('file', {
     storage: multer.memoryStorage(),
@@ -17,18 +17,14 @@ export class ImagenController {
       if (allowedMimeTypes.includes(file.mimetype)) cb(null, true);
       else cb(new Error('Tipo de archivo no permitido'), false);
     },
-    limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
+    limits: { fileSize: 1024 * 1024 * 5 },
   }))
   async uploadImagen(
     @UploadedFile() file?: Express.Multer.File,
     @Param('idProfesional') idProfesional?: number,
   ) {
-    if (!file) {
-      throw new HttpException('No se ha proporcionado un archivo', HttpStatus.BAD_REQUEST);
-    }
-    if (!idProfesional) {
-      throw new HttpException('idProfesional es requerido', HttpStatus.BAD_REQUEST);
-    }
+    if (!file) throw new HttpException('No se ha proporcionado un archivo', HttpStatus.BAD_REQUEST);
+    if (!idProfesional) throw new HttpException('idProfesional es requerido', HttpStatus.BAD_REQUEST);
 
     try {
       return await this.imagenService.subirImagen(file, idProfesional);
@@ -38,13 +34,13 @@ export class ImagenController {
     }
   }
 
-  // Obtener todas las imágenes de un profesional
+  // Obtener imágenes
   @Get(':idProfesional')
   async getImagenes(@Param('idProfesional') idProfesional: number) {
     return this.imagenService.obtenerImagenes(idProfesional);
   }
 
-  // Eliminar imagen por id
+  // Eliminar imagen
   @Delete(':idImagen')
   async deleteImagen(@Param('idImagen') idImagen: number) {
     try {

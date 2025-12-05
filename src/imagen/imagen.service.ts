@@ -14,7 +14,7 @@ export class ImagenService {
     private readonly profesionalRepository: Repository<Profesional>,
   ) {}
 
-  // Subir imagen de trabajo a Cloudinary y guardar URL en DB
+  // Subir imagen
   async subirImagen(file: Express.Multer.File, idProfesional: number) {
     if (!file) throw new BadRequestException('No se recibió ninguna imagen');
 
@@ -44,24 +44,29 @@ export class ImagenService {
     }
   }
 
-  // Obtener todas las imágenes de un profesional
+  // Obtener todas las imágenes
   async obtenerImagenes(idProfesional: number) {
     return this.imagenRepository.find({ where: { idProfesional } });
   }
 
-  // Eliminar imagen por id
+  // Eliminar imagen
   async eliminarImagen(idImagen: number) {
-    const imagen = await this.imagenRepository.findOneBy({ idImagen });
+    const imagen = await this.imagenRepository.findOne({ where: { idImagen } });
     if (!imagen) throw new BadRequestException('Imagen no encontrada');
 
-    // Borrar de Cloudinary si tiene publicId
-    if (imagen.publicId) {
-      await cloudinary.uploader.destroy(imagen.publicId);
+    try {
+      // Eliminar de Cloudinary si guardaste publicId
+      if (imagen.publicId) {
+        await cloudinary.uploader.destroy(imagen.publicId);
+      }
+
+      // Eliminar de la base de datos
+      await this.imagenRepository.remove(imagen);
+
+      return { message: 'Imagen eliminada correctamente' };
+    } catch (error) {
+      console.error('Error al eliminar la imagen:', error);
+      throw new BadRequestException('No se pudo eliminar la imagen');
     }
-
-    // Borrar de la base de datos
-    await this.imagenRepository.remove(imagen);
-
-    return { message: 'Imagen eliminada con éxito' };
   }
 }
