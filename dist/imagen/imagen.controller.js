@@ -56,12 +56,10 @@ let ImagenController = class ImagenController {
         this.imagenService = imagenService;
     }
     async uploadImagen(file, idProfesional) {
-        if (!file) {
+        if (!file)
             throw new common_1.HttpException('No se ha proporcionado un archivo', common_1.HttpStatus.BAD_REQUEST);
-        }
-        if (!idProfesional) {
+        if (!idProfesional)
             throw new common_1.HttpException('idProfesional es requerido', common_1.HttpStatus.BAD_REQUEST);
-        }
         try {
             return await this.imagenService.subirImagen(file, idProfesional);
         }
