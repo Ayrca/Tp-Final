@@ -2,7 +2,7 @@ import { Controller, Post, Get, Delete, UploadedFile, Param, UseInterceptors, Ht
 import { ImagenService } from './imagen.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
-import type { Express } from 'express';
+import type { Express } from 'express'; 
 
 @Controller('imagen')
 export class ImagenController {
