@@ -63,6 +63,18 @@
   background: rgba(255, 0, 0, 1);
 }
 
+/* Evitar que SweetAlert limite el ancho del contenido */
+.popup-img-full {
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+/* Evitar scroll incorrecto */
+.swal2-html-container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 /* PAGINACIÓN estilo consistente con otras secciones */
 .gallery-pagination {
   display: flex;
