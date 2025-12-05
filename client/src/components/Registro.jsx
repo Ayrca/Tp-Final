@@ -253,7 +253,7 @@ const Registro = () => {
   return (
     <div>
       <form id="registro-form" onSubmit={handleSubmit}>
-        <h2 id="form-titulo">Registro de {tipoUsuario === 'Cliente' ? 'Usuario' : 'Profesional'}</h2>
+        <h2 id="form-titulo">Registro de {tipoUsuario === 'Cliente' ? 'Cliente' : 'Profesional'}</h2>
 
         <CamposComunes
           nombre={nombre}
