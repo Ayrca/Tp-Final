@@ -1,42 +1,254 @@
-/* =========================================================
-   Carrusel Horizontal Mobile - Solo para ListaProfesional
-   ========================================================= */
+/* ========================
+   Layout general
+   ======================== */
 
-/* ------------------- Contenedor principal ------------------- */
+/* Wrapper principal con carruseles a los costados */
+.layout-profesionales-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  margin-top: 30px;
+  padding: 0 20px;
+}
+
+/* Título del oficio */
+.titulo-oficio {
+  font-size: 2rem;        
+  font-weight: 700;    
+  color: #2f89c8;       
+  text-align: center;       
+  margin: 20px 0;          
+  padding: 10px 15px;      
+  letter-spacing: 1px;     
+  text-transform: uppercase; 
+}
+
+/* Subtítulo cuando no hay profesionales */
+.titulo-oficio.no-profesionales {
+  font-size: 2rem;        
+  font-weight: 700;    
+  color: #2f89c8;       
+  text-align: center;       
+  margin: 20px 0;          
+  padding: 10px 15px;      
+  letter-spacing: 1px;     
+  text-transform: uppercase; 
+}
+
+
+/* Carrusel vertical izquierdo y derecho */
+.carrusel-desktop {
+  width: 300px; /* tamaño fijo en desktop */
+  flex-shrink: 0;
+}
+
+/* Grid de profesionales */
+.grid-profesionales {
+  width: 100%;
+  max-width: 1150px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 26px;
+}
+
+/* Cards de profesionales */
+.profesional-item {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 200px;
+}
+
+.profesional-item:hover {
+  transform: scale(1.01);
+}
+
+.profesional-item img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #3b82f6;
+}
+
+.profesional-data {
+  flex: 1;
+  padding: 0 10px;
+}
+
+.profesional-data h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.profesional-data p {
+  margin: 3px 0;
+  color: #374151;
+  font-size: 14px;
+}
+
+/* Botones */
+.profesional-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 130px);
+  grid-auto-rows: 38px;
+  grid-gap: 10px;
+  margin-top: 12px;
+  grid-template-areas:
+    "verMas conectar"
+    "contratar contratar";
+}
+
+.profesional-buttons button {
+  width: 130px;
+  height: 38px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Ver Más */
+.verMas {
+  grid-area: verMas;
+  background-color: white;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+}
+
+.verMas:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Conectar */
+.conectar {
+  grid-area: conectar;
+  background-color: #3b82f6;
+  border: none;
+  color: white;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.conectar:hover {
+  background-color: #2563eb;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.6);
+}
+
+/* Contratar */
+.contratar {
+  grid-area: contratar;
+  justify-self: center;
+  width: 270px;
+  background-color: #10b981;
+  border: none;
+  color: white;
+}
+
+.contratar:hover {
+  background-color: #059669;
+}
+
+/* Disponibilidad */
+.disponible {
+  width: auto;
+  padding: 4px 12px;
+  border: 2px solid black;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  color: #22c55e;
+  border-color: #22c55e;
+  background-color: #dcfce7;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.no-disponible {
+  width: auto;
+  padding: 4px 12px;
+  border: 2px solid black;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  color: #ee2525;
+  border-color: #ef4444;
+  background-color: #fee2e2;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+/* Paginador */
+.pagination {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.pagination button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.pagination button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ========================
+   Carrusel horizontal Mobile
+   Solo para ListaProfesional
+   ======================== */
 .carrusel-mobile {
-  display: none;               /* Oculto por defecto */
+  display: none; /* Oculto por defecto en desktop */
   width: 100%;
   margin: 20px 0;
   overflow: hidden;
   position: relative;
 }
 
-/* ------------------- Mostrar en Mobile (<800px) ------------------- */
-@media (max-width: 800px) {
-  .carrusel-mobile {
-    display: block;
-  }
-}
-
-/* ------------------- Botones Prev / Next ------------------- */
+/* Botones prev/next (solo en este carrusel mobile) */
 .carrusel-mobile .nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
   background: #3498db;
   border: none;
   color: white;
   font-size: 28px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 10;
 }
 
@@ -50,15 +262,10 @@
   background-color: #2980b9;
 }
 
-.carrusel-mobile .nav-btn.prev {
-  left: 10px;
-}
+.carrusel-mobile .nav-btn.prev { left: 10px; }
+.carrusel-mobile .nav-btn.next { right: 10px; }
 
-.carrusel-mobile .nav-btn.next {
-  right: 10px;
-}
-
-/* ------------------- Contenedor de items ------------------- */
+/* Contenedor y track */
 .carrusel-mobile .propaganda-container {
   overflow: hidden;
   width: 100%;
@@ -69,9 +276,9 @@
   transition: transform 0.55s ease-in-out;
 }
 
-/* ------------------- Cada item ------------------- */
+/* Cada item ocupa 100% del contenedor */
 .carrusel-mobile .propaganda-item {
-  flex: 0 0 100%;              /* Cada item ocupa 100% */
+  flex: 0 0 100%;
   box-sizing: border-box;
   padding: 0 10px;
   display: flex;
@@ -80,7 +287,7 @@
   font-weight: bold;
 }
 
-/* ------------------- Título ------------------- */
+/* Título */
 .carrusel-mobile .propaganda-title {
   text-align: center;
   margin-bottom: 10px;
@@ -89,7 +296,7 @@
   color: #007bff;
 }
 
-/* ------------------- Imagen ------------------- */
+/* Imagen */
 .carrusel-mobile .propaganda-img {
   width: 100%;
   height: 180px;
@@ -103,7 +310,38 @@
   transform: scale(1.04);
 }
 
-/* ------------------- Ajustes más responsive (<600px) ------------------- */
+/* Estrellas */
+.estrellas {
+  display: flex;
+  gap: 2px;
+  font-size: 18px;
+  color: #facc15; /* amarillo dorado */
+}
+
+.estrella.vacia {
+  color: #d1d5db; /* gris claro */
+}
+
+.estrella.llena {
+  color: #facc15;
+}
+
+.estrella.media {
+  position: relative;
+  display: inline-block;
+  color: #d1d5db; 
+}
+
+.estrella.media::before {
+  content: '★';
+  color: #facc15;
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+}
+
+/* Más responsive <600px */
 @media (max-width: 600px) {
   .carrusel-mobile .nav-btn {
     width: 36px;
@@ -113,5 +351,32 @@
 
   .carrusel-mobile .propaganda-img {
     height: 150px;
+  }
+}
+
+/* ========================
+   Responsive general ListaProfesional
+   ======================== */
+@media (max-width: 800px) {
+  /* Wrapper principal en columna */
+  .layout-profesionales-wrapper {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  /* Ocultar carruseles verticales */
+  .carrusel-desktop {
+    display: none;
+  }
+
+  /* Mostrar carrusel horizontal */
+  .carrusel-mobile {
+    display: block;
+  }
+
+  /* Grid de profesionales a 1 columna */
+  .grid-profesionales {
+    grid-template-columns: 1fr;
   }
 }
