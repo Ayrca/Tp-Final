@@ -28,7 +28,7 @@ const ImagenesProf = ({ idProfesional }) => {
       .catch((error) => console.error(error));
   }, [idProfesional, reload]);
 
-  // Subir imagen al backend (igual que avatar)
+  // Subir imagen al backend
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) return;
@@ -41,7 +41,7 @@ const ImagenesProf = ({ idProfesional }) => {
 
     try {
       const formData = new FormData();
-      formData.append('file', file); // ⚡ File real
+      formData.append('file', file);
 
       const response = await axios.post(
         `${BASE_URL}/imagen/upload/${idProfesional}`,
@@ -54,16 +54,34 @@ const ImagenesProf = ({ idProfesional }) => {
         }
       );
 
-      // Backend devuelve la URL subida a Cloudinary
       console.log('Imagen subida:', response.data);
-
-      // Limpiar input y recargar imágenes
       setFile(null);
       document.getElementById('file-input').value = '';
       setReload(prev => !prev);
     } catch (error) {
       console.error('Error al subir imagen:', error);
       alert('Ocurrió un error al subir la imagen');
+    }
+  };
+
+  // Eliminar imagen
+  const handleEliminar = async (idImagen) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Debes estar logueado para eliminar imágenes');
+      return;
+    }
+
+    if (!window.confirm('¿Deseas eliminar esta imagen?')) return;
+
+    try {
+      await axios.delete(`${BASE_URL}/imagen/${idImagen}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setReload(prev => !prev);
+    } catch (error) {
+      console.error('Error al eliminar imagen:', error);
+      alert('No se pudo eliminar la imagen');
     }
   };
 
@@ -81,7 +99,15 @@ const ImagenesProf = ({ idProfesional }) => {
 
       <div className={`imagenes-container ${fadeImagenes}`}>
         {imagenesPagina.map((imagen, index) => (
-        <img key={index} src={imagen.url} alt="Imagen" />
+          <div className="imagen-wrapper" key={index}>
+            <img src={imagen.url} alt="Imagen" />
+            <button
+              className="btn-eliminar"
+              onClick={() => handleEliminar(imagen.id)}
+            >
+              ×
+            </button>
+          </div>
         ))}
       </div>
 

@@ -48,4 +48,20 @@ export class ImagenService {
   async obtenerImagenes(idProfesional: number) {
     return this.imagenRepository.find({ where: { idProfesional } });
   }
+
+  // Eliminar imagen por id
+  async eliminarImagen(idImagen: number) {
+    const imagen = await this.imagenRepository.findOneBy({ idImagen });
+    if (!imagen) throw new BadRequestException('Imagen no encontrada');
+
+    // Borrar de Cloudinary si tiene publicId
+    if (imagen.publicId) {
+      await cloudinary.uploader.destroy(imagen.publicId);
+    }
+
+    // Borrar de la base de datos
+    await this.imagenRepository.remove(imagen);
+
+    return { message: 'Imagen eliminada con éxito' };
+  }
 }

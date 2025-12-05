@@ -1,4 +1,4 @@
-import { Controller, Post, Get, UploadedFile, Param, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Delete, UploadedFile, Param, UseInterceptors, HttpException, HttpStatus } from '@nestjs/common';
 import { ImagenService } from './imagen.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
@@ -42,5 +42,16 @@ export class ImagenController {
   @Get(':idProfesional')
   async getImagenes(@Param('idProfesional') idProfesional: number) {
     return this.imagenService.obtenerImagenes(idProfesional);
+  }
+
+  // Eliminar imagen por id
+  @Delete(':idImagen')
+  async deleteImagen(@Param('idImagen') idImagen: number) {
+    try {
+      return await this.imagenService.eliminarImagen(idImagen);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Error al eliminar la imagen', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
