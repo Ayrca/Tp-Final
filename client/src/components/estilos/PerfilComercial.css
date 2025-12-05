@@ -201,6 +201,18 @@
     font-size: 13px;
   }
 
+  /* Evitar que SweetAlert limite el ancho del contenido */
+.popup-img-full {
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+/* Evitar scroll incorrecto */
+.swal2-html-container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
   /* Grids: 1 columna */
   .imagenes-comercial-container,
   .trabajos-grid {

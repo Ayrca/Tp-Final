@@ -109,26 +109,35 @@ const handleEliminar = async (idImagen) => {
     }, 300);
   };
 
-        const handleVerImagen = (url) => {
-          Swal.fire({
-            html: `<img src="${url}" style="
-              display: block;
-              max-width: 90vw;
-              max-height: 90vh;
-              width: auto;
-              height: auto;
-              border-radius: 0;
-              margin: 0;
-            ">`,
-            showConfirmButton: false,
-            showCloseButton: true,
-            background: 'transparent',
-            padding: '0',
-            backdrop: 'rgba(0,0,0,0.5)',
-            width: 'auto',
-            grow: 'row', 
-          });
-        };
+      const handleVerImagen = (url) => {
+        Swal.fire({
+          html: `
+            <div style="
+              display:flex;
+              justify-content:center;
+              align-items:center;
+              width:100%;
+            ">
+              <img src="${url}" style="
+                max-width: 90vw;
+                max-height: 90vh;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+              "/>
+            </div>
+          `,
+          showConfirmButton: false,
+          showCloseButton: true,
+          background: 'rgba(0,0,0,0.85)',
+          allowOutsideClick: true,
+          width: 'auto',
+          heightAuto: false,
+          customClass: {
+            popup: 'popup-img-full',
+          },
+        });
+};
 
   return (
     <div className='cajaImagenes'>
