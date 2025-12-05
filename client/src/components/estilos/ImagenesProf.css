@@ -63,16 +63,19 @@
   background: rgba(255, 0, 0, 1);
 }
 
-/* Evitar que SweetAlert limite el ancho del contenido */
-.popup-img-full {
+/* Quita borde, fondo y sombras del popup */
+.no-popup-style {
   padding: 0 !important;
-  max-width: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
-/* Evitar scroll incorrecto */
+/* Evita que SweetAlert fuerce scroll o limpie el contenido */
 .swal2-html-container {
   margin: 0 !important;
   padding: 0 !important;
+  overflow: visible !important;
 }
 
 /* PAGINACIÓN estilo consistente con otras secciones */

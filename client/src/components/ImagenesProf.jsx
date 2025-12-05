@@ -109,34 +109,34 @@ const handleEliminar = async (idImagen) => {
     }, 300);
   };
 
-      const handleVerImagen = (url) => {
-        Swal.fire({
-          html: `
-            <div style="
-              display:flex;
-              justify-content:center;
-              align-items:center;
-              width:100%;
-            ">
-              <img src="${url}" style="
-                max-width: 90vw;
-                max-height: 90vh;
-                width: auto;
-                height: auto;
-                object-fit: contain;
-              "/>
-            </div>
-          `,
-          showConfirmButton: false,
-          showCloseButton: true,
-          background: 'rgba(0,0,0,0.85)',
-          allowOutsideClick: true,
-          width: 'auto',
-          heightAuto: false,
-          customClass: {
-            popup: 'popup-img-full',
-          },
-        });
+const handleVerImagen = (url) => {
+  Swal.fire({
+    html: `
+      <img src="${url}" style="
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 90vh;
+        display: block;
+        margin: 0 auto;
+        border-radius: 0;
+      "/>
+    `,
+    showConfirmButton: false,
+    showCloseButton: true,
+
+    /* SIN FONDO */
+    background: 'transparent',
+
+    /* SIN BURBUJA REDONDEADA */
+    customClass: {
+      popup: 'no-popup-style'
+    },
+
+    /* Permitir ver imagen a tamaño real */
+    width: 'auto',
+    heightAuto: true,
+  });
 };
 
   return (
